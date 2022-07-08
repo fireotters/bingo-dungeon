@@ -13,6 +13,8 @@ namespace UI
         {
             // levelTransitionOverlay.gameObject.SetActive(true);
             // Change music track
+            var optionsMenu = optionsPanel.GetComponent<OptionsMenu>();
+            MusicManager.i.sfxDemo = optionsMenu.optionSFXSlider.GetComponent<AudioSource>();
             MusicManager.i.ChangeMusicTrack(1);
         }
 
@@ -30,6 +32,10 @@ namespace UI
                 {
                     GameIsPaused(!gamePausePanel.activeInHierarchy);
                 }
+                else
+                {
+                    optionsPanel.SetActive(!optionsPanel.activeInHierarchy);
+                }
             }
         }
 
@@ -41,6 +47,11 @@ namespace UI
             MusicManager.i.FindAllSfxAndPlayPause(gameIsPaused: intent);
         }
 
+        public void ResumeGame()
+        {
+            GameIsPaused(false);
+        }
+        
         public void ToggleOptionsPanel()
         {
             optionsPanel.SetActive(!optionsPanel.activeInHierarchy);

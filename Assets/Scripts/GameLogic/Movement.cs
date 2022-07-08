@@ -6,7 +6,7 @@ namespace GameLogic
     {
         private void Update()
         {
-            transform.Rotate(Vector3.forward, 90 * Time.deltaTime);
+            transform.Rotate(Vector3.forward, -90 * Time.deltaTime * 2);
         }
     }
 }

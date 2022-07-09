@@ -20,7 +20,7 @@ public class FmodMixer : MonoBehaviour
     void Update()
     {
         sfx.setVolume(DecibelToLinear(sfxVolume));
-        music.setVolume(DecibelToLinear(sfxVolume));
+        music.setVolume(DecibelToLinear(musicVolume));
     }
 
     private float DecibelToLinear (float dB)

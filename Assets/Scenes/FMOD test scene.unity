@@ -293,7 +293,7 @@ MonoBehaviour:
   LoadEvent: 1
   UnloadEvent: 2
   Banks:
-  - Master
+  - Desktop/Master
   CollisionTag: 
   PreloadSamples: 0
 --- !u!4 &1438496735

@@ -1,0 +1,2 @@
+﻿# avoid FMOD Mac libraries to corrupt when cloning on Windows machines
+*.bundle text eol=lf

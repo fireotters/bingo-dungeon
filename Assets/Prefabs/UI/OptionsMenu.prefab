@@ -448,6 +448,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5435942658491795627}
   - component: {fileID: 5435942658491795626}
+  - component: {fileID: 1115094807499646652}
+  - component: {fileID: 9173357959272924415}
   m_Layer: 5
   m_Name: OptionsMenu
   m_TagString: Untagged
@@ -490,6 +492,49 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _optionMusicSlider: {fileID: 5435942660211236271}
   optionSFXSlider: {fileID: 5435942659338415085}
+--- !u!114 &1115094807499646652
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5435942658491795605}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32dc717346d083c4891d0496d214d7a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sfxDemoEmitter: {fileID: 9173357959272924415}
+--- !u!114 &9173357959272924415
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5435942658491795605}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -691844138
+      Data2: 1208388378
+      Data3: 56698508
+      Data4: -71010045
+    Path: event:/2D/UI/Select
+  Event: 
+  PlayEvent: 1
+  StopEvent: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &5435942658549934907
 GameObject:
   m_ObjectHideFlags: 0
@@ -1057,16 +1102,16 @@ MonoBehaviour:
   m_FillRect: {fileID: 5435942658387390980}
   m_HandleRect: {fileID: 5435942660171789644}
   m_Direction: 0
-  m_MinValue: 0.0001
-  m_MaxValue: 1
+  m_MinValue: -40
+  m_MaxValue: 10
   m_WholeNumbers: 0
   m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5435942658491795626}
-        m_TargetAssemblyTypeName: UI.OptionsMenu, Assembly-CSharp
-        m_MethodName: ChangeSfxPassToManager
+      - m_Target: {fileID: 1115094807499646652}
+        m_TargetAssemblyTypeName: Audio.FmodMixer, Assembly-CSharp
+        m_MethodName: ChangeSfxVolume
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1961,16 +2006,16 @@ MonoBehaviour:
   m_FillRect: {fileID: 5435942659677996220}
   m_HandleRect: {fileID: 5435942660154216949}
   m_Direction: 0
-  m_MinValue: 0.0001
-  m_MaxValue: 1
+  m_MinValue: -40
+  m_MaxValue: 10
   m_WholeNumbers: 0
   m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5435942658491795626}
-        m_TargetAssemblyTypeName: UI.OptionsMenu, Assembly-CSharp
-        m_MethodName: ChangeMusicPassToManager
+      - m_Target: {fileID: 1115094807499646652}
+        m_TargetAssemblyTypeName: Audio.FmodMixer, Assembly-CSharp
+        m_MethodName: ChangeMusicVolume
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

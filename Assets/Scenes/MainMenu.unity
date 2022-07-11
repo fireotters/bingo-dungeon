@@ -589,6 +589,8 @@ GameObject:
   - component: {fileID: 995272797}
   - component: {fileID: 995272796}
   - component: {fileID: 995272800}
+  - component: {fileID: 995272801}
+  - component: {fileID: 995272802}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -698,6 +700,66 @@ MonoBehaviour:
   versionText: {fileID: 1519201352}
   desktopButtons: {fileID: 604649672}
   webButtons: {fileID: 140125948}
+--- !u!114 &995272801
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 995272795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 246360362
+      Data2: 1228063111
+      Data3: 462333367
+      Data4: 82753582
+    Path: event:/2D/UI/Menu
+  Event: 
+  PlayEvent: 1
+  StopEvent: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
+--- !u!114 &995272802
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 995272795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -691844138
+      Data2: 1208388378
+      Data3: 56698508
+      Data4: -71010045
+    Path: event:/2D/UI/Select
+  Event: 
+  PlayEvent: 0
+  StopEvent: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &1005879414
 GameObject:
   m_ObjectHideFlags: 0
@@ -2681,6 +2743,10 @@ PrefabInstance:
     - target: {fileID: 5435942658491795627, guid: 2a36c7ce67dfdfa4a9260d12d94d3d06, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5435942660211236271, guid: 2a36c7ce67dfdfa4a9260d12d94d3d06, type: 3}
+      propertyPath: m_Value
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2a36c7ce67dfdfa4a9260d12d94d3d06, type: 3}

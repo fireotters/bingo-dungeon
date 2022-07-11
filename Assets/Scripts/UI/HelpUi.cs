@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace UI
 {
@@ -10,7 +11,7 @@ namespace UI
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                // exit menu
+                BackToMainMenu();
             }
         }
 
@@ -19,19 +20,19 @@ namespace UI
             switch (who)
             {
                 case "bench":
-                    Application.OpenURL("");
+                    Application.OpenURL("https://about.rubenbermejoromero.com/");
                     break;
                 case "cross":
-                    Application.OpenURL("");
+                    Application.OpenURL("https://crossfirecam.itch.io/");
                     break;
                 case "rioni":
-                    Application.OpenURL("");
+                    Application.OpenURL("https://rioni.itch.io/");
                     break;
                 case "darelt":
-                    Application.OpenURL("");
+                    Application.OpenURL("https://darelt.itch.io/");
                     break;
                 case "tesla":
-                    Application.OpenURL("");
+                    Application.OpenURL("https://teslasp2.itch.io/");
                     break;
             }
         }
@@ -44,7 +45,7 @@ namespace UI
 
         public void BackToMainMenu()
         {
-            
+            SceneManager.LoadScene("Scenes/MainMenu");
         }
     }
 }

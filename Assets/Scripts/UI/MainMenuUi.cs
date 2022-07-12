@@ -1,8 +1,6 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Serialization;
-using Audio;
 
 namespace UI
 {
@@ -15,7 +13,6 @@ namespace UI
         }
 
         [Header("Main Menu UI")]
-        [FormerlySerializedAs("optionsPanel")] [SerializeField] private OptionsMenu optionsMenu;
         [SerializeField] private TextMeshProUGUI versionText;
         [SerializeField] private GameObject desktopButtons, webButtons;
         
@@ -31,19 +28,13 @@ namespace UI
             
             // Set version number
             SetVersionText();
-            // Find SFX Slider & tell MusicManager where it is
-            MusicManager.i.sfxDemo = optionsMenu.optionSFXSlider.GetComponent<AudioSource>();
-
+            
             // Set up PlayerPrefs when game is first ever loaded
             if (!PlayerPrefs.HasKey("Music"))
             {
                 PlayerPrefs.SetFloat("Music", 0.8f);
                 PlayerPrefs.SetFloat("SFX", 0.8f);
             }
-
-            // Change music track & set volume. Disable low pass filter.
-            MusicManager.i.ChangeMusicTrack(0);
-            MusicManager.i.audLowPass.enabled = false;
         }
 
         private void SetVersionText()

@@ -1,35 +1,30 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Tilemaps;
 using Toolbox;
+using UnityEngine;
+using UnityEngine.Serialization;
+using UnityEngine.Tilemaps;
 
 public class DemoPathFinding : MonoBehaviour
 {
     public Transform endPos;
     public Transform startPos;
     public Tilemap tilemap;
-    public LineRenderer linePath;
-    private List<Vector3> wayPoints;
-
-    private void Start()
-    {
-        wayPoints = new List<Vector3>();
-    }
+    [FormerlySerializedAs("linePath")] public LineRenderer lineRenderer;
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
+        // if (Input.GetMouseButtonDown(0))
+        // {
             var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             mousePos.z = 0;
             endPos.position = mousePos;
-            wayPoints = AStar.FindPath(tilemap, startPos.position, endPos.position);
-            if (wayPoints != null)
+            var linePath = AStar.FindFourDirectionLinePath(tilemap, startPos.position, endPos.position);
+
+            if (linePath != null)
             {
-                linePath.positionCount = wayPoints.Count;
-                linePath.SetPositions(wayPoints.ToArray());
+                lineRenderer.positionCount = linePath.Length;
+                lineRenderer.SetPositions(linePath.nodes);
             }
-        }
+        // }
     }
 }

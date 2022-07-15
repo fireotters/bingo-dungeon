@@ -117,6 +117,12 @@ namespace Toolbox
             return ToLinePath(path);
         }
 
+        public static LinePath FindFourDirectionLinePath(Tilemap map, Vector3 start, Vector3 goal)
+        {
+            var path = FindFourDirectionPath(map, start, goal);
+            return ToLinePath(path);
+        }
+        
         /// <summary>
         /// Finds a path in the tilemap using world coordinates.
         /// </summary>
@@ -126,12 +132,26 @@ namespace Toolbox
             return map.GetCellCenterWorld(path);
         }
 
+        public static List<Vector3> FindFourDirectionPath(Tilemap map, Vector3 start, Vector3 goal)
+        {
+            List<Vector3Int> path = FindFourDirectionPath(map, map.WorldToCell(start), map.WorldToCell(goal));
+            return map.GetCellCenterWorld(path);
+        }
+
         /// <summary>
         /// Finds a path in the tilemap using cell coordinates.
         /// </summary>
         public static List<Vector3Int> FindPath(Tilemap map, Vector3Int start, Vector3Int goal)
         {
             return FindPath(new MoveGraph(map), start, goal, Vector3Int.Distance);
+        }
+        
+        /// <summary>
+        /// Finds a path in the tilemap using cell coordinates.
+        /// </summary>
+        public static List<Vector3Int> FindFourDirectionPath(Tilemap map, Vector3Int start, Vector3Int goal)
+        {
+            return FindPath(new FourDirectionGraph(map), start, goal, Vector3Int.Distance);
         }
 
         /// <summary>

@@ -20,22 +20,30 @@ namespace Entities
                 : AStar.FindPath(tilemap, transform.position, endPos);
         }
 
-        public void Move(Vector3 destination)
+        public bool TryMove(Vector3 destination)
         {
-            if (IsInRange(transform.position, destination))
+            if (IsInRange(destination))
             {
                 print("In range");
                 var linePath = PreviewPath(destination);
                 if (linePath != null)
                 {
-                    transform.DOPath(linePath.ToArray(), 1f);
+                    transform.DOPath(linePath.ToArray(), 1f).OnComplete(OnReached);
+                    return true;
                 }
             }
+
+            return false;
+        }
+
+        protected virtual void OnReached() 
+        {
+            // Notify turn ended
         }
         
-        protected bool IsInRange(Vector3 startPos, Vector3 endPos)
+        protected bool IsInRange(Vector3 endPos)
         {
-            Vector3Int distance = tilemap.WorldToCell(endPos) - tilemap.WorldToCell(startPos);
+            Vector3Int distance = tilemap.WorldToCell(endPos) - tilemap.WorldToCell(transform.position);
             return distance.magnitude < (range + 1);
         }
     }

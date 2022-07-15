@@ -11,6 +11,10 @@ namespace Entities
         {
             var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             mousePos.z = 0;
+
+            if (!IsInRange(mousePos))
+                return;
+
             var previewLinePoints = PreviewPath(mousePos);
             
             if (previewLinePoints != null)
@@ -21,7 +25,7 @@ namespace Entities
 
             if (Input.GetMouseButton(0))
             {
-                Move(mousePos);
+                TryMove(mousePos);
             }
         }
     }

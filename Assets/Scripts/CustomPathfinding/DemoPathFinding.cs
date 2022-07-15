@@ -1,8 +1,8 @@
-using System.Collections.Generic;
 using Toolbox;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
+using DG.Tweening;
 
 public class DemoPathFinding : MonoBehaviour
 {
@@ -14,19 +14,21 @@ public class DemoPathFinding : MonoBehaviour
 
     private void Update()
     {
-        // if (Input.GetMouseButtonDown(0))
-        // {
-        var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        mousePos.z = 0;
-        endPos.position = mousePos;
-        var linePath = AStar.FindFourDirectionLinePath(tilemap, startPos.position, endPos.position);
-
-        if (linePath != null && IsInRange(tilemap.WorldToCell(startPos.position), tilemap.WorldToCell(linePath.EndNode)))
+        if (Input.GetMouseButton(0))
         {
-            lineRenderer.positionCount = linePath.Length;
-            lineRenderer.SetPositions(linePath.nodes);
+            var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            mousePos.z = 0;
+            endPos.position = mousePos;
+            var linePath = AStar.FindFourDirectionLinePath(tilemap, startPos.position, endPos.position);
+
+            if (linePath != null &&
+                IsInRange(tilemap.WorldToCell(startPos.position), tilemap.WorldToCell(linePath.EndNode)))
+            {
+                lineRenderer.positionCount = linePath.Length;
+                lineRenderer.SetPositions(linePath.nodes);
+                startPos.DOPath(linePath.nodes, 1f);
+            }
         }
-        // }
     }
 
     bool IsInRange(Vector3Int startPos, Vector3Int endPos)

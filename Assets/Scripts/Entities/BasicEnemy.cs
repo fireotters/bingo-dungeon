@@ -94,11 +94,14 @@ namespace Entities
 
         public override bool TryMove(Vector3 destination, Action onFinish = null)
         {
+            spriteRenderer.sortingOrder += 20;
+
             transform.DOMove(destination, 1f).OnComplete(
                 () =>
                 {
                     Damage();
                     onFinish?.Invoke();
+                    spriteRenderer.sortingOrder -= 20;
                 }
                 );
             return true;

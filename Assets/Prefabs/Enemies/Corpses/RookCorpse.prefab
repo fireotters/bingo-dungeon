@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2920898620040078545}
   - component: {fileID: 6613988055697228699}
-  - component: {fileID: 7663182675193307121}
+  - component: {fileID: 2774020249107311633}
   - component: {fileID: 5096284885854579615}
   m_Layer: 0
   m_Name: RookCorpse
@@ -87,7 +87,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &7663182675193307121
+--- !u!114 &2774020249107311633
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -96,9 +96,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1981591651481221961}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc0dbd63edc3ce243bcf2a065920d53a, type: 3}
+  m_Script: {fileID: 11500000, guid: 78d47284af831a84f85732c28e7ccd23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BlackPiece: 0
+  animator: {fileID: 5096284885854579615}
+  pSystem: {fileID: 8032698978748798939}
 --- !u!95 &5096284885854579615
 Animator:
   serializedVersion: 4
@@ -235,7 +238,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 5.36
+      scalar: 1.61
       minScalar: 5
       maxCurve:
         serializedVersion: 2

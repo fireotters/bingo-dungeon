@@ -126,6 +126,7 @@ namespace Entities
 
         public override void OnDeath()
         {
+            corpsePrefab.GetComponent<Corpse>().BlackPiece = BlackPiece;
             Instantiate(corpsePrefab, transform.position, Quaternion.identity);
         }
     }

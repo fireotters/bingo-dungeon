@@ -38,6 +38,25 @@ namespace Audio
             }
         }
 
+        public void FindAllSfxAndPlayPause(bool gameIsPaused)
+        {
+            if (FindObjectsOfType(typeof(StudioEventEmitter)) is StudioEventEmitter[] eventEmitters)
+            {
+                foreach (var eventEmitter in eventEmitters)
+                {
+                    switch (gameIsPaused)
+                    {
+                        case true when eventEmitter.IsPlaying():
+                            eventEmitter.Stop();
+                            break;
+                        case false when !eventEmitter.IsPlaying():
+                            eventEmitter.Play();
+                            break;
+                    }
+                }
+            }
+        }
+
         private float DecibelToLinear(float dB)
         {
             var linear = Mathf.Pow(10f, dB / 20f);

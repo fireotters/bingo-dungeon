@@ -8,14 +8,11 @@ namespace UI
     {
         [Header("Game UI")] public GameObject gamePausePanel;
         public GameObject optionsPanel;
+        private FmodMixer fmodMixer;
 
         private void Start()
         {
-            // levelTransitionOverlay.gameObject.SetActive(true);
-            // Change music track
-            var optionsMenu = optionsPanel.GetComponent<OptionsMenu>();
-            MusicManager.i.sfxDemo = optionsMenu.optionSFXSlider.GetComponent<AudioSource>();
-            MusicManager.i.ChangeMusicTrack(1);
+            fmodMixer = GetComponent<FmodMixer>();
         }
 
         private void Update()
@@ -44,12 +41,17 @@ namespace UI
             // Show or hide pause panel and set timescale
             gamePausePanel.SetActive(intent);
             Time.timeScale = intent ? 0 : 1;
-            MusicManager.i.FindAllSfxAndPlayPause(gameIsPaused: intent);
+            fmodMixer.FindAllSfxAndPlayPause(gameIsPaused: intent);
         }
 
         public void ResumeGame()
         {
             GameIsPaused(false);
+        }
+
+        public void ResetCurrentLevel()
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
         
         public void ToggleOptionsPanel()

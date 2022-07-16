@@ -14,7 +14,8 @@ namespace Entities
         public bool fourDir;
         private int lostTurns;
         private int hitPoints = 1;
-        private const int MAX_HEALTH = 2; 
+        private const int MAX_HEALTH = 2;
+        Action currentFinishAction;
 
         // Re-orders the sprites on-screen as they move, so that pieces which are below others will render above them.
         // For example, a bishop on a space above a knight... rendering in above the knight. The whole knight should be visible, obscuring the bishop.
@@ -38,13 +39,13 @@ namespace Entities
 
         protected void ConsumeTurn() => lostTurns = Mathf.Max(lostTurns-1, 0);
         
-        private void Update()
-        {
-            if (spriteRenderer != null)
-            {
-                spriteRenderer.sortingOrder = -Mathf.CeilToInt(transform.position.y);
-            }
-        }
+        //private void Update()
+        //{
+        //    if (spriteRenderer != null)
+        //    {
+        //        spriteRenderer.sortingOrder = -Mathf.CeilToInt(transform.position.y);
+        //    }
+        //}
 
         protected List<Vector3> PreviewPath(Vector3 endPos)
         {
@@ -55,17 +56,31 @@ namespace Entities
 
         public virtual bool TryMove(Vector3 destination, System.Action onFinish = null)
         {
+            currentFinishAction = onFinish;
             if (IsInRange(destination))
             {
                 var linePath = PreviewPath(destination);
                 if (linePath != null)
                 {
-                    transform.DOPath(linePath.ToArray(), 1f).OnComplete(() => onFinish?.Invoke());
+                    transform.DOPath(linePath.ToArray(), 1f).OnComplete(() =>
+                    {
+                        onFinish?.Invoke();
+                        currentFinishAction = null;
+                        });
                     return true;
                 }
             }
 
             return false;
+        }
+
+        public void ChangePath(Vector3 newDestination)
+        {
+            if(currentFinishAction != null)
+            {
+                transform.DOKill();
+                TryMove(newDestination, currentFinishAction);
+            }
         }
 
         protected bool IsInRange(Vector3 endPos)

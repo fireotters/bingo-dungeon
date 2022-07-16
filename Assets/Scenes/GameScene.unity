@@ -382,7 +382,32 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 9173357959272924415, guid: 2a36c7ce67dfdfa4a9260d12d94d3d06, type: 3}
+      propertyPath: PlayEvent
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9173357959272924415, guid: 2a36c7ce67dfdfa4a9260d12d94d3d06, type: 3}
+      propertyPath: EventReference.Path
+      value: event:/2D/UI/Select
+      objectReference: {fileID: 0}
+    - target: {fileID: 9173357959272924415, guid: 2a36c7ce67dfdfa4a9260d12d94d3d06, type: 3}
+      propertyPath: EventReference.Guid.Data1
+      value: -691844138
+      objectReference: {fileID: 0}
+    - target: {fileID: 9173357959272924415, guid: 2a36c7ce67dfdfa4a9260d12d94d3d06, type: 3}
+      propertyPath: EventReference.Guid.Data2
+      value: 1208388378
+      objectReference: {fileID: 0}
+    - target: {fileID: 9173357959272924415, guid: 2a36c7ce67dfdfa4a9260d12d94d3d06, type: 3}
+      propertyPath: EventReference.Guid.Data3
+      value: 56698508
+      objectReference: {fileID: 0}
+    - target: {fileID: 9173357959272924415, guid: 2a36c7ce67dfdfa4a9260d12d94d3d06, type: 3}
+      propertyPath: EventReference.Guid.Data4
+      value: -71010045
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 1115094807499646652, guid: 2a36c7ce67dfdfa4a9260d12d94d3d06, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 2a36c7ce67dfdfa4a9260d12d94d3d06, type: 3}
 --- !u!1 &635104915 stripped
 GameObject:
@@ -405,6 +430,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86d040e4983814947a55743ff9fb7bdd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &635104918 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9173357959272924415, guid: 2a36c7ce67dfdfa4a9260d12d94d3d06, type: 3}
+  m_PrefabInstance: {fileID: 635104914}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 635104915}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &976050166
 GameObject:
   m_ObjectHideFlags: 0
@@ -418,6 +454,7 @@ GameObject:
   - component: {fileID: 976050168}
   - component: {fileID: 976050167}
   - component: {fileID: 976050171}
+  - component: {fileID: 976050172}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -522,9 +559,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelTransitionOverlay: {fileID: 0}
-  loadingScreenCanvas: {fileID: 0}
   gamePausePanel: {fileID: 1845285493}
   optionsPanel: {fileID: 635104915}
+--- !u!114 &976050172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 976050166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32dc717346d083c4891d0496d214d7a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sfxDemoEmitter: {fileID: 635104918}
 --- !u!1 &1001738849
 GameObject:
   m_ObjectHideFlags: 0
@@ -536,6 +585,8 @@ GameObject:
   - component: {fileID: 1001738852}
   - component: {fileID: 1001738851}
   - component: {fileID: 1001738850}
+  - component: {fileID: 1001738853}
+  - component: {fileID: 1001738854}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -609,6 +660,49 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1001738853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1001738849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attenuationObject: {fileID: 0}
+--- !u!114 &1001738854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1001738849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 1059666769
+      Data2: 1284116682
+      Data3: 2039085503
+      Data4: 1598347319
+    Path: event:/2D/Music/Stage theme
+  Event: 
+  PlayEvent: 1
+  StopEvent: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &1104451745
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,4 +1,6 @@
-﻿using TMPro;
+﻿using System.Collections.Generic;
+using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -19,6 +21,7 @@ namespace Level
         {
             gridLayout = transform.parent.GetComponentInParent<GridLayout>();
             numbersParent = GameObject.Find("Numbers");
+            gridData.tileNumbers = new List<TextMeshPro>();
 
             GenerateFloorNumbers();
         }
@@ -26,22 +29,39 @@ namespace Level
         private void GenerateFloorNumbers()
         {
             var floorSize = floorTilemap.cellBounds.size;
-            print($"current floor size x: {floorSize.x} y: {floorSize.y}");
 
             foreach (var pos in floorTilemap.cellBounds.allPositionsWithin)
             {
-                print($"currently looking at x:{pos.x}, y:{pos.y}");
-
                 if (!obstacleTilemap.HasTile(pos))
                 {
                     var cellWorldPos = GetCellCenter(pos);
                     var tileNumber = Instantiate(numberText, cellWorldPos, Quaternion.identity,
                         numbersParent.transform);
-                    
-                    tileNumber.text = Random.Range(1, floorSize.x * floorSize.y).ToString();
+                    var generatedNumber = GenerateUniqueNumber(floorSize);
+
+                    tileNumber.name = generatedNumber;
+                    tileNumber.text = generatedNumber;
                     gridData.tileNumbers.Add(tileNumber);
                 }
             }
+        }
+
+        private string GenerateUniqueNumber(Vector3Int floorSize)
+        {
+            var duplicatedText = false;
+            var generatedNumber = Random.Range(1, floorSize.x * floorSize.y).ToString();
+
+            foreach (var tileNumber in gridData.tileNumbers)
+            {
+                if (tileNumber.text.Equals(generatedNumber))
+                {
+                    duplicatedText = true;
+                }
+            }
+            
+            return duplicatedText
+                ? GenerateUniqueNumber(floorSize)
+                : generatedNumber;
         }
 
         private Vector3 GetCellCenter(Vector3Int position)

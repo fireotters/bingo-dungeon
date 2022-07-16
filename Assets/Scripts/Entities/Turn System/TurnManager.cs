@@ -13,13 +13,14 @@ namespace Entities.Turn_System
         public List<GameObject> turnEntitiesObjects;
         private int currentTurn;
         [SerializeField] private GridData gridData;
-        private List<string> alreadyRolledNumbers;
+        [SerializeField] private GameObject token;
+        private List<TextMeshPro> alreadyRolledNumbers;
 
         private void Start()
         {
             turnEntities = FindObjectsOfType<Component>().OfType<ITurnEntity>().ToList();
             turnEntitiesObjects = turnEntities.Cast<Component>().Select(x => x.gameObject).ToList();
-            alreadyRolledNumbers = new List<string>();
+            alreadyRolledNumbers = new List<TextMeshPro>();
             turnEntities[0].DoTurn(NextTurn);
             currentTurnPointer.position = (turnEntities[0] as Component).transform.position;
             print($"TurnManager: Number of Turn Entities is '{turnEntities.Count}");
@@ -28,14 +29,6 @@ namespace Entities.Turn_System
         private void NextTurn()
         {
             currentTurn++;
-            if (currentTurn >= turnEntities.Count)
-            {
-                var selectedNumber = RollCage();
-                print($"Rolled number: {selectedNumber}");
-                // drop token on number
-                currentTurn = 0;
-            }
-
             var currentEntity = turnEntitiesObjects[currentTurn];
             if (currentEntity == null || !currentEntity.activeInHierarchy)
             {
@@ -44,15 +37,30 @@ namespace Entities.Turn_System
             }
 
             if (currentTurn >= turnEntities.Count)
+            {
+                var selectedNumber = RollCage();
+                alreadyRolledNumbers.Add(selectedNumber);
+                print($"Rolled number: {selectedNumber}");
+                DropTokenOn(selectedNumber);
                 currentTurn = 0;
+            }
 
             turnEntities[currentTurn].DoTurn(NextTurn);
             currentTurnPointer.position = (turnEntities[currentTurn] as Component).transform.position + Vector3.up;
         }
 
-        private string RollCage()
+        private void DropTokenOn(TextMeshPro number)
         {
-            return gridData.tileNumbers[Random.Range(0, gridData.tileNumbers.Count)].text;
+            // TODO generate a random token to drop on the board
+            // if a meteor falls down, create a tile in the obstacles tilemap! w/ tilemap.SetTile(tile, positionInMap)
+            Instantiate(token, number.transform.position, Quaternion.identity);
+        }
+
+        private TextMeshPro RollCage()
+        {
+            var rolledNumber = gridData.tileNumbers[Random.Range(0, gridData.tileNumbers.Count)];
+
+            return alreadyRolledNumbers.Contains(rolledNumber) ? RollCage() : rolledNumber;
         }
     }
 }

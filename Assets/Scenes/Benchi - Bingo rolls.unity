@@ -1367,7 +1367,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentTurnPointer: {fileID: 1103676483}
+  turnEntitiesObjects: []
   gridData: {fileID: 11400000, guid: 361afe7f11283034a94bf7faf0e41ea8, type: 2}
+  token: {fileID: 0}
 --- !u!4 &564271021
 Transform:
   m_ObjectHideFlags: 0

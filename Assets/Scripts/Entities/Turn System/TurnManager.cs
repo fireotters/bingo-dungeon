@@ -13,6 +13,7 @@ namespace Entities.Turn_System
     public class TurnManager : MonoBehaviour
     {
         public Transform currentTurnPointer;
+        public Transform entitiesContainer;
         public List<ITurnEntity> turnEntities;
         public List<GameObject> turnEntitiesObjects;
         private int currentTurn;
@@ -24,13 +25,20 @@ namespace Entities.Turn_System
         
         private void Start()
         {
-            turnEntities = FindObjectsOfType<Component>().OfType<ITurnEntity>().ToList();
-            turnEntitiesObjects.OrderBy(x => x.gameObject.name).ToList();
+            CreateListITurnEntity();
             turnEntitiesObjects = turnEntities.Cast<Component>().Select(x => x.gameObject).ToList();
             alreadyRolledNumbers = new List<TextMeshPro>();
             turnEntities[0].DoTurn(NextTurn);
-            currentTurnPointer.position = (turnEntities[0] as Component).transform.position;
+            currentTurnPointer.position = (turnEntities[0] as Component).transform.position + Vector3.up;
             print($"TurnManager: Number of Turn Entities is '{turnEntities.Count}");
+        }
+
+        void CreateListITurnEntity()
+        {
+            turnEntities = entitiesContainer.GetComponentsInChildren<ITurnEntity>().ToList();
+            ITurnEntity player = turnEntities.Find(x => (x as Component).gameObject.CompareTag("Player"));
+            turnEntities.Remove(player);
+            turnEntities.Insert(0, player);
         }
 
         private void NextTurn()

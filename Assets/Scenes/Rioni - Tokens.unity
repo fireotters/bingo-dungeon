@@ -6469,6 +6469,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1598371975}
     m_Modifications:
+    - target: {fileID: 1876590596722464800, guid: de72a1fdbfc0ebf4b82ba4a7806f1450, type: 3}
+      propertyPath: m_SortingLayer
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1876590596722464800, guid: de72a1fdbfc0ebf4b82ba4a7806f1450, type: 3}
+      propertyPath: m_SortingOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1876590596722464800, guid: de72a1fdbfc0ebf4b82ba4a7806f1450, type: 3}
+      propertyPath: m_SortingLayerID
+      value: -912334867
+      objectReference: {fileID: 0}
     - target: {fileID: 1876590596722464801, guid: de72a1fdbfc0ebf4b82ba4a7806f1450, type: 3}
       propertyPath: m_Name
       value: Player

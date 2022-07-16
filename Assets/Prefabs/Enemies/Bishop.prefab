@@ -205,6 +205,7 @@ MonoBehaviour:
   timeToMove: 0
   playerObj: {fileID: 0}
   moveReticuleGameObject: {fileID: 2116351310106951641, guid: 526f03761721bcb42850480a01d43681, type: 3}
+  corpsePrefab: {fileID: 1981591651481221961, guid: c54fc52716d250048bfcef37bbd120b6, type: 3}
   validMoves: []
   fatalMove: {x: 0, y: 0, z: 0}
 --- !u!58 &1267674098

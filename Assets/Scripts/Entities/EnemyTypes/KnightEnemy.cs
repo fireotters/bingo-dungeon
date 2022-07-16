@@ -19,7 +19,7 @@ namespace Entities
                 Vector3 modifier = direction;
                 if (ValidateDestination(modifier) == false)
                 {
-                    continue;
+                    break;
                 }
             }
 

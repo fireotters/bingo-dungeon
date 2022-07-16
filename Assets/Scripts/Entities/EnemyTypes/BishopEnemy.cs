@@ -20,7 +20,7 @@ namespace Entities
                     Vector3 modifier = direction * i;
                     if (ValidateDestination(modifier) == false)
                     {
-                        continue;
+                        break;
                     }
                 }
             }

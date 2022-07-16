@@ -1,6 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Entities
 {
@@ -84,6 +87,12 @@ namespace Entities
                     Debug.LogError("BasicEnemy Object '" + transform.name + "' has no moves to try! (Saved Unity from endless loop)");
                 }
             } while (!moved);
+        }
+
+        public override bool TryMove(Vector3 destination, Action onFinish = null)
+        {
+            transform.DOMove(destination, 1f).OnComplete(() => onFinish?.Invoke());
+            return true;
         }
 
         public override void DoTurn(System.Action finished)

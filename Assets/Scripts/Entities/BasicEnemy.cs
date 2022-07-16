@@ -41,6 +41,8 @@ namespace Entities
             {
                 return fatalMove;
             }
+            else if (validMoves == null || validMoves.Count == 0)
+                return transform.position;
             else
             {
                 // TODO calculate the move most threatening to the player by using A* some way.
@@ -52,7 +54,7 @@ namespace Entities
         public bool ValidateDestination(Vector3 modifier)
         {
             Vector3 destination = transform.position + modifier;
-            Vector3Int destinationTile = Vector3Int.FloorToInt(destination);
+            Vector3Int destinationTile = tilemap.WorldToCell(destination);
             if (tilemap.HasTile(destinationTile))
             {
                 return false; // Tell the enemy to no longer search for valid tiles in this direction.
@@ -91,7 +93,13 @@ namespace Entities
 
         public override bool TryMove(Vector3 destination, Action onFinish = null)
         {
-            transform.DOMove(destination, 1f).OnComplete(() => onFinish?.Invoke());
+            transform.DOMove(destination, 1f).OnComplete(
+                () =>
+                {
+                    KillEntity();
+                    onFinish?.Invoke();
+                }
+                );
             return true;
         }
 

@@ -61,6 +61,18 @@ namespace Entities
             return distance.magnitude < (range + 1);
         }
 
+        protected void KillEntity()
+        {
+            var searchLayer = LayerMask.NameToLayer("Pieces");
+            var colliders = Physics2D.OverlapCircleAll(transform.position, 0.5f, searchLayer);
+
+            foreach (var collider in colliders)
+            {
+                if (collider.gameObject != gameObject)
+                    Destroy(collider.gameObject);
+            }
+        }
+
         public abstract void DoTurn(Action finished);
     }
 }

@@ -49,8 +49,12 @@ namespace Entities.Turn_System
 
         void UpdatePointer()
         {
-            currentTurnPointer.position = (turnEntities[currentTurn] as Component).transform.position + Vector3.up;
-            currentTurnPointer.SetParent((turnEntities[currentTurn] as Component).transform);
+            var component = (turnEntities[currentTurn] as Component);
+            if (component == null)
+                return;
+            var currentEntTransform = component.transform;
+            currentTurnPointer.position = currentEntTransform.position + Vector3.up;
+            currentTurnPointer.SetParent(currentEntTransform);
         }
 
         void CreateListITurnEntity()

@@ -27,11 +27,5 @@ namespace Entities
             turnEntities[currentTurn].DoTurn(NextTurn);
             currentTurnPointer.position = (turnEntities[currentTurn] as Component).transform.position + Vector3.up;
         }
-
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
     }
 }

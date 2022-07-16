@@ -23,9 +23,12 @@ namespace Entities.Turn_System
         private List<TextMeshPro> alreadyRolledNumbers;
         [SerializeField] private TileBase meteorTile;
         [SerializeField] private Tilemap obstacleTilemap;
-        
+        bool rollTurn = true;
+        CompositeDisposable disposables = new CompositeDisposable();
+
         private void Start()
         {
+            SignalBus<SignalGameEnded>.Subscribe((gameEnded) => OnGameEnded()).AddTo(disposables);
             CreateListITurnEntity();
             turnEntitiesObjects = turnEntities.Cast<Component>().Select(x => x.gameObject).ToList();
             alreadyRolledNumbers = new List<TextMeshPro>();
@@ -33,10 +36,25 @@ namespace Entities.Turn_System
             UpdatePointer();
         }
 
+        private void OnDestroy()
+        {
+            disposables.Dispose();
+        }
+
+        void OnGameEnded()
+        {
+            rollTurn = false;
+            currentTurnPointer.gameObject.SetActive(false);
+        }
+
         void UpdatePointer()
         {
-            currentTurnPointer.position = (turnEntities[currentTurn] as Component).transform.position + Vector3.up;
-            currentTurnPointer.SetParent((turnEntities[currentTurn] as Component).transform);
+            var component = (turnEntities[currentTurn] as Component);
+            if (component == null)
+                return;
+            var currentEntTransform = component.transform;
+            currentTurnPointer.position = currentEntTransform.position + Vector3.up;
+            currentTurnPointer.SetParent(currentEntTransform);
         }
 
         void CreateListITurnEntity()
@@ -51,26 +69,31 @@ namespace Entities.Turn_System
         {
             yield return new WaitForEndOfFrame();
             yield return new WaitForEndOfFrame();
-            currentTurn++;
-            int currentTurnTemp = currentTurn % turnEntitiesObjects.Count;
-            var currentEntity = turnEntitiesObjects[currentTurnTemp];
-            if (currentEntity == null || !currentEntity.activeInHierarchy)
+            if (rollTurn)
             {
-                turnEntities.RemoveAt(currentTurnTemp);
-                turnEntitiesObjects.RemoveAt(currentTurnTemp);
-            }
 
-            if (currentTurn >= turnEntities.Count)
-            {
-                var selectedNumber = RollCage();
-                alreadyRolledNumbers.Add(selectedNumber);
-                print($"Rolled number: {selectedNumber}");
-                DropTokenOn(selectedNumber);
-                currentTurn = 0;
-            }
 
-            turnEntities[currentTurn].DoTurn(NextTurn);
-            UpdatePointer();
+                currentTurn++;
+                int currentTurnTemp = currentTurn % turnEntitiesObjects.Count;
+                var currentEntity = turnEntitiesObjects[currentTurnTemp];
+                if (currentEntity == null || !currentEntity.activeInHierarchy)
+                {
+                    turnEntities.RemoveAt(currentTurnTemp);
+                    turnEntitiesObjects.RemoveAt(currentTurnTemp);
+                }
+
+                if (currentTurn >= turnEntities.Count)
+                {
+                    var selectedNumber = RollCage();
+                    alreadyRolledNumbers.Add(selectedNumber);
+                    print($"Rolled number: {selectedNumber}");
+                    DropTokenOn(selectedNumber);
+                    currentTurn = 0;
+                }
+
+                UpdatePointer();
+                turnEntities[currentTurn].DoTurn(NextTurn);
+            }
         }
 
         private void NextTurn()
@@ -81,7 +104,7 @@ namespace Entities.Turn_System
         private void DropTokenOn(TextMeshPro number)
         {
             var values = Enum.GetValues(typeof(TokenType));
-            var type = (TokenType) values.GetValue(Random.Range(0, values.Length));
+            var type = (TokenType)values.GetValue(Random.Range(0, values.Length));
 
             switch (type)
             {

@@ -16,6 +16,7 @@ namespace Entities
         [HideInInspector] public Transform playerObj;
         public Transform moveReticuleGameObject;
         bool BlackPiece;
+        bool Pissed;
         Animator enemyAnimator;
         public GameObject corpsePrefab;
 
@@ -31,8 +32,14 @@ namespace Entities
             BlackPiece = Convert.ToBoolean(Random.Range(0, 2));
             enemyAnimator = gameObject.GetComponent<Animator>();
             enemyAnimator.SetBool("Black", BlackPiece);
+            SignalBus<SignalPieceAdded>.Fire(default);
 
             //StartCoroutine(EnemyPatrol());
+        }
+
+        private void OnDestroy()
+        {
+            SignalBus<SignalEnemyDied>.Fire();
         }
 
         public virtual Vector3 ChoosePosition()
@@ -126,7 +133,12 @@ namespace Entities
 
         public override void OnDeath()
         {
-            Instantiate(corpsePrefab, transform.position, Quaternion.identity);
+            if (corpsePrefab != null)
+            {
+                corpsePrefab.GetComponent<Corpse>().BlackPiece = BlackPiece;
+                corpsePrefab.GetComponent<Corpse>().Pissed = Pissed;
+                Instantiate(corpsePrefab, transform.position, Quaternion.identity);
+            }
         }
     }
 }

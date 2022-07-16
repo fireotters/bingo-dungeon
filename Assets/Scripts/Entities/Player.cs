@@ -46,7 +46,7 @@ namespace Entities
                         if (TryMove(mousePos, () =>
                         {
                             lineRenderer.positionCount = 0;
-                            KillEntity();
+                            Damage();
                             finished?.Invoke();
                         }))
                             yield break;

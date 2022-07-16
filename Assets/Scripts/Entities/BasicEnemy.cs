@@ -96,7 +96,7 @@ namespace Entities
             transform.DOMove(destination, 1f).OnComplete(
                 () =>
                 {
-                    KillEntity();
+                    Damage();
                     onFinish?.Invoke();
                 }
                 );

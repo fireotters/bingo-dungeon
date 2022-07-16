@@ -15,6 +15,8 @@ namespace Entities
         WaitForSeconds waitTimeToMove;
         [HideInInspector] public Transform playerObj;
         public Transform moveReticuleGameObject;
+        bool BlackPiece;
+        Animator enemyAnimator;
         public GameObject corpsePrefab;
 
         // Targetting
@@ -26,6 +28,10 @@ namespace Entities
         {
             waitTimeToMove = new WaitForSeconds(timeToMove);
             playerObj = GameObject.Find("Player").transform;
+            BlackPiece = Convert.ToBoolean(Random.Range(0, 2));
+            enemyAnimator = gameObject.GetComponent<Animator>();
+            enemyAnimator.SetBool("Black", BlackPiece);
+
             //StartCoroutine(EnemyPatrol());
         }
 

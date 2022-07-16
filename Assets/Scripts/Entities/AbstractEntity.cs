@@ -108,9 +108,12 @@ namespace Entities
             if (hitPoints <= 0)
             {
                 Destroy(gameObject);
+                OnDeath();
             }
         }
 
         public abstract void DoTurn(Action finished);
+        
+        public virtual void OnDeath() { }
     }
 }

@@ -15,6 +15,7 @@ namespace Entities
         WaitForSeconds waitTimeToMove;
         [HideInInspector] public Transform playerObj;
         public Transform moveReticuleGameObject;
+        public GameObject corpsePrefab;
 
         // Targetting
         public List<Vector3> validMoves = new List<Vector3>();
@@ -115,6 +116,11 @@ namespace Entities
         {
             yield return new WaitForSeconds(1f);
             DoMove(finished);
+        }
+
+        public override void OnDeath()
+        {
+            Instantiate(corpsePrefab, transform.position, Quaternion.identity);
         }
     }
 }

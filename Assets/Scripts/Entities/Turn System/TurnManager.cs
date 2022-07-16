@@ -29,7 +29,7 @@ namespace Entities.Turn_System
         private void NextTurn()
         {
             currentTurn++;
-            var currentEntity = turnEntitiesObjects[currentTurn];
+            var currentEntity = turnEntitiesObjects[currentTurn % turnEntitiesObjects.Count];
             if (currentEntity == null || !currentEntity.activeInHierarchy)
             {
                 turnEntities.RemoveAt(currentTurn);

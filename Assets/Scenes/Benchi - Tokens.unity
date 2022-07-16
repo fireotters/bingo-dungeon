@@ -4628,9 +4628,12 @@ MonoBehaviour:
   currentTurnPointer: {fileID: 1103676483}
   turnEntitiesObjects: []
   gridData: {fileID: 11400000, guid: 361afe7f11283034a94bf7faf0e41ea8, type: 2}
-  tokens: []
-  meteorTile: {fileID: 0}
-  obstacleTilemap: {fileID: 0}
+  tokens:
+  - {fileID: 1271792155338618115, guid: b29d97cced1a18f4183ad5bbeb62b219, type: 3}
+  - {fileID: 6222400237953946709, guid: 8e8b4c6e193b498459719be8355e2141, type: 3}
+  - {fileID: 5497180536610290778, guid: 8246b6350daef88458639b039c87c423, type: 3}
+  meteorTile: {fileID: 11400000, guid: e3485a0d61ddd5f4cb630556cb26eb5d, type: 2}
+  obstacleTilemap: {fileID: 525800421}
 --- !u!4 &564271021
 Transform:
   m_ObjectHideFlags: 0

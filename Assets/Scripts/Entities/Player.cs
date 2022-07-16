@@ -28,6 +28,8 @@ namespace Entities
 
         IEnumerator PlayerTurn(Action finished)
         {
+            spriteRenderer.sortingOrder += 20;
+
             while (true)
             {
                 var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -51,6 +53,7 @@ namespace Entities
                             animator.SetBool("Moving", false);
                             lineRenderer.positionCount = 0;
                             Damage();
+                            spriteRenderer.sortingOrder -= 20;
                             finished?.Invoke();
                         }))
                             yield break;

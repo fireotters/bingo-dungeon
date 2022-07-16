@@ -99,11 +99,14 @@ namespace Entities
 
         public override bool TryMove(Vector3 destination, Action onFinish = null)
         {
+            spriteRenderer.sortingOrder += 20;
+
             transform.DOMove(destination, 1f).OnComplete(
                 () =>
                 {
                     Damage();
                     onFinish?.Invoke();
+                    spriteRenderer.sortingOrder -= 20;
                 }
                 );
             return true;
@@ -118,6 +121,11 @@ namespace Entities
         {
             yield return new WaitForSeconds(1f);
             DoMove(finished);
+        }
+
+        public override void OnDeath()
+        {
+            Instantiate(corpsePrefab, transform.position, Quaternion.identity);
         }
     }
 }

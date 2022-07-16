@@ -17,6 +17,7 @@ namespace Entities
         public Transform moveReticuleGameObject;
         bool BlackPiece;
         Animator enemyAnimator;
+        public GameObject corpsePrefab;
 
         // Targetting
         public List<Vector3> validMoves = new List<Vector3>();

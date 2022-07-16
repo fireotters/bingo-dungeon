@@ -1,8 +1,12 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Entities.Tokens;
 using Level;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Tilemaps;
+using Random = UnityEngine.Random;
 
 namespace Entities.Turn_System
 {
@@ -13,9 +17,11 @@ namespace Entities.Turn_System
         public List<GameObject> turnEntitiesObjects;
         private int currentTurn;
         [SerializeField] private GridData gridData;
-        [SerializeField] private GameObject token;
+        [SerializeField] private Token[] tokens;
         private List<TextMeshPro> alreadyRolledNumbers;
-
+        [SerializeField] private TileBase meteorTile;
+        [SerializeField] private Tilemap obstacleTilemap;
+        
         private void Start()
         {
             turnEntities = FindObjectsOfType<Component>().OfType<ITurnEntity>().ToList();
@@ -51,9 +57,22 @@ namespace Entities.Turn_System
 
         private void DropTokenOn(TextMeshPro number)
         {
-            // TODO generate a random token to drop on the board
-            // if a meteor falls down, create a tile in the obstacles tilemap! w/ tilemap.SetTile(tile, positionInMap)
-            Instantiate(token, number.transform.position, Quaternion.identity);
+            var values = Enum.GetValues(typeof(TokenType));
+            var type = (TokenType) values.GetValue(Random.Range(0, values.Length));
+
+            switch (type)
+            {
+                case TokenType.NOTHING:
+                case TokenType.SHIELD:
+                case TokenType.WATER:
+                    Instantiate(tokens[(int)type], number.transform.position, Quaternion.identity);
+                    break;
+                case TokenType.METEOR:
+                    obstacleTilemap.SetTile(obstacleTilemap.WorldToCell(number.transform.position), meteorTile);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         private TextMeshPro RollCage()

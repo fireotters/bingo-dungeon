@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using DG.Tweening;
 
 namespace Entities.Tokens
 {
@@ -9,6 +10,7 @@ namespace Entities.Tokens
             if (col.gameObject.TryGetComponent<AbstractEntity>(out var entity))
             {
                 entity.AddLostTurn();
+                entity.ChangePath(transform.position);
                 Destroy(gameObject);
             }
         }

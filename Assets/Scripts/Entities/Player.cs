@@ -9,6 +9,17 @@ namespace Entities
         public LineRenderer lineRenderer;
 
         [SerializeField] Animator animator;
+        Vector3 previousPos;
+
+        private void Update()
+        {
+            if((transform.position - previousPos).x <= 0)
+                spriteRenderer.flipX = true;
+            else
+                spriteRenderer.flipX = false;
+
+             previousPos = transform.position;
+        }
 
         public override void DoTurn(Action finished)
         {

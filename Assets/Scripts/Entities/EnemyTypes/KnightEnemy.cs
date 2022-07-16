@@ -16,14 +16,22 @@ namespace Entities
 
             foreach (Vector3 direction in directionsToMove)
             {
-                Vector3 modifier = direction;
-                if (ValidateDestination(modifier) == false)
-                {
-                    break;
-                }
+                ValidateDestination(direction);
             }
 
             return base.ChoosePosition();
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+            Vector3[] directionsToMove = {
+                new Vector3(1, -2), new Vector3(1, 2), new Vector3(2, 1), new Vector3(2, -1),
+                new Vector3(-1, -2), new Vector3(-1, 2), new Vector3(-2, 1), new Vector3(-2, -1)
+            };
+
+            Gizmos.color = Color.green;
+            foreach (Vector3 direction in directionsToMove)
+                Gizmos.DrawWireSphere(transform.position + direction, 0.5f);
         }
     }
 

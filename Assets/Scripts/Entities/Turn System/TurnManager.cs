@@ -16,7 +16,7 @@ namespace Entities
             turnEntities = FindObjectsOfType<Component>().OfType<ITurnEntity>().ToArray();
             turnEntities[0].DoTurn(NextTurn);
             currentTurnPointer.position = (turnEntities[0] as Component).transform.position;
-            print(turnEntities.Length);
+            print("TurnManager: Number of Turn Entities is '" + turnEntities.Length + "'");
         }
 
         void NextTurn()

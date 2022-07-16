@@ -31,6 +31,7 @@ namespace Entities
             BlackPiece = Convert.ToBoolean(Random.Range(0, 2));
             enemyAnimator = gameObject.GetComponent<Animator>();
             enemyAnimator.SetBool("Black", BlackPiece);
+            SignalBus<SignalPieceAdded>.Fire(default);
 
             //StartCoroutine(EnemyPatrol());
         }

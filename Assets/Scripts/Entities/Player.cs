@@ -8,6 +8,8 @@ namespace Entities
     {
         public LineRenderer lineRenderer;
 
+        [SerializeField] Animator animator;
+
         public override void DoTurn(Action finished)
         {
             if (CanDoTurn())
@@ -43,8 +45,10 @@ namespace Entities
 
                     if (Input.GetMouseButton(0))
                     {
+                        animator.SetBool("Moving", true);
                         if (TryMove(mousePos, () =>
                         {
+                            animator.SetBool("Moving", false);
                             lineRenderer.positionCount = 0;
                             Damage();
                             finished?.Invoke();

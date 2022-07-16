@@ -151,6 +151,7 @@ MonoBehaviour:
   range: 5
   fourDir: 1
   lineRenderer: {fileID: 1876590596722464800}
+  animator: {fileID: 5890224473386045795}
 --- !u!212 &1876590596722464805
 SpriteRenderer:
   m_ObjectHideFlags: 0

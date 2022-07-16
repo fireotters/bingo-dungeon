@@ -1,39 +1,60 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Entities.Tokens;
 using Level;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Tilemaps;
+using Random = UnityEngine.Random;
 
 namespace Entities.Turn_System
 {
     public class TurnManager : MonoBehaviour
     {
         public Transform currentTurnPointer;
+        public Transform entitiesContainer;
         public List<ITurnEntity> turnEntities;
         public List<GameObject> turnEntitiesObjects;
         private int currentTurn;
         [SerializeField] private GridData gridData;
-        [SerializeField] private GameObject token;
+        [SerializeField] private Token[] tokens;
         private List<TextMeshPro> alreadyRolledNumbers;
-
+        [SerializeField] private TileBase meteorTile;
+        [SerializeField] private Tilemap obstacleTilemap;
+        
         private void Start()
         {
-            turnEntities = FindObjectsOfType<Component>().OfType<ITurnEntity>().ToList();
+            CreateListITurnEntity();
             turnEntitiesObjects = turnEntities.Cast<Component>().Select(x => x.gameObject).ToList();
             alreadyRolledNumbers = new List<TextMeshPro>();
             turnEntities[0].DoTurn(NextTurn);
-            currentTurnPointer.position = (turnEntities[0] as Component).transform.position;
-            print($"TurnManager: Number of Turn Entities is '{turnEntities.Count}");
+            UpdatePointer();
+        }
+
+        void UpdatePointer()
+        {
+            currentTurnPointer.position = (turnEntities[currentTurn] as Component).transform.position + Vector3.up;
+            currentTurnPointer.SetParent((turnEntities[currentTurn] as Component).transform);
+        }
+
+        void CreateListITurnEntity()
+        {
+            turnEntities = entitiesContainer.GetComponentsInChildren<ITurnEntity>().ToList();
+            ITurnEntity player = turnEntities.Find(x => (x as Component).gameObject.CompareTag("Player"));
+            turnEntities.Remove(player);
+            turnEntities.Insert(0, player);
         }
 
         private void NextTurn()
         {
             currentTurn++;
-            var currentEntity = turnEntitiesObjects[currentTurn % turnEntitiesObjects.Count];
+            int currentTurnTemp = currentTurn % turnEntitiesObjects.Count;
+            var currentEntity = turnEntitiesObjects[currentTurnTemp];
             if (currentEntity == null || !currentEntity.activeInHierarchy)
             {
-                turnEntities.RemoveAt(currentTurn);
-                turnEntitiesObjects.RemoveAt(currentTurn);
+                turnEntities.RemoveAt(currentTurnTemp);
+                turnEntitiesObjects.RemoveAt(currentTurnTemp);
             }
 
             if (currentTurn >= turnEntities.Count)
@@ -46,14 +67,27 @@ namespace Entities.Turn_System
             }
 
             turnEntities[currentTurn].DoTurn(NextTurn);
-            currentTurnPointer.position = (turnEntities[currentTurn] as Component).transform.position + Vector3.up;
+            UpdatePointer();
         }
 
         private void DropTokenOn(TextMeshPro number)
         {
-            // TODO generate a random token to drop on the board
-            // if a meteor falls down, create a tile in the obstacles tilemap! w/ tilemap.SetTile(tile, positionInMap)
-            Instantiate(token, number.transform.position, Quaternion.identity);
+            var values = Enum.GetValues(typeof(TokenType));
+            var type = (TokenType) values.GetValue(Random.Range(0, values.Length));
+
+            switch (type)
+            {
+                case TokenType.NOTHING:
+                case TokenType.SHIELD:
+                case TokenType.WATER:
+                    Instantiate(tokens[(int)type], number.transform.position, Quaternion.identity);
+                    break;
+                case TokenType.METEOR:
+                    obstacleTilemap.SetTile(obstacleTilemap.WorldToCell(number.transform.position), meteorTile);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         private TextMeshPro RollCage()

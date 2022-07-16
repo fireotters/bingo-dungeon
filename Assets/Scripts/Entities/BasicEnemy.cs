@@ -16,6 +16,7 @@ namespace Entities
         [HideInInspector] public Transform playerObj;
         public Transform moveReticuleGameObject;
         bool BlackPiece;
+        bool Pissed;
         Animator enemyAnimator;
         public GameObject corpsePrefab;
 
@@ -132,6 +133,8 @@ namespace Entities
 
         public override void OnDeath()
         {
+            corpsePrefab.GetComponent<Corpse>().BlackPiece = BlackPiece;
+            corpsePrefab.GetComponent<Corpse>().Pissed = Pissed;
             Instantiate(corpsePrefab, transform.position, Quaternion.identity);
         }
     }

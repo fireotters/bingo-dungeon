@@ -1,24 +1,33 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class EndGameHandler : MonoBehaviour
+namespace GameLogic
 {
-    CompositeDisposable disposables = new CompositeDisposable(); 
-
-    void Start()
+    public class EndGameHandler : MonoBehaviour
     {
-        SignalBus<SignalGameEnded>.Subscribe(HandleEndGame).AddTo(disposables);
-    }
+        CompositeDisposable disposables = new CompositeDisposable();
+        [SerializeField] private GameObject gameOverOverlay;
 
-    void HandleEndGame(SignalGameEnded context)
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
+        private void Start()
+        {
+            SignalBus<SignalGameEnded>.Subscribe(HandleEndGame).AddTo(disposables);
+        }
 
-    private void OnDestroy()
-    {
-        disposables.Dispose();
+        private void HandleEndGame(SignalGameEnded context)
+        {
+            if (context.winCondition)
+            {
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            }
+            else
+            {
+                gameOverOverlay.SetActive(true);
+            }
+        }
+
+        private void OnDestroy()
+        {
+            disposables.Dispose();
+        }
     }
 }

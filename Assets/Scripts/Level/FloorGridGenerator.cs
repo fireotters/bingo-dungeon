@@ -9,6 +9,7 @@ namespace Level
         [SerializeField] private Tilemap floorTilemap, obstacleTilemap;
         [SerializeField] private int radius;
         [SerializeField] private TextMeshPro numberText;
+        [SerializeField] private GridData gridData;
 
         [Range(0.0f, 1.0f)] [SerializeField] private float numberOffset = .5f;
         private GridLayout gridLayout;
@@ -38,6 +39,7 @@ namespace Level
                         numbersParent.transform);
                     
                     tileNumber.text = Random.Range(1, floorSize.x * floorSize.y).ToString();
+                    gridData.tileNumbers.Add(tileNumber);
                 }
             }
         }

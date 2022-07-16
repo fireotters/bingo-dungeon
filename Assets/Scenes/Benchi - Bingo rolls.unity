@@ -1367,6 +1367,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentTurnPointer: {fileID: 1103676483}
+  gridData: {fileID: 11400000, guid: 361afe7f11283034a94bf7faf0e41ea8, type: 2}
 --- !u!4 &564271021
 Transform:
   m_ObjectHideFlags: 0
@@ -1728,10 +1729,8 @@ MonoBehaviour:
   floorTilemap: {fileID: 1492944741}
   obstacleTilemap: {fileID: 525800421}
   radius: 0
-  tileToInstantiate: {fileID: 11400000, guid: 52fac81954fc3434698034fcf86b4071, type: 2}
-  colorA: {r: 1, g: 0.7132122, b: 0.504717, a: 1}
-  colorB: {r: 0.80132717, g: 0.7311321, b: 1, a: 1}
   numberText: {fileID: 6795734725879817035, guid: 1b79d41130802c34aa1d6340b1795ec9, type: 3}
+  gridData: {fileID: 11400000, guid: 361afe7f11283034a94bf7faf0e41ea8, type: 2}
   numberOffset: 0.5
 --- !u!66 &1492944737
 CompositeCollider2D:

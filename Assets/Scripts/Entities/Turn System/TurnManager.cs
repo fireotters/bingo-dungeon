@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Entities.Tokens;
@@ -46,8 +47,10 @@ namespace Entities.Turn_System
             turnEntities.Insert(0, player);
         }
 
-        private void NextTurn()
+        IEnumerator DoNextTurn()
         {
+            yield return new WaitForEndOfFrame();
+            yield return new WaitForEndOfFrame();
             currentTurn++;
             int currentTurnTemp = currentTurn % turnEntitiesObjects.Count;
             var currentEntity = turnEntitiesObjects[currentTurnTemp];
@@ -68,6 +71,11 @@ namespace Entities.Turn_System
 
             turnEntities[currentTurn].DoTurn(NextTurn);
             UpdatePointer();
+        }
+
+        private void NextTurn()
+        {
+            StartCoroutine(DoNextTurn());
         }
 
         private void DropTokenOn(TextMeshPro number)

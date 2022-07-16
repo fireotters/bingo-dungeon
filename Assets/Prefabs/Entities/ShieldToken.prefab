@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6222400237953946708}
   - component: {fileID: 6222400237953946715}
   - component: {fileID: 6222400237953946709}
+  - component: {fileID: 7422040265373857109}
   m_Layer: 0
   m_Name: ShieldToken
   m_TagString: Untagged
@@ -146,3 +147,50 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cabebd7d7c904eec872d5bed497a81c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7422040265373857109
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6222400237953946712}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18e47d0a1fa259145ace5cdea70c1230, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scaleSpeed: 2.5
+  amplitude: 0.25
+  curve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2.0298243
+      outSlope: 2.0298243
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.4926535
+      value: 1
+      inSlope: 1.2399766
+      outSlope: -1.0351042
+      tangentMode: 1
+      weightedMode: 0
+      inWeight: 0.13519064
+      outWeight: 0.17093264
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -1.9710395
+      outSlope: -1.9710395
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4

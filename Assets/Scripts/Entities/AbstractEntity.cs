@@ -22,7 +22,7 @@ namespace Entities
         // Plan is:
         // - Lift the piece by 0.3 units, then temporarily increase the sorting order, so that it will fly over other pieces / cover
         // - Bring the sorting order back to normal after it's 'placed' back down.
-        SpriteRenderer spriteRenderer;
+        protected SpriteRenderer spriteRenderer;
 
         private void Awake()
         {

@@ -35,6 +35,7 @@ namespace Entities
                         if (TryMove(mousePos, () =>
                         {
                             lineRenderer.positionCount = 0;
+                            KillEntity();
                             finished?.Invoke();
                         }))
                             yield break;
@@ -43,28 +44,5 @@ namespace Entities
                 yield return null;
             }
         }
-
-
-        //private void Update()
-        //{
-        //    var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        //    mousePos.z = 0;
-
-        //    if (!IsInRange(mousePos))
-        //        return;
-
-        //    var previewLinePoints = PreviewPath(mousePos);
-
-        //    if (previewLinePoints != null)
-        //    {
-        //        lineRenderer.positionCount = previewLinePoints.Count;
-        //        lineRenderer.SetPositions(previewLinePoints.ToArray());
-        //    }
-
-        //    if (Input.GetMouseButton(0))
-        //    {
-        //        TryMove(mousePos);
-        //    }
-        //}
     }
 }

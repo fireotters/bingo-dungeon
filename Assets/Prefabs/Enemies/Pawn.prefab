@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 5173811542705145852}
   - component: {fileID: 5173811542705145853}
   - component: {fileID: 5173811542705145850}
-  m_Layer: 0
+  - component: {fileID: 365904382}
+  m_Layer: 1
   m_Name: Pawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -202,3 +203,22 @@ MonoBehaviour:
   fourDir: 0
   timeToMove: 0
   playerObj: {fileID: 0}
+  moveReticuleGameObject: {fileID: 0}
+  validMoves: []
+  fatalMove: {x: 0, y: 0, z: 0}
+--- !u!58 &365904382
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5173811542705145851}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.4

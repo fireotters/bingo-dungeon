@@ -29,8 +29,13 @@ namespace Entities.Turn_System
             turnEntitiesObjects = turnEntities.Cast<Component>().Select(x => x.gameObject).ToList();
             alreadyRolledNumbers = new List<TextMeshPro>();
             turnEntities[0].DoTurn(NextTurn);
-            currentTurnPointer.position = (turnEntities[0] as Component).transform.position + Vector3.up;
-            print($"TurnManager: Number of Turn Entities is '{turnEntities.Count}");
+            UpdatePointer();
+        }
+
+        void UpdatePointer()
+        {
+            currentTurnPointer.position = (turnEntities[currentTurn] as Component).transform.position + Vector3.up;
+            currentTurnPointer.SetParent((turnEntities[currentTurn] as Component).transform);
         }
 
         void CreateListITurnEntity()
@@ -62,7 +67,7 @@ namespace Entities.Turn_System
             }
 
             turnEntities[currentTurn].DoTurn(NextTurn);
-            currentTurnPointer.position = (turnEntities[currentTurn] as Component).transform.position + Vector3.up;
+            UpdatePointer();
         }
 
         private void DropTokenOn(TextMeshPro number)

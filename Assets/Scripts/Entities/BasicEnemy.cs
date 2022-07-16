@@ -11,6 +11,12 @@ namespace Entities
         [SerializeField] float timeToMove;
         WaitForSeconds waitTimeToMove;
         [HideInInspector] public Transform playerObj;
+        public Transform moveReticuleGameObject;
+
+        // Targetting
+        public List<Vector3> validMoves = new List<Vector3>();
+        public Vector3 fatalMove = Vector3.zero;
+
 
         void Start()
         {
@@ -19,21 +25,63 @@ namespace Entities
             //StartCoroutine(EnemyPatrol());
         }
 
-        public abstract Vector3 ChoosePosition();
+        public virtual Vector3 ChoosePosition()
+        {
+            // Movement constraints are set in each Enemy's script
 
+            // Spawn movement reticules to illustrate piece range
+            foreach (Vector3 validMove in validMoves)
+                Instantiate(moveReticuleGameObject, validMove, Quaternion.identity);
+
+            // If the player can be killed, do it. Else, pick a random valid destination.
+            if (fatalMove != Vector3.zero)
+            {
+                return fatalMove;
+            }
+            else
+            {
+                // TODO calculate the move most threatening to the player by using A* some way.
+                int randomNum = Random.Range(0, validMoves.Count);
+                return validMoves[randomNum];
+            }
+        }
+
+        public bool ValidateDestination(Vector3 modifier)
+        {
+            Vector3 destination = transform.position + modifier;
+            Vector3Int destinationTile = Vector3Int.FloorToInt(destination);
+            if (tilemap.HasTile(destinationTile))
+            {
+                return false; // Tell the enemy to no longer search for valid tiles in this direction.
+            }
+            else
+            {
+                if (Vector3.Distance(destination, playerObj.position) < 0.1f)
+                {
+                    fatalMove = destination;
+                }
+                validMoves.Add(destination);
+                return true;
+            }
+        }
 
         private void DoMove(System.Action onFinished = null)
         {
+            // Reset targetting variables
+            validMoves = new List<Vector3>();
+            fatalMove = Vector3.zero;
+
             int attemptLimit = 100;
             int attempts = 0;
             bool moved;
             do
             {
                 moved = TryMove(ChoosePosition(), onFinished);
+
                 attempts += 1;
                 if (attempts > attemptLimit)
                 {
-                    Debug.LogError("BasicEnemy Object '" + transform.name + "' cannot try any moves! (Saved Unity from endless loop)");
+                    Debug.LogError("BasicEnemy Object '" + transform.name + "' has no moves to try! (Saved Unity from endless loop)");
                 }
             } while (!moved);
         }

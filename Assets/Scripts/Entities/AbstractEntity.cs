@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using DG.Tweening;
 using Toolbox;
 using UnityEngine;
@@ -25,6 +24,7 @@ namespace Entities
         {
             spriteRenderer = GetComponent<SpriteRenderer>();
         }
+        
         private void Update()
         {
             if (spriteRenderer != null)
@@ -32,10 +32,6 @@ namespace Entities
                 spriteRenderer.sortingOrder = -Mathf.CeilToInt(transform.position.y);
             }
         }
-
-
-
-
 
         protected List<Vector3> PreviewPath(Vector3 endPos)
         {

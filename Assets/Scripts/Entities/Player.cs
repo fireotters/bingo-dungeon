@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 
 namespace Entities
@@ -7,26 +8,63 @@ namespace Entities
     {
         public LineRenderer lineRenderer;
 
-        private void Update()
+        public override void DoTurn(Action finished)
         {
-            var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            mousePos.z = 0;
+            StartCoroutine(PlayerTurn(finished));
+        }
 
-            if (!IsInRange(mousePos))
-                return;
-
-            var previewLinePoints = PreviewPath(mousePos);
-            
-            if (previewLinePoints != null)
+        IEnumerator PlayerTurn(Action finished)
+        {
+            while (true)
             {
-                lineRenderer.positionCount = previewLinePoints.Count;
-                lineRenderer.SetPositions(previewLinePoints.ToArray());
-            }
+                var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                mousePos.z = 0;
 
-            if (Input.GetMouseButton(0))
-            {
-                TryMove(mousePos);
+                if (IsInRange(mousePos))
+                {
+                    var previewLinePoints = PreviewPath(mousePos);
+
+                    if (previewLinePoints != null)
+                    {
+                        lineRenderer.positionCount = previewLinePoints.Count;
+                        lineRenderer.SetPositions(previewLinePoints.ToArray());
+                    }
+
+                    if (Input.GetMouseButton(0))
+                    {
+                        if (TryMove(mousePos, () =>
+                        {
+                            lineRenderer.positionCount = 0;
+                            finished?.Invoke();
+                        }))
+                            yield break;
+                    }
+                }
+                yield return null;
             }
         }
+
+
+        //private void Update()
+        //{
+        //    var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        //    mousePos.z = 0;
+
+        //    if (!IsInRange(mousePos))
+        //        return;
+
+        //    var previewLinePoints = PreviewPath(mousePos);
+
+        //    if (previewLinePoints != null)
+        //    {
+        //        lineRenderer.positionCount = previewLinePoints.Count;
+        //        lineRenderer.SetPositions(previewLinePoints.ToArray());
+        //    }
+
+        //    if (Input.GetMouseButton(0))
+        //    {
+        //        TryMove(mousePos);
+        //    }
+        //}
     }
 }

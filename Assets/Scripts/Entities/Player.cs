@@ -20,6 +20,10 @@ namespace Entities
             ConsumeTurn();
         }
 
+        private void OnDestroy()
+        {
+            SignalBus<SignalGameEnded>.Fire(new SignalGameEnded { winCondition = false });
+        }
         IEnumerator LostTurn(Action finished)
         {
             yield return new WaitForSeconds(1);

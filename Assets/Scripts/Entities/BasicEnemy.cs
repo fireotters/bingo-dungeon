@@ -35,6 +35,11 @@ namespace Entities
             //StartCoroutine(EnemyPatrol());
         }
 
+        private void OnDestroy()
+        {
+            SignalBus<SignalEnemyDied>.Fire();
+        }
+
         public virtual Vector3 ChoosePosition()
         {
             // Movement constraints are set in each Enemy's script

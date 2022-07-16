@@ -13,7 +13,7 @@ public static class SignalBus<T>
 		return new Subscription(action);
 	}
 
-	public static void Fire(T t) => action?.Invoke(t);
+	public static void Fire(T t = default) => action?.Invoke(t);
 
 	public static void Unsusbscribe(Action<T> action) => SignalBus<T>.action -= action;
 

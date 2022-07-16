@@ -23,14 +23,22 @@ namespace Entities.Turn_System
         private List<TextMeshPro> alreadyRolledNumbers;
         [SerializeField] private TileBase meteorTile;
         [SerializeField] private Tilemap obstacleTilemap;
-        
+        bool rollTurn = true;
+        CompositeDisposable disposables = new CompositeDisposable();
+
         private void Start()
         {
+            SignalBus<SignalGameEnded>.Subscribe((gameEnded) => rollTurn = false).AddTo(disposables);
             CreateListITurnEntity();
             turnEntitiesObjects = turnEntities.Cast<Component>().Select(x => x.gameObject).ToList();
             alreadyRolledNumbers = new List<TextMeshPro>();
             turnEntities[0].DoTurn(NextTurn);
             UpdatePointer();
+        }
+
+        private void OnDestroy()
+        {
+            disposables.Dispose();
         }
 
         void UpdatePointer()
@@ -75,13 +83,14 @@ namespace Entities.Turn_System
 
         private void NextTurn()
         {
-            StartCoroutine(DoNextTurn());
+            if (rollTurn)
+                StartCoroutine(DoNextTurn());
         }
 
         private void DropTokenOn(TextMeshPro number)
         {
             var values = Enum.GetValues(typeof(TokenType));
-            var type = (TokenType) values.GetValue(Random.Range(0, values.Length));
+            var type = (TokenType)values.GetValue(Random.Range(0, values.Length));
 
             switch (type)
             {

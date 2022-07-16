@@ -1,5 +1,4 @@
 ﻿using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -12,11 +11,16 @@ namespace Level
         [SerializeField] private Tile tileToInstantiate;
         [SerializeField] private Color colorA, colorB;
         [SerializeField] private TextMeshPro numberText;
+
+        [Range(0.0f, 1.0f)] [SerializeField] private float numberOffset = .5f;
         private GridLayout gridLayout;
+        private GameObject numbersParent;
+
         private void Start()
         {
             gridLayout = transform.parent.GetComponentInParent<GridLayout>();
-            
+            numbersParent = GameObject.Find("Numbers");
+
             GenerateFloor();
         }
 
@@ -36,9 +40,10 @@ namespace Level
                     var newTile = Instantiate(tileToInstantiate);
                     tileToInstantiate.color = isAlternate ? colorA : colorB;
                     var cellWorldPos = GetCellCenter(pos);
-                    
-                    var tileNumber = Instantiate(numberText, cellWorldPos, Quaternion.identity);
-                    tileNumber.text = "1";
+
+                    var tileNumber = Instantiate(numberText, cellWorldPos, Quaternion.identity,
+                        numbersParent.transform);
+                    tileNumber.text = Random.Range(1, floorSize.x * floorSize.y).ToString();
 
                     floorTilemap.SetTile(pos, newTile);
                 }
@@ -50,8 +55,7 @@ namespace Level
         private Vector3 GetCellCenter(Vector3Int position)
         {
             var cellWorldPos = gridLayout.CellToWorld(position);
-            return new Vector3(cellWorldPos.x + 0.6f, cellWorldPos.y + 0.6f, cellWorldPos.z);
-
+            return new Vector3(cellWorldPos.x + numberOffset, cellWorldPos.y + numberOffset, cellWorldPos.z);
         }
     }
 }

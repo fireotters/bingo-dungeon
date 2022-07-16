@@ -93,7 +93,13 @@ namespace Entities
 
         public override bool TryMove(Vector3 destination, Action onFinish = null)
         {
-            transform.DOMove(destination, 1f).OnComplete(() => onFinish?.Invoke());
+            transform.DOMove(destination, 1f).OnComplete(
+                () =>
+                {
+                    KillEntity();
+                    onFinish?.Invoke();
+                }
+                );
             return true;
         }
 

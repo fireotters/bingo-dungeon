@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 4456943478365563073}
   - component: {fileID: 4456943478365563072}
   - component: {fileID: 4456943478365563135}
-  m_Layer: 0
+  - component: {fileID: 1825689851}
+  m_Layer: 1
   m_Name: Queen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -205,3 +206,19 @@ MonoBehaviour:
   moveReticuleGameObject: {fileID: 2116351310106951641, guid: 526f03761721bcb42850480a01d43681, type: 3}
   validMoves: []
   fatalMove: {x: 0, y: 0, z: 0}
+--- !u!58 &1825689851
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4456943478365563134}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.4

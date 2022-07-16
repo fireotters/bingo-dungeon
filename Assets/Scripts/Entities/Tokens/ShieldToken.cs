@@ -1,8 +1,10 @@
-﻿namespace Entities.Tokens
+﻿using UnityEngine;
+
+namespace Entities.Tokens
 {
     public class ShieldToken : Token
     {
-        protected override void OnTokenPickup()
+        protected override void OnTokenPickup(Collision2D col)
         {
             
         }

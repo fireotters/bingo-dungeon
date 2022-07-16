@@ -12,6 +12,7 @@ namespace Entities
         public Tilemap tilemap;
         public int range;
         public bool fourDir;
+        private int lostTurns;
 
         // Re-orders the sprites on-screen as they move, so that pieces which are below others will render above them.
         // For example, a bishop on a space above a knight... rendering in above the knight. The whole knight should be visible, obscuring the bishop.
@@ -24,6 +25,15 @@ namespace Entities
         {
             spriteRenderer = GetComponent<SpriteRenderer>();
         }
+
+        public void AddLostTurn() => lostTurns++;
+
+        protected bool CanDoTurn()
+        {
+            return lostTurns <= 0;
+        }
+
+        protected void ConsumeTurn() => lostTurns = Mathf.Max(lostTurns-1, 0);
         
         private void Update()
         {

@@ -14,10 +14,10 @@ namespace Entities.Tokens
     {
         private void OnCollisionEnter2D(Collision2D col)
         {
-            OnTokenPickup();
+            OnTokenPickup(col);
             Destroy(gameObject);
         }
 
-        protected abstract void OnTokenPickup();
+        protected abstract void OnTokenPickup(Collision2D col);
     }
 }

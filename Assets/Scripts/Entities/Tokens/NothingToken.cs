@@ -1,12 +1,13 @@
 ﻿using System;
+using UnityEngine;
 
 namespace Entities.Tokens
 {
     public class NothingToken : Token
     {
-        protected override void OnTokenPickup()
+        protected override void OnTokenPickup(Collision2D col)
         {
-            throw new NotImplementedException();
+           Destroy(gameObject);
         }
     }
 }

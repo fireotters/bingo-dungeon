@@ -25,6 +25,7 @@ namespace Entities.Turn_System
         private void Start()
         {
             turnEntities = FindObjectsOfType<Component>().OfType<ITurnEntity>().ToList();
+            turnEntitiesObjects.OrderBy(x => x.gameObject.name).ToList();
             turnEntitiesObjects = turnEntities.Cast<Component>().Select(x => x.gameObject).ToList();
             alreadyRolledNumbers = new List<TextMeshPro>();
             turnEntities[0].DoTurn(NextTurn);
@@ -35,11 +36,12 @@ namespace Entities.Turn_System
         private void NextTurn()
         {
             currentTurn++;
-            var currentEntity = turnEntitiesObjects[currentTurn % turnEntitiesObjects.Count];
+            int currentTurnTemp = currentTurn % turnEntitiesObjects.Count;
+            var currentEntity = turnEntitiesObjects[currentTurnTemp];
             if (currentEntity == null || !currentEntity.activeInHierarchy)
             {
-                turnEntities.RemoveAt(currentTurn);
-                turnEntitiesObjects.RemoveAt(currentTurn);
+                turnEntities.RemoveAt(currentTurnTemp);
+                turnEntitiesObjects.RemoveAt(currentTurnTemp);
             }
 
             if (currentTurn >= turnEntities.Count)

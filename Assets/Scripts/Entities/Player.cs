@@ -10,7 +10,18 @@ namespace Entities
 
         public override void DoTurn(Action finished)
         {
-            StartCoroutine(PlayerTurn(finished));
+            if (CanDoTurn())
+                StartCoroutine(PlayerTurn(finished));
+            else
+                StartCoroutine(LostTurn(finished));
+
+            ConsumeTurn();
+        }
+
+        IEnumerator LostTurn(Action finished)
+        {
+            yield return new WaitForSeconds(1);
+            finished?.Invoke();
         }
 
         IEnumerator PlayerTurn(Action finished)

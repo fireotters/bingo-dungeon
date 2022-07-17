@@ -42,7 +42,7 @@ namespace Audio
             {
                 foreach (var eventEmitter in eventEmitters)
                 {
-                    if (!eventEmitter.EventReference.Path.Contains("Stage theme"))
+                    if (!eventEmitter.Event.Contains("Stage theme"))
                     {
                         switch (gameIsPaused)
                         {

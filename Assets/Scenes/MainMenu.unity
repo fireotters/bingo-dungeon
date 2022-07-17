@@ -7822,7 +7822,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5435942658387390980, guid: 2a36c7ce67dfdfa4a9260d12d94d3d06, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.8
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5435942658387390980, guid: 2a36c7ce67dfdfa4a9260d12d94d3d06, type: 3}
       propertyPath: m_AnchorMax.y
@@ -7942,7 +7942,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5435942660171789644, guid: 2a36c7ce67dfdfa4a9260d12d94d3d06, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.8
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5435942660171789644, guid: 2a36c7ce67dfdfa4a9260d12d94d3d06, type: 3}
       propertyPath: m_AnchorMax.y
@@ -7950,11 +7950,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5435942660171789644, guid: 2a36c7ce67dfdfa4a9260d12d94d3d06, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0.8
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5435942660211236271, guid: 2a36c7ce67dfdfa4a9260d12d94d3d06, type: 3}
       propertyPath: m_Value
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6787578948272557332, guid: 2a36c7ce67dfdfa4a9260d12d94d3d06, type: 3}
+      propertyPath: m_Color.a
+      value: 0.74509805
+      objectReference: {fileID: 0}
+    - target: {fileID: 6787578948272557332, guid: 2a36c7ce67dfdfa4a9260d12d94d3d06, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6787578948272557332, guid: 2a36c7ce67dfdfa4a9260d12d94d3d06, type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6787578948272557332, guid: 2a36c7ce67dfdfa4a9260d12d94d3d06, type: 3}
+      propertyPath: m_Color.r
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2a36c7ce67dfdfa4a9260d12d94d3d06, type: 3}

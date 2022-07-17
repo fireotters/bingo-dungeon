@@ -26,7 +26,7 @@ namespace Entities
         // - Bring the sorting order back to normal after it's 'placed' back down.
         protected SpriteRenderer spriteRenderer;
 
-        private void Awake()
+        public virtual void Awake()
         {
             spriteRenderer = GetComponent<SpriteRenderer>();
             spriteRenderer.sortingOrder = -(int)transform.position.y;

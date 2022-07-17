@@ -12,6 +12,7 @@ namespace UI
         public GameObject gameOverPanel;
         private FmodMixer fmodMixer;
         private StudioEventEmitter gameSong;
+        public string sceneToLoad;
 
         private void Start()
         {
@@ -63,6 +64,12 @@ namespace UI
         public void ToggleOptionsPanel()
         {
             optionsPanel.SetActive(!optionsPanel.activeInHierarchy);
+        }
+
+        public void LoadNextScene()
+        {
+            SceneManager.LoadScene(sceneToLoad);
+            Time.timeScale = 1;
         }
 
         public void ExitGameFromPause()

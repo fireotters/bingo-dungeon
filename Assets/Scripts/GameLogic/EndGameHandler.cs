@@ -8,8 +8,9 @@ namespace GameLogic
     {
         CompositeDisposable disposables = new CompositeDisposable();
         [SerializeField] private GameObject gameOverOverlay;
+        [SerializeField] private GameObject gameWinOverlay;
         [SerializeField] private StudioEventEmitter gameSong;
-        
+
         private void Start()
         {
             SignalBus<SignalGameEnded>.Subscribe(HandleEndGame).AddTo(disposables);
@@ -18,9 +19,7 @@ namespace GameLogic
         private void HandleEndGame(SignalGameEnded context)
         {
             if (context.winCondition)
-            {
-                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-            }
+                gameWinOverlay.SetActive(true);
             else
             {
                 gameSong.SetParameter("Dead", 1);

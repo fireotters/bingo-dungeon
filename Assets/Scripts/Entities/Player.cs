@@ -46,6 +46,8 @@ namespace Entities
 
         IEnumerator PlayerTurn(Action finished)
         {
+            if (extraTurns == range)
+                text.gameObject.SetActive(true);
             text.text = extraTurns.ToString();
             spriteRenderer.sortingOrder += 20;
 
@@ -70,7 +72,7 @@ namespace Entities
                         }
 
                         // Round down to allow more forgiving movement, but also round up to rein in movement a bit.
-                        if (Math.Round(totalMoveCost) <= range)
+                        if (Math.Round(totalMoveCost) <= extraTurns)
                         {
                             lineRenderer.positionCount = previewLinePoints.Count;
                             lineRenderer.SetPositions(previewLinePoints.ToArray());
@@ -112,6 +114,10 @@ namespace Entities
                                 {
                                     extraTurns -= Mathf.FloorToInt(totalMoveCost);
                                     text.text = extraTurns.ToString();
+
+                                    if (extraTurns == 0)
+                                        text.gameObject.SetActive(false);
+
                                     animator.SetBool("Moving", false);
                                     animator.SetInteger("Dir", 0);
                                     animator.SetBool("Push", false);

@@ -33,6 +33,7 @@ namespace Entities.Turn_System
             CreateListITurnEntity();
             turnEntitiesObjects = turnEntities.Cast<Component>().Select(x => x.gameObject).ToList();
             occupiedNumbers = new List<TextMeshPro>();
+            turnEntities[0].InitTurn();
             turnEntities[0].DoTurn(NextTurn);
             UpdatePointer();
         }

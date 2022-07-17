@@ -15,6 +15,7 @@ namespace Entities
         private Vector3 previousPos;
 		private List<Token> nearbyTokens = new List<Token>();
 		[SerializeField] TextMeshPro text;
+        [SerializeField] TextMeshProUGUI textSkipUi;
 
         private void Update()
         {
@@ -62,10 +63,19 @@ namespace Entities
             finished?.Invoke();
         }
 
+        public void SkipTurn()
+        {
+            extraTurns = 0;
+            Debug.LogError("Rioni pls");
+        }
+
         IEnumerator PlayerTurn(Action finished)
         {
             if (extraTurns == range)
+            {
                 text.gameObject.SetActive(true);
+                textSkipUi.gameObject.SetActive(true);
+            }
             text.text = extraTurns.ToString();
             spriteRenderer.sortingOrder += 20;
 
@@ -157,7 +167,10 @@ namespace Entities
                                     text.text = extraTurns.ToString();
 
                                     if (extraTurns == 0)
+                                    {
                                         text.gameObject.SetActive(false);
+                                        textSkipUi.gameObject.SetActive(false);
+                                    }
 
                                     animator.SetBool("Moving", false);
                                     animator.SetInteger("Dir", 0);

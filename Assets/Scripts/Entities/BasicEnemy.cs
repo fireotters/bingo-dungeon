@@ -161,6 +161,10 @@ namespace Entities
         {
             spriteRenderer.sortingOrder += 20;
             enemyMovement.Play();
+            if (fatalMove != Vector3.zero)
+            {
+                enemyMovement.SetParameter("Deadly", 1);
+            }
             transform.DOMove(destination, timeToMove).OnComplete(
                 () =>
                 {

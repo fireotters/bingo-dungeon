@@ -55,6 +55,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentTouchingObjects: []
+  notation: 0
+  checkForBingo: {fileID: 0}
 --- !u!23 &7478440422445864222
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -197,9 +199,9 @@ SortingGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8174027415674399978}
   m_Enabled: 1
-  m_SortingLayerID: -912334867
-  m_SortingLayer: -1
-  m_SortingOrder: 0
+  m_SortingLayerID: 1827605805
+  m_SortingLayer: -3
+  m_SortingOrder: 10
 --- !u!61 &1924739184767483627
 BoxCollider2D:
   m_ObjectHideFlags: 0

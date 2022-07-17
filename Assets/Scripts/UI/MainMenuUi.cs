@@ -56,20 +56,19 @@ namespace UI
 
         public void Transition(int b)
         {
-            var intent = (SceneNavigationIntent) b;
             
             if (levelTransitionOverlay != null)
             {
                 levelTransitionOverlay.SetBool("levelEndedOrDead", true);    
             }
 
-            switch (intent)
+            switch (b)
             {
-                case SceneNavigationIntent.HelpMenu:
-                    Invoke(nameof(OpenHelp), 2);
+                case 0:
+                    Invoke(nameof(OpenHelp), 0);
                     break;
-                case SceneNavigationIntent.StartGame:
-                    Invoke(nameof(StartGame), 2);
+                case 1:
+                    Invoke(nameof(StartGame), 0);
                     break;
                 default:
                     Debug.LogError("This option is not defined!");
@@ -80,6 +79,7 @@ namespace UI
         public void StartGame()
         {
             menuSong.Stop();
+            Debug.LogError("Put the first gamescene in!!");
             SceneManager.LoadScene("Scenes/TemplateGameScene");
         }
 

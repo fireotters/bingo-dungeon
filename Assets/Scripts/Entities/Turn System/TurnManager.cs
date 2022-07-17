@@ -94,9 +94,8 @@ namespace Entities.Turn_System
                         print($"Rolled number: {selectedNumber}");
 
                         // Decide effect
-                        var type = TokenType.Nothing;
-                        // var values = Enum.GetValues(typeof(TokenType));
-                        // var type = (TokenType)values.GetValue(Random.Range(0, values.Length));
+                        var values = Enum.GetValues(typeof(TokenType));
+                        var type = (TokenType)values.GetValue(Random.Range(0, values.Length));
 
                         // Hide pointer, summon Bingo UI
                         currentTurnPointer.gameObject.SetActive(false);
@@ -130,12 +129,10 @@ namespace Entities.Turn_System
                 case TokenType.Nothing:
                 case TokenType.Shield:
                 case TokenType.Water:
+                case TokenType.Meteor:
                     var newToken = Instantiate(tokens[(int)type], number.transform.position, Quaternion.identity);
                     newToken.assignedNum = number;
                     newToken.turnManager = GetComponent<TurnManager>(); // Crossy: Oh help me, I don't understand this signalling library so I'm just passing turnmanager to every token
-                    break;
-                case TokenType.Meteor:
-                    obstacleTilemap.SetTile(obstacleTilemap.WorldToCell(number.transform.position), meteorTile);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

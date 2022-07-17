@@ -1,20 +1,23 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
+using TMPro;
+using Entities.Tokens;
 
 namespace Entities
 {
     public class Player : AbstractEntity
     {
         public LineRenderer lineRenderer;
-
-        [SerializeField] Animator animator;
-        Vector3 previousPos;
+        [SerializeField] private Animator animator;
+        private Vector3 previousPos;
+        private Token nearbyToken;
+        [SerializeField] TextMeshPro text;
 
         private void Update()
         {
             var currentPos = transform.position;
-            
+
             spriteRenderer.flipX = (currentPos - previousPos).x <= 0;
 
             previousPos = currentPos;
@@ -34,7 +37,7 @@ namespace Entities
         {
             SignalBus<SignalGameEnded>.Fire(new SignalGameEnded { winCondition = false });
         }
-        
+
         IEnumerator LostTurn(Action finished)
         {
             yield return new WaitForSeconds(1);
@@ -43,6 +46,9 @@ namespace Entities
 
         IEnumerator PlayerTurn(Action finished)
         {
+            if (extraTurns == range)
+                text.gameObject.SetActive(true);
+            text.text = extraTurns.ToString();
             spriteRenderer.sortingOrder += 20;
 
             while (true)
@@ -64,9 +70,9 @@ namespace Entities
                         {
                             totalMoveCost += Vector3.Distance(previewLinePoints[i], previewLinePoints[i + 1]);
                         }
-                        
+
                         // Round down to allow more forgiving movement, but also round up to rein in movement a bit.
-                        if (Math.Round(totalMoveCost) <= range)
+                        if (Math.Round(totalMoveCost) <= extraTurns)
                         {
                             lineRenderer.positionCount = previewLinePoints.Count;
                             lineRenderer.SetPositions(previewLinePoints.ToArray());
@@ -76,7 +82,7 @@ namespace Entities
                             {
                                 float xTo = mousePos.x;
                                 float xFrom = gameObject.transform.position.x;
-                                float xDiff = xTo-xFrom;
+                                float xDiff = xTo - xFrom;
 
                                 float yTo = mousePos.y;
                                 float yFrom = gameObject.transform.position.y;
@@ -92,13 +98,13 @@ namespace Entities
                                     dir = 0;
                                 else if (xDiff > 0 && yDiff == 0)
                                     dir = 1;
-                                else if(xDiff > 0 && yDiff > 0)
+                                else if (xDiff > 0 && yDiff > 0)
                                     dir = 3;
-                                else if(xDiff > 0 && yDiff < 0)
+                                else if (xDiff > 0 && yDiff < 0)
                                     dir = 3;
-                                else if(xDiff < 0 && yDiff > 0)
+                                else if (xDiff < 0 && yDiff > 0)
                                     dir = 1;
-                                else if(xDiff < 0 && yDiff < 0)
+                                else if (xDiff < 0 && yDiff < 0)
                                     dir = 1;
 
                                 animator.SetBool("Moving", true);
@@ -106,6 +112,12 @@ namespace Entities
                                 animator.SetBool("Push", false);
                                 if (TryMove(mousePos, () =>
                                 {
+                                    extraTurns -= Mathf.FloorToInt(totalMoveCost);
+                                    text.text = extraTurns.ToString();
+
+                                    if (extraTurns == 0)
+                                        text.gameObject.SetActive(false);
+
                                     animator.SetBool("Moving", false);
                                     animator.SetInteger("Dir", 0);
                                     animator.SetBool("Push", false);

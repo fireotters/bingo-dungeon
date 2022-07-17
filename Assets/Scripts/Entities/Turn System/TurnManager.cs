@@ -33,6 +33,7 @@ namespace Entities.Turn_System
             CreateListITurnEntity();
             turnEntitiesObjects = turnEntities.Cast<Component>().Select(x => x.gameObject).ToList();
             occupiedNumbers = new List<TextMeshPro>();
+            turnEntities[0].InitTurn();
             turnEntities[0].DoTurn(NextTurn);
             UpdatePointer();
         }
@@ -72,42 +73,48 @@ namespace Entities.Turn_System
             yield return new WaitForEndOfFrame();
             if (rollTurn)
             {
-                currentTurn++;
-                int currentTurnTemp = currentTurn % turnEntitiesObjects.Count;
-                var currentEntity = turnEntitiesObjects[currentTurnTemp];
-                if (currentEntity == null || !currentEntity.activeInHierarchy)
+                if (turnEntities[currentTurn].GetTurns() > 0)
+                    turnEntities[currentTurn].DoTurn(NextTurn);
+                else
                 {
-                    turnEntities.RemoveAt(currentTurnTemp);
-                    turnEntitiesObjects.RemoveAt(currentTurnTemp);
+                    currentTurn++;
+                    int currentTurnTemp = currentTurn % turnEntitiesObjects.Count;
+                    var currentEntity = turnEntitiesObjects[currentTurnTemp];
+                    if (currentEntity == null || !currentEntity.activeInHierarchy)
+                    {
+                        turnEntities.RemoveAt(currentTurnTemp);
+                        turnEntitiesObjects.RemoveAt(currentTurnTemp);
+                    }
+
+                    if (currentTurn >= turnEntities.Count)
+                    {
+                        // Decide number
+                        var selectedNumber = RollCage();
+                        occupiedNumbers.Add(selectedNumber);
+                        print($"Rolled number: {selectedNumber}");
+
+                        // Decide effect
+                        var type = TokenType.Nothing;
+                        // var values = Enum.GetValues(typeof(TokenType));
+                        // var type = (TokenType)values.GetValue(Random.Range(0, values.Length));
+
+                        // Hide pointer, summon Bingo UI
+                        currentTurnPointer.gameObject.SetActive(false);
+                        yield return new WaitForSeconds(.5f);
+                        bingoWheelUi.RunBingoWheelUi(Int16.Parse(selectedNumber.transform.name), type);
+                        yield return new WaitForSeconds(3f);
+
+                        // Drop token, return pointer
+                        DropTokenOn(type, selectedNumber);
+                        currentTurn = 0;
+                        yield return new WaitForSeconds(.5f);
+                        currentTurnPointer.gameObject.SetActive(true);
+                    }
+
+                    UpdatePointer();
+                    turnEntities[currentTurn].InitTurn();
+                    turnEntities[currentTurn].DoTurn(NextTurn);
                 }
-
-                if (currentTurn >= turnEntities.Count)
-                {
-                    // Decide number
-                    var selectedNumber = RollCage();
-                    occupiedNumbers.Add(selectedNumber);
-                    print($"Rolled number: {selectedNumber}");
-
-                    // Decide effect
-                    var type = TokenType.Nothing;
-                    // var values = Enum.GetValues(typeof(TokenType));
-                    // var type = (TokenType)values.GetValue(Random.Range(0, values.Length));
-
-                    // Hide pointer, summon Bingo UI
-                    currentTurnPointer.gameObject.SetActive(false);
-                    yield return new WaitForSeconds(.5f);
-                    bingoWheelUi.RunBingoWheelUi(Int16.Parse(selectedNumber.transform.name), type);
-                    yield return new WaitForSeconds(3f);
-
-                    // Drop token, return pointer
-                    DropTokenOn(type, selectedNumber);
-                    currentTurn = 0;
-                    yield return new WaitForSeconds(.5f);
-                    currentTurnPointer.gameObject.SetActive(true);
-                }
-
-                UpdatePointer();
-                turnEntities[currentTurn].DoTurn(NextTurn);
             }
         }
 

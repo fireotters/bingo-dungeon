@@ -14,6 +14,7 @@ namespace Entities
         public bool fourDir;
         private int lostTurns;
         private int hitPoints = 1;
+        protected int extraTurns;
         private const int MAX_HEALTH = 2;
         Action currentFinishAction;
 
@@ -132,5 +133,15 @@ namespace Entities
         public abstract void DoTurn(Action finished);
         
         public virtual void OnDeath() { }
+
+        public void InitTurn()
+        {
+            extraTurns = range;
+        }
+
+        public int GetTurns()
+        {
+            return extraTurns;
+        }
     }
 }

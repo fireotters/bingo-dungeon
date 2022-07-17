@@ -118,6 +118,7 @@ namespace Entities
             transform.DOMove(destination, timeToMove).OnComplete(
                 () =>
                 {
+                    extraTurns = 0;
                     Damage();
                     onFinish?.Invoke();
                     spriteRenderer.sortingOrder -= 20;

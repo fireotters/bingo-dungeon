@@ -8,12 +8,12 @@ public class TimeTestDebugHelper : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(key))
-        {
-            if (Time.timeScale == 1)
-                Time.timeScale = newTime;
-            else
-                Time.timeScale = 1;
-        }
+        //if (Input.GetKeyDown(key))
+        //{
+        //    if (Time.timeScale == 1)
+        //        Time.timeScale = newTime;
+        //    else
+        //        Time.timeScale = 1;
+        //}
     }
 }

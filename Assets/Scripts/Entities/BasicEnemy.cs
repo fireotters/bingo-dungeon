@@ -82,11 +82,11 @@ namespace Entities
                 print($"piece {gameObject.name} can move closer to player {movesCloserToPlayer.Count}");
                 print($"piece {gameObject.name} can move away from player {movesAwayFromPlayer.Count}");
 
-                var chanceToRetreat = Random.Range(1, 4);
+                var chanceToRetreat = Random.Range(1, 8);
 
-                print($"piece {gameObject.name} will go closer to player: {chanceToRetreat < 2}");
+                print($"piece {gameObject.name} will go closer to player: {chanceToRetreat > 2}");
 
-                if (chanceToRetreat < 2)
+                if (chanceToRetreat > 2)
                 {
                     return movesCloserToPlayer.Count > 0
                         ? movesCloserToPlayer[Random.Range(0, movesCloserToPlayer.Count)]

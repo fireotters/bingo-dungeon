@@ -96,7 +96,7 @@ namespace Entities.Turn_System
                     currentTurnPointer.gameObject.SetActive(false);
                     yield return new WaitForSeconds(.5f);
                     bingoWheelUi.RunBingoWheelUi(Int16.Parse(selectedNumber.transform.name), type);
-                    yield return new WaitForSeconds(2f);
+                    yield return new WaitForSeconds(3f);
 
                     // Drop token, return pointer
                     DropTokenOn(type, selectedNumber);
@@ -122,7 +122,9 @@ namespace Entities.Turn_System
                 case TokenType.NOTHING:
                 case TokenType.SHIELD:
                 case TokenType.WATER:
-                    Instantiate(tokens[(int)type], number.transform.position, Quaternion.identity);
+                    Token newToken = Instantiate(tokens[(int)type], number.transform.position, Quaternion.identity);
+                    newToken.assignedNum = number;
+                    newToken.turnManager = GetComponent<TurnManager>(); // Crossy: Oh help me, I don't understand this signalling library so I'm just passing turnmanager to every token
                     break;
                 case TokenType.METEOR:
                     obstacleTilemap.SetTile(obstacleTilemap.WorldToCell(number.transform.position), meteorTile);
@@ -137,6 +139,11 @@ namespace Entities.Turn_System
             var rolledNumber = gridData.tileNumbers[Random.Range(0, gridData.tileNumbers.Count)];
 
             return alreadyRolledNumbers.Contains(rolledNumber) ? RollCage() : rolledNumber;
+        }
+
+        public void TokenWasCollected(TextMeshPro freedNumber)
+        {
+            alreadyRolledNumbers.Remove(freedNumber);
         }
     }
 }

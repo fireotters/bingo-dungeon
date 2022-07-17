@@ -36,7 +36,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 2
-    m_ConditionEvent: Pushing
+    m_ConditionEvent: Push
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -5827773542127053426}
@@ -61,7 +61,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Pushing
+    m_ConditionEvent: Push
     m_EventTreshold: 0
   - m_ConditionMode: 6
     m_ConditionEvent: Dir
@@ -89,7 +89,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Pushing
+    m_ConditionEvent: Push
     m_EventTreshold: 0
   - m_ConditionMode: 6
     m_ConditionEvent: Dir
@@ -117,7 +117,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 2
-    m_ConditionEvent: Pushing
+    m_ConditionEvent: Push
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -5827773542127053426}
@@ -142,7 +142,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 2
-    m_ConditionEvent: Pushing
+    m_ConditionEvent: Push
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -5827773542127053426}
@@ -284,7 +284,7 @@ AnimatorStateTransition:
     m_ConditionEvent: Dir
     m_EventTreshold: 1
   - m_ConditionMode: 2
-    m_ConditionEvent: Pushing
+    m_ConditionEvent: Push
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 498901654996910557}
@@ -315,7 +315,7 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
-  - m_Name: Pushing
+  - m_Name: Push
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -407,7 +407,7 @@ AnimatorStateTransition:
     m_ConditionEvent: Dir
     m_EventTreshold: 3
   - m_ConditionMode: 2
-    m_ConditionEvent: Pushing
+    m_ConditionEvent: Push
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 8033314665537057480}
@@ -432,7 +432,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Pushing
+    m_ConditionEvent: Push
     m_EventTreshold: 0
   - m_ConditionMode: 6
     m_ConditionEvent: Dir
@@ -527,7 +527,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Pushing
+    m_ConditionEvent: Push
     m_EventTreshold: 0
   - m_ConditionMode: 6
     m_ConditionEvent: Dir
@@ -555,7 +555,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 2
-    m_ConditionEvent: Pushing
+    m_ConditionEvent: Push
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -5827773542127053426}

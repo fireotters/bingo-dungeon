@@ -68,6 +68,7 @@ namespace UI
 
         public void LoadNextScene()
         {
+            gameSong.Stop();
             SceneManager.LoadScene(sceneToLoad);
             Time.timeScale = 1;
         }

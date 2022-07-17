@@ -76,7 +76,8 @@ namespace UI
 
         public void StartGame()
         {
-            SceneManager.LoadScene("Scenes/GameScene");
+            SceneManager.LoadScene("Scenes/TemplateGameScene");
+
         }
 
         public void OpenHelp()

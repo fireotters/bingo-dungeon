@@ -6,6 +6,7 @@ using UnityEngine;
 using TMPro;
 using DG.Tweening;
 using FMODUnity;
+using UI;
 
 namespace Entities
 {
@@ -18,6 +19,13 @@ namespace Entities
 		[SerializeField] TextMeshPro text;
         [SerializeField] GameObject textSkipUi;
         [SerializeField] private StudioEventEmitter playerTurn, playerMove;
+        private GameUi gameUi;
+
+        public override void Awake()
+        {
+            gameUi = FindObjectOfType<Canvas>().GetComponent<GameUi>();
+            base.Awake();
+        }
 
         private void Update()
         {
@@ -89,8 +97,13 @@ namespace Entities
 
             while (true)
             {
+
                 var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 mousePos.z = 0;
+                if (gameUi.gamePausePanel.activeInHierarchy)
+                {
+                    mousePos = new Vector3(6000, 6000, 0);
+                }
 
                 if (nearbyTokens.Count > 0) // can move a token
                 {

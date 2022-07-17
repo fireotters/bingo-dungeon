@@ -11,7 +11,7 @@ namespace Entities
         public LineRenderer lineRenderer;
         [SerializeField] private Animator animator;
         private Vector3 previousPos;
-        private Token nearbyToken;
+        private List<Token> nearbyTokens = new List<Token>();
 
         private void Update()
         {
@@ -30,7 +30,16 @@ namespace Entities
             if (col.gameObject.transform.parent.TryGetComponent<Token>(out var foundToken))
             {
                 print("next to a token");
-                nearbyToken = foundToken;
+                nearbyTokens.Add(foundToken);
+                print(nearbyTokens.Count);
+            }
+        }
+        private void OnTriggerLeave2D(Collider2D col)
+        {
+            if (col.gameObject.transform.parent.TryGetComponent<Token>(out var foundToken))
+            {
+                print("moved away from a token");
+                nearbyTokens.Remove(foundToken);
             }
         }
 
@@ -59,15 +68,17 @@ namespace Entities
                 var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 mousePos.z = 0;
 
-                if (nearbyToken) // can move a token
+                if (nearbyTokens.Count > 0) // can move a token
                 {
-                    if (TryMoveToken(mousePos))
-                    {
-                        finished?.Invoke();
-                        yield break;
-                    }
+                    Token tokenSelected = MouseHoveringOverToken(mousePos, nearbyTokens);
+                    if (tokenSelected)
+                        if (Input.GetMouseButton(1))
+                        {
+                            //tokenSelected.MoveTo();
+                            nearbyTokens.Remove(tokenSelected);
+                        }
                 }
-                
+
                 if (IsInRange(mousePos))
                 {
                     var previewLinePoints = PreviewPath(mousePos);
@@ -94,7 +105,7 @@ namespace Entities
                             {
                                 float xTo = mousePos.x;
                                 float xFrom = gameObject.transform.position.x;
-                                float xDiff = xTo-xFrom;
+                                float xDiff = xTo - xFrom;
 
                                 float yTo = mousePos.y;
                                 float yFrom = gameObject.transform.position.y;
@@ -110,13 +121,13 @@ namespace Entities
                                     dir = 0;
                                 else if (xDiff > 0 && yDiff == 0)
                                     dir = 1;
-                                else if(xDiff > 0 && yDiff > 0)
+                                else if (xDiff > 0 && yDiff > 0)
                                     dir = 3;
-                                else if(xDiff > 0 && yDiff < 0)
+                                else if (xDiff > 0 && yDiff < 0)
                                     dir = 3;
-                                else if(xDiff < 0 && yDiff > 0)
+                                else if (xDiff < 0 && yDiff > 0)
                                     dir = 1;
-                                else if(xDiff < 0 && yDiff < 0)
+                                else if (xDiff < 0 && yDiff < 0)
                                     dir = 1;
 
                                 animator.SetBool("Moving", true);
@@ -150,56 +161,68 @@ namespace Entities
             }
         }
 
-        private bool TryMoveToken(Vector3 mousePos)
+        private Token MouseHoveringOverToken(Vector3 mousePos, List<Token> listOfNearbyTokens)
         {
-            Vector3[] possibleDirections =
+            foreach (Token token in listOfNearbyTokens)
             {
-                new(0, 1), new(0, -1), new(1, 0), new(-1, 0),
-            };
-
-            var validPositionsToMove = FigureOutValidPositions(possibleDirections);
-            float previousDistance = 0;
-            var nearestPointToMousePos = Vector3.zero;
-
-            foreach (var validPosition in validPositionsToMove)
-            {
-                var distance = Vector3.Distance(mousePos, validPosition);
-                if (nearestPointToMousePos == Vector3.zero || distance < previousDistance)
-                    nearestPointToMousePos = validPosition;
-
-                previousDistance = distance;
-            }
-
-            var lineToDraw = new[] { nearbyToken.transform.position, nearestPointToMousePos };
-            lineRenderer.positionCount = lineToDraw.Length;
-            lineRenderer.SetPositions(lineToDraw);
-
-            if (Input.GetMouseButton(0))
-            {
-                nearbyToken.MoveTo(nearestPointToMousePos);
-                nearbyToken = null;
-                return true;
-            }
-
-            return false;
-        }
-
-        private List<Vector3> FigureOutValidPositions(Vector3[] possibleDirections)
-        {
-            var validPositions = new List<Vector3>();
-
-            foreach (var possibleDirection in possibleDirections)
-            {
-                var supposedFinalTokenPosition = nearbyToken.transform.position + possibleDirection;
-                if (supposedFinalTokenPosition != transform.position &&
-                    !IsPossibleDirectionAWall(supposedFinalTokenPosition))
-                {
-                    validPositions.Add(supposedFinalTokenPosition);
+                if (Vector3.Distance(mousePos, token.transform.position) < 0.5f) {
+                    print("I am touching a token!");
+                    return token;
                 }
             }
-
-            return validPositions;
+            return null;
         }
+
+        //private bool TryMoveToken(Vector3 mousePos)
+        //{
+        //    Vector3[] possibleDirections =
+        //    {
+        //        new(0, 1), new(0, -1), new(1, 0), new(-1, 0),
+        //    };
+
+        //    var validPositionsToMove = FigureOutValidPositions(possibleDirections);
+        //    float previousDistance = 0;
+        //    var nearestPointToMousePos = Vector3.zero;
+
+        //    foreach (var validPosition in validPositionsToMove)
+        //    {
+        //        var distance = Vector3.Distance(mousePos, validPosition);
+        //        if (nearestPointToMousePos == Vector3.zero || distance < previousDistance)
+        //            nearestPointToMousePos = validPosition;
+
+        //        previousDistance = distance;
+        //    }
+
+        //    var lineToDraw = new[] { nearbyToken.transform.position, nearestPointToMousePos };
+        //    lineRenderer.positionCount = lineToDraw.Length;
+        //    lineRenderer.SetPositions(lineToDraw);
+
+        //    if (Input.GetMouseButton(1))
+        //    {
+        //        nearbyToken.MoveTo(nearestPointToMousePos);
+        //        nearbyToken = null;
+        //        return true;
+        //    }
+
+        //    return false;
+        //}
+
+        //private List<Vector3> FigureOutValidPositions(Vector3[] possibleDirections)
+        //{
+        //    var validPositions = new List<Vector3>();
+
+        //    foreach (var possibleDirection in possibleDirections)
+        //    {
+        //        var supposedFinalTokenPosition = nearbyToken.transform.position + possibleDirection;
+        //        if (supposedFinalTokenPosition != transform.position &&
+        //            !IsPossibleDirectionAWall(supposedFinalTokenPosition))
+        //        {
+        //            validPositions.Add(supposedFinalTokenPosition);
+        //        }
+        //    }
+
+        //    return validPositions;
+        //}
 
         private bool IsPossibleDirectionAWall(Vector3 supposedFinalTokenPosition)
         {

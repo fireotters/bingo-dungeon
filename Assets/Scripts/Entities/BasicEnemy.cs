@@ -43,6 +43,12 @@ namespace Entities
             SignalBus<SignalEnemyDied>.Fire();
         }
 
+        [ContextMenu("Snap")]
+        public void SnapToClosesTile()
+        {
+            transform.position = tilemap.WorldToCell(transform.position) + tilemap.cellSize/2;
+        }
+
         public virtual Vector3 ChoosePosition()
         {
             // Movement constraints are set in each Enemy's script

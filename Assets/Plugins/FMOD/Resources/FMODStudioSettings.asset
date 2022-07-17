@@ -348,10 +348,10 @@ MonoBehaviour:
   m_Name: FMODStudioSettings
   m_EditorClassIdentifier: 
   SwitchSettingsMigration: 1
-  HasSourceProject: 1
-  HasPlatforms: 1
+  HasSourceProject: 0
+  HasPlatforms: 0
   sourceProjectPath: ../../../Musica/FMOD/gmtk-gamejam-2022/gmtk-gamejam-2022.fspro
-  sourceBankPath: ../../../Musica/FMOD/gmtk-gamejam-2022/Build
+  sourceBankPath: Assets/Plugins/FMOD/build
   SourceBankPathUnformatted: 
   BankRefreshCooldown: 1
   ShowBankRefreshWindow: 1
@@ -374,10 +374,10 @@ MonoBehaviour:
   RealChannelSettings: []
   Plugins: []
   MasterBanks:
-  - Master
+  - Desktop/Master
   Banks:
-  - Game
-  - Menu
+  - Desktop/Game
+  - Desktop/Menu
   BanksToLoad: []
   LiveUpdatePort: 9264
   EnableMemoryTracking: 0

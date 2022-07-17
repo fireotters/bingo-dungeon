@@ -172,6 +172,7 @@ namespace Entities
                     Damage();
                     onFinish?.Invoke();
                     spriteRenderer.sortingOrder -= 20;
+                    spriteRenderer.sortingOrder = -(int)transform.position.y;
                 }
             );
             return true;

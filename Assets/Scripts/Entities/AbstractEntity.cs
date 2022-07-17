@@ -29,6 +29,7 @@ namespace Entities
         private void Awake()
         {
             spriteRenderer = GetComponent<SpriteRenderer>();
+            spriteRenderer.sortingOrder = -(int)transform.position.y;
         }
 
         public void AddLostTurn() => lostTurns++;

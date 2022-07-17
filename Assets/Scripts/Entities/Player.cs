@@ -86,7 +86,6 @@ namespace Entities
                 textSkipUi.gameObject.SetActive(true);
             }
             text.text = extraTurns.ToString();
-            spriteRenderer.sortingOrder += 20;
 
             while (true)
             {
@@ -190,8 +189,8 @@ namespace Entities
                                     animator.SetInteger("Dir", 0);
                                     animator.SetBool("Push", false);
                                     lineRenderer.positionCount = 0;
+                                    spriteRenderer.sortingOrder = -(int)transform.position.y;
                                     Damage();
-                                    spriteRenderer.sortingOrder -= 20;
                                     finished?.Invoke();
                                 }))
                                     yield break;

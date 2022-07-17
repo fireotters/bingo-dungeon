@@ -133,7 +133,7 @@ namespace Entities.Turn_System
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            print(occupiedNumbers.Count);
+            //print(occupiedNumbers.Count);
         }
 
         private TextMeshPro RollCage()
@@ -157,7 +157,7 @@ namespace Entities.Turn_System
                 if (textObj.GetComponent<NumberSquare>().IsSomethingStandingOn())
                     occupiedNumbers.Add(textObj);
             }
-            print(occupiedNumbers.Count);
+            //print(occupiedNumbers.Count);
         }
     }
 }

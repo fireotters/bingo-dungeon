@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Entities.Tokens;
 using UnityEngine;
+using TMPro;
 using DG.Tweening;
 
 namespace Entities
@@ -12,7 +13,10 @@ namespace Entities
         public LineRenderer lineRenderer;
         [SerializeField] private Animator animator;
         private Vector3 previousPos;
+		private List<Token> nearbyTokens = new List<Token>();
+		[SerializeField] TextMeshPro text;
         private List<Token> nearbyTokens = new List<Token>();
+        [SerializeField] TextMeshPro text;
 
         private void Update()
         {
@@ -62,6 +66,9 @@ namespace Entities
 
         IEnumerator PlayerTurn(Action finished)
         {
+            if (extraTurns == range)
+                text.gameObject.SetActive(true);
+            text.text = extraTurns.ToString();
             spriteRenderer.sortingOrder += 20;
 
             while (true)
@@ -103,7 +110,7 @@ namespace Entities
                         }
 
                         // Round down to allow more forgiving movement, but also round up to rein in movement a bit.
-                        if (Math.Round(totalMoveCost) <= range)
+                        if (Math.Round(totalMoveCost) <= extraTurns)
                         {
                             lineRenderer.positionCount = previewLinePoints.Count;
                             lineRenderer.SetPositions(previewLinePoints.ToArray());
@@ -143,6 +150,12 @@ namespace Entities
                                 animator.SetBool("Push", false);
                                 if (TryMove(mousePos, () =>
                                 {
+                                    extraTurns -= Mathf.FloorToInt(totalMoveCost);
+                                    text.text = extraTurns.ToString();
+
+                                    if (extraTurns == 0)
+                                        text.gameObject.SetActive(false);
+
                                     animator.SetBool("Moving", false);
                                     animator.SetInteger("Dir", 0);
                                     animator.SetBool("Push", false);

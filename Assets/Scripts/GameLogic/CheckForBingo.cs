@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class CheckForBingo : MonoBehaviour
 {
-
     public TextMeshProUGUI debugBingoDisplay;
 
     // TODO After Jam: The FloorGridGenerator fills out numbers from bottom to top, left to right. Instead of top to bottom.
@@ -34,13 +33,17 @@ public class CheckForBingo : MonoBehaviour
         {
             board[notation] = 0;
         }
+
         print("Is there Bingo? " + CheckForBingoResult());
     }
 
     private void Update()
     {
         string b = string.Join(", ", board);
-        debugBingoDisplay.text = b;
+        if (debugBingoDisplay != null)
+        {
+            debugBingoDisplay.text = b;
+        }
     }
 
     private bool CheckForBingoResult()
@@ -53,20 +56,21 @@ public class CheckForBingo : MonoBehaviour
 
             string check =
                 board[notation].ToString() +
-                board[notation + 1].ToString()+
+                board[notation + 1].ToString() +
                 board[notation + 2].ToString() +
                 board[notation + 3].ToString() +
                 board[notation + 4].ToString();
             if (check == "11111")
                 return true;
         }
+
         // Vertical
         for (int notation = 0; notation < board.Length; notation++)
         {
             if (board.Length < (notation + 1) + 72)
                 break; // Impossible to be in a column from now
 
-            string check = 
+            string check =
                 board[notation].ToString() +
                 board[notation + 18].ToString() +
                 board[notation + 36].ToString() +
@@ -75,13 +79,14 @@ public class CheckForBingo : MonoBehaviour
             if (check == "11111")
                 return true;
         }
+
         // Dia Right
         for (int notation = 0; notation < board.Length; notation++)
         {
             if (board.Length < (notation + 1) + 76)
                 break; // Impossible to be in a dia right from now
-            
-            string check = 
+
+            string check =
                 board[notation].ToString() +
                 board[notation + 19].ToString() +
                 board[notation + 38].ToString() +
@@ -90,6 +95,7 @@ public class CheckForBingo : MonoBehaviour
             if (check == "11111")
                 return true;
         }
+
         // Dia Left
         for (int notation = 0; notation < board.Length; notation++)
         {
@@ -105,6 +111,7 @@ public class CheckForBingo : MonoBehaviour
             if (check == "11111")
                 return true;
         }
+
         return false;
     }
 }

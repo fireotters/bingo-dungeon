@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace Entities
+namespace Entities.EnemyTypes
 {
     public class BishopEnemy : BasicEnemy
     {
@@ -18,7 +16,7 @@ namespace Entities
                 for (int i = 1; i < range; i++)
                 {
                     Vector3 modifier = direction * i;
-                    if (ValidateDestination(modifier) == false)
+                    if (!ValidateDestination(modifier))
                     {
                         break;
                     }

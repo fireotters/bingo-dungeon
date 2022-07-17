@@ -72,11 +72,25 @@ namespace Entities
                     var playerToEnemyDist = Vector3.Distance(transform.position, playerPos);
                     return playerToDestinationDist > playerToEnemyDist;
                 }).ToList();
+                print($"piece {gameObject.name} can move closer to player {movesCloserToPlayer.Count}");
+                print($"piece {gameObject.name} can move away from player {movesAwayFromPlayer.Count}");
+
                 var chanceToRetreat = Random.Range(1, 4);
-                
-                return chanceToRetreat < 2 ?
-                        movesAwayFromPlayer[Random.Range(0, movesAwayFromPlayer.Count)] :
-                        movesCloserToPlayer[Random.Range(0, movesCloserToPlayer.Count)];
+
+                print($"piece {gameObject.name} will go closer to player: {chanceToRetreat < 2}");
+
+                if (chanceToRetreat < 2)
+                {
+                    return movesCloserToPlayer.Count > 0
+                        ? movesCloserToPlayer[Random.Range(0, movesCloserToPlayer.Count)]
+                        : transform.position;
+                }
+                else
+                {
+                    return movesAwayFromPlayer.Count > 0 
+                        ? movesAwayFromPlayer[Random.Range(0, movesAwayFromPlayer.Count)]
+                        : transform.position;
+                }
             }
         }
 
@@ -84,7 +98,7 @@ namespace Entities
         {
             Vector3 destination = transform.position + modifier;
             Vector3Int destinationTile = tilemap.WorldToCell(destination);
-            if (tilemap.HasTile(destinationTile) || IsCellOccupiedByEnemy())
+            if (tilemap.HasTile(destinationTile) || IsCellOccupiedByEnemy(destination))
             {
                 return false; // Tell the enemy to no longer search for valid tiles in this direction.
             }
@@ -100,10 +114,10 @@ namespace Entities
             }
         }
 
-        private bool IsCellOccupiedByEnemy()
+        private bool IsCellOccupiedByEnemy(Vector3 destination)
         {
             var searchLayer = LayerMask.NameToLayer("Pieces");
-            var colliders = Physics2D.OverlapCircleAll(transform.position, 0.5f, searchLayer);
+            var colliders = Physics2D.OverlapCircleAll(destination, 0.5f, searchLayer);
 
             foreach (var colliderFound in colliders)
             {

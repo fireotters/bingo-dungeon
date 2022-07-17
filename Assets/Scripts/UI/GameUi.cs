@@ -1,4 +1,5 @@
 using Audio;
+using FMODUnity;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -14,6 +15,7 @@ namespace UI
         private void Start()
         {
             fmodMixer = GetComponent<FmodMixer>();
+            GetComponent<StudioEventEmitter>().Play();
         }
 
         private void Update()

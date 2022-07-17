@@ -1,3 +1,4 @@
+using FMODUnity;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -15,9 +16,11 @@ namespace UI
         [Header("Main Menu UI")]
         [SerializeField] private TextMeshProUGUI versionText;
         [SerializeField] private GameObject desktopButtons, webButtons;
+        private StudioEventEmitter menuSong;
         
         private void Start()
         {
+            menuSong = GetComponent<StudioEventEmitter>();
 #if UNITY_WEBGL
             desktopButtons.SetActive(false);
             webButtons.SetActive(true);
@@ -76,8 +79,8 @@ namespace UI
 
         public void StartGame()
         {
+            menuSong.Stop();
             SceneManager.LoadScene("Scenes/TemplateGameScene");
-
         }
 
         public void OpenHelp()

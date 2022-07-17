@@ -47,10 +47,10 @@ namespace Audio
                     switch (gameIsPaused)
                     {
                         case true when eventEmitter.IsPlaying():
-                            eventEmitter.Stop();
+                            eventEmitter.EventInstance.setPaused(true);
                             break;
                         case false when !eventEmitter.IsPlaying():
-                            eventEmitter.Play();
+                            eventEmitter.EventInstance.setPaused(false);
                             break;
                     }
                 }

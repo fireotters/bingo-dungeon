@@ -16,6 +16,7 @@ namespace Entities.Turn_System
         public Transform currentTurnPointer;
         public Transform entitiesContainer;
         public List<ITurnEntity> turnEntities;
+        public BingoWheelUi bingoWheelUi;
         public List<GameObject> turnEntitiesObjects;
         private int currentTurn;
         [SerializeField] private GridData gridData;
@@ -71,8 +72,6 @@ namespace Entities.Turn_System
             yield return new WaitForEndOfFrame();
             if (rollTurn)
             {
-
-
                 currentTurn++;
                 int currentTurnTemp = currentTurn % turnEntitiesObjects.Count;
                 var currentEntity = turnEntitiesObjects[currentTurnTemp];
@@ -84,11 +83,26 @@ namespace Entities.Turn_System
 
                 if (currentTurn >= turnEntities.Count)
                 {
+                    // Decide number
                     var selectedNumber = RollCage();
                     alreadyRolledNumbers.Add(selectedNumber);
                     print($"Rolled number: {selectedNumber}");
-                    DropTokenOn(selectedNumber);
+
+                    // Decide effect
+                    var values = Enum.GetValues(typeof(TokenType));
+                    var type = (TokenType)values.GetValue(Random.Range(0, values.Length));
+
+                    // Hide pointer, summon Bingo UI
+                    currentTurnPointer.gameObject.SetActive(false);
+                    yield return new WaitForSeconds(.5f);
+                    bingoWheelUi.RunBingoWheelUi(Int16.Parse(selectedNumber.transform.name), type);
+                    yield return new WaitForSeconds(2f);
+
+                    // Drop token, return pointer
+                    DropTokenOn(type, selectedNumber);
                     currentTurn = 0;
+                    yield return new WaitForSeconds(.5f);
+                    currentTurnPointer.gameObject.SetActive(true);
                 }
 
                 UpdatePointer();
@@ -101,11 +115,8 @@ namespace Entities.Turn_System
             StartCoroutine(DoNextTurn());
         }
 
-        private void DropTokenOn(TextMeshPro number)
+        private void DropTokenOn(TokenType type, TextMeshPro number)
         {
-            var values = Enum.GetValues(typeof(TokenType));
-            var type = (TokenType)values.GetValue(Random.Range(0, values.Length));
-
             switch (type)
             {
                 case TokenType.NOTHING:

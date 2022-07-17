@@ -162,7 +162,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
-  m_Name: Daydreamer SDF - Bingo Nums
+  m_Name: Daydreamer SDF Outlined - Bingo Nums
   m_EditorClassIdentifier: 
   hashCode: -200251072
   material: {fileID: -3023377866104313265}

@@ -13183,7 +13183,7 @@ MonoBehaviour:
   gamePausePanel: {fileID: 1865915941}
   optionsPanel: {fileID: 601584452}
   gameOverPanel: {fileID: 1985745277}
-  sceneToLoad: 
+  sceneToLoad: Level6
 --- !u!114 &1366126229
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16931,7 +16931,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4456943478365563074, guid: f01f6d14efdf92941a978e804b7060b5, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 4456943478365563074, guid: f01f6d14efdf92941a978e804b7060b5, type: 3}
       propertyPath: m_LocalRotation.w
@@ -19888,7 +19888,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4456943478365563074, guid: f01f6d14efdf92941a978e804b7060b5, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 4456943478365563074, guid: f01f6d14efdf92941a978e804b7060b5, type: 3}
       propertyPath: m_LocalRotation.w

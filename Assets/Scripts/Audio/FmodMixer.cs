@@ -60,6 +60,18 @@ namespace Audio
             }
         }
 
+        public void KillEverySound()
+        {
+            print("DEATH TO AUDIO MUSIC IS FORBIDDEN BY THE LAW OF ROBOTNIK");
+            if (FindObjectsOfType(typeof(StudioEventEmitter)) is StudioEventEmitter[] eventEmitters)
+            {
+                foreach (var eventEmitter in eventEmitters)
+                {
+                    eventEmitter.Stop();
+                }
+            }
+        }
+
         private float DecibelToLinear(float dB)
         {
             var linear = Mathf.Pow(10f, dB / 20f);

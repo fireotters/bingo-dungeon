@@ -6,6 +6,7 @@ TagManager:
   tags:
   - NumberText
   - Token
+  - Enemy
   layers:
   - Default
   - TransparentFX

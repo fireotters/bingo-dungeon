@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 9042397326158598929}
   m_Layer: 1
   m_Name: Knight
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -52,7 +52,6 @@ MonoBehaviour:
   tilemap: {fileID: 0}
   range: 3
   fourDir: 0
-  timeToMove: 0
   playerObj: {fileID: 0}
   moveReticuleGameObject: {fileID: 2116351310106951641, guid: 526f03761721bcb42850480a01d43681, type: 3}
   corpsePrefab: {fileID: 1981591651481221961, guid: 792ce23db96ec434e938781967619b8d, type: 3}

@@ -15,8 +15,6 @@ namespace Entities
         private Vector3 previousPos;
 		private List<Token> nearbyTokens = new List<Token>();
 		[SerializeField] TextMeshPro text;
-        private List<Token> nearbyTokens = new List<Token>();
-        [SerializeField] TextMeshPro text;
 
         private void Update()
         {
@@ -39,7 +37,7 @@ namespace Entities
                 print(nearbyTokens.Count);
             }
         }
-        private void OnTriggerLeave2D(Collider2D col)
+        private void OnTriggerExit2D(Collider2D col)
         {
             if (col.gameObject.transform.parent.TryGetComponent<Token>(out var foundToken))
             {
@@ -90,6 +88,11 @@ namespace Entities
                             {
                                 tokenSelected.transform.DOMove(intendedDestination, 0.6f);
                                 nearbyTokens.Remove(tokenSelected);
+
+                                extraTurns -= 1;
+                                text.text = extraTurns.ToString();
+                                finished?.Invoke();
+                                yield break;
                             }
                         }
                 }

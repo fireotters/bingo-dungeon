@@ -26,7 +26,7 @@ namespace Entities
         // Targetting
         [HideInInspector] public List<Vector3> validMoves = new List<Vector3>();
         [HideInInspector] public Vector3 fatalMove = Vector3.zero;
-        [SerializeField] private StudioEventEmitter enemyMovement;
+        [SerializeField] private StudioEventEmitter enemyMovement, enemyDeath;
 
         private void Start()
         {
@@ -197,6 +197,7 @@ namespace Entities
 
         public override void OnDeath()
         {
+            enemyDeath.Play();
             if (corpsePrefab != null)
             {
                 corpsePrefab.GetComponent<Corpse>().BlackPiece = BlackPiece;

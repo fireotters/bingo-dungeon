@@ -7653,8 +7653,9 @@ MonoBehaviour:
   gridData: {fileID: 11400000, guid: 361afe7f11283034a94bf7faf0e41ea8, type: 2}
   tokens:
   - {fileID: 1271792155338618115, guid: b29d97cced1a18f4183ad5bbeb62b219, type: 3}
-  - {fileID: 6222400237953946709, guid: 8e8b4c6e193b498459719be8355e2141, type: 3}
-  - {fileID: 5497180536610290778, guid: 8246b6350daef88458639b039c87c423, type: 3}
+  - {fileID: 1271792155338618115, guid: 200e4e22a2c6a8747930535cca89aa15, type: 3}
+  - {fileID: 1271792155338618115, guid: 425ab7967f410704087a65a8a68de833, type: 3}
+  - {fileID: 1271792155338618115, guid: 6d5996c3a600e0f48b1777068afa1bd7, type: 3}
   meteorTile: {fileID: 11400000, guid: e3485a0d61ddd5f4cb630556cb26eb5d, type: 2}
   obstacleTilemap: {fileID: 525800421}
 --- !u!4 &564271021
@@ -16847,7 +16848,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 862088030039164282, guid: 41dd87cd33dbc324f99e1f3b2359ba3b, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 41dd87cd33dbc324f99e1f3b2359ba3b, type: 3}

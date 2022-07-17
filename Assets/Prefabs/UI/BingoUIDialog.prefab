@@ -361,6 +361,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b35d00ecae763394ab2156ee2ca928ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _animator: {fileID: 862088030039164280}
   _ballImage: {fileID: 862088029022698161}
   _ballText: {fileID: 862088030327577980}
   bingoRollSfx: {fileID: 244358001503204593}

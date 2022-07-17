@@ -72,7 +72,6 @@ namespace Entities
             textSkipUi.gameObject.SetActive(false);
             currentFinishAction?.Invoke();
             currentFinishAction = null;
-            Debug.LogError("Rioni pls");
         }
 
         IEnumerator PlayerTurn(Action finished)

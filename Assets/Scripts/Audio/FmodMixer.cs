@@ -44,14 +44,17 @@ namespace Audio
             {
                 foreach (var eventEmitter in eventEmitters)
                 {
-                    switch (gameIsPaused)
+                    if (!eventEmitter.EventReference.Path.Contains("Stage theme"))
                     {
-                        case true when eventEmitter.IsPlaying():
-                            eventEmitter.EventInstance.setPaused(true);
-                            break;
-                        case false when !eventEmitter.IsPlaying():
-                            eventEmitter.EventInstance.setPaused(false);
-                            break;
+                        switch (gameIsPaused)
+                        {
+                            case true when eventEmitter.IsPlaying():
+                                eventEmitter.EventInstance.setPaused(true);
+                                break;
+                            case false when !eventEmitter.IsPlaying():
+                                eventEmitter.EventInstance.setPaused(false);
+                                break;
+                        }
                     }
                 }
             }

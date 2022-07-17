@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Entities.Tokens;
 using UnityEngine;
+using DG.Tweening;
 
 namespace Entities
 {
@@ -74,8 +75,15 @@ namespace Entities
                     if (tokenSelected)
                         if (Input.GetMouseButton(1))
                         {
-                            //tokenSelected.MoveTo();
-                            nearbyTokens.Remove(tokenSelected);
+                            Vector3 directionToMove = tokenSelected.transform.position - transform.position;
+                            Vector3 intendedDestination = tokenSelected.transform.position + directionToMove;
+
+                            Vector3Int destinationTile = tilemap.WorldToCell(intendedDestination);
+                            if (!tilemap.HasTile(destinationTile))
+                            {
+                                tokenSelected.transform.DOMove(intendedDestination, 0.6f);
+                                nearbyTokens.Remove(tokenSelected);
+                            }
                         }
                 }
 
@@ -165,8 +173,11 @@ namespace Entities
         {
             foreach (Token token in listOfNearbyTokens)
             {
+                if (Vector3.Distance(transform.position, token.transform.position) < 0.1f)
+                {
+                    continue; // Don't attempt to push tokens Player is standing on
+                }
                 if (Vector3.Distance(mousePos, token.transform.position) < 0.5f) {
-                    print("I am touching a token!");
                     return token;
                 }
             }

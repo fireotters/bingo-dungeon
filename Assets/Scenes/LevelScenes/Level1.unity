@@ -13653,7 +13653,7 @@ MonoBehaviour:
   gamePausePanel: {fileID: 1865915941}
   optionsPanel: {fileID: 601584452}
   gameOverPanel: {fileID: 1985745277}
-  sceneToLoad: Level2
+  sceneToLoad: Level2 - Bishop Tutorial
 --- !u!114 &1366126229
 MonoBehaviour:
   m_ObjectHideFlags: 0

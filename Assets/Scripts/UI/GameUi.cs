@@ -74,6 +74,7 @@ namespace UI
 
         public void ExitGameFromPause()
         {
+            fmodMixer.KillEverySound();
             SceneManager.LoadScene("MainMenu");
             Time.timeScale = 1;
         }

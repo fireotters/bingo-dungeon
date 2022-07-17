@@ -9,10 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1271792155338618114}
+  - component: {fileID: 1271792155338618115}
   - component: {fileID: 1271792155338618109}
   - component: {fileID: 1271792155338618108}
   - component: {fileID: 1271792155338618111}
-  - component: {fileID: 1271792155338618115}
   - component: {fileID: -4567844336656937962}
   m_Layer: 0
   m_Name: WhiteToken
@@ -36,6 +36,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1271792155338618115
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1271792155338618110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f9faa88c6a54848b89816f1415725e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  assignedNum: {fileID: 0}
+  turnManager: {fileID: 0}
 --- !u!212 &1271792155338618109
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -112,7 +126,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.28, y: 1.28}
+  m_Size: {x: 0.8, y: 0.8}
   m_EdgeRadius: 0
 --- !u!50 &1271792155338618111
 Rigidbody2D:
@@ -135,18 +149,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &1271792155338618115
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1271792155338618110}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f9faa88c6a54848b89816f1415725e7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &-4567844336656937962
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -160,6 +162,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scaleSpeed: 2.5
+  initialScaleSpeed: 0
   amplitude: 0.25
   curve:
     serializedVersion: 2

@@ -56,23 +56,45 @@ namespace Entities
 
                     if (previewLinePoints != null)
                     {
-                        lineRenderer.positionCount = previewLinePoints.Count;
-                        lineRenderer.SetPositions(previewLinePoints.ToArray());
+                        // Dodgy move cost setup, because our A* implementation cannot return move costs.
+                        // This measures how long a line is, and from that determine the cost.
+                        // This is so that Player can't go around thin walls to destinations which are considered 'In Range'
+                        float totalMoveCost = 0;
+                        for (int i = 0; i < previewLinePoints.Count - 1; i++)
+                        {
+                            totalMoveCost += Vector3.Distance(previewLinePoints[i], previewLinePoints[i + 1]);
+                        }
+                        // Round down to allow more forgiving movement, but also round up to rein in movement a bit.
+                        if (Math.Round(totalMoveCost) <= range)
+                        {
+                            lineRenderer.positionCount = previewLinePoints.Count;
+                            lineRenderer.SetPositions(previewLinePoints.ToArray());
+
+                            // Can only move if preview points exist
+                            if (Input.GetMouseButton(0))
+                            {
+                                animator.SetBool("Moving", true);
+                                if (TryMove(mousePos, () =>
+                                {
+                                    animator.SetBool("Moving", false);
+                                    lineRenderer.positionCount = 0;
+                                    Damage();
+                                    spriteRenderer.sortingOrder -= 20;
+                                    finished?.Invoke();
+                                }))
+                                    yield break;
+                            }
+                        }
+                        else
+                        {
+                            lineRenderer.positionCount = 0;
+                        }
                     }
 
-                    if (Input.GetMouseButton(0))
-                    {
-                        animator.SetBool("Moving", true);
-                        if (TryMove(mousePos, () =>
-                        {
-                            animator.SetBool("Moving", false);
-                            lineRenderer.positionCount = 0;
-                            Damage();
-                            spriteRenderer.sortingOrder -= 20;
-                            finished?.Invoke();
-                        }))
-                            yield break;
-                    }
+                }
+                else
+                {
+                    lineRenderer.positionCount = 0;
                 }
                 yield return null;
             }

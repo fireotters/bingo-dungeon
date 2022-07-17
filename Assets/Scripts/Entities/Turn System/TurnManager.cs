@@ -133,10 +133,12 @@ namespace Entities.Turn_System
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+            //print(occupiedNumbers.Count);
         }
 
         private TextMeshPro RollCage()
         {
+            UpdateOccupiedSquares();
             var rolledNumber = gridData.tileNumbers[Random.Range(0, gridData.tileNumbers.Count)];
 
             return occupiedNumbers.Contains(rolledNumber) ? RollCage() : rolledNumber;
@@ -145,6 +147,17 @@ namespace Entities.Turn_System
         public void TokenWasCollected(TextMeshPro freedNumber)
         {
             occupiedNumbers.Remove(freedNumber);
+        }
+
+        private void UpdateOccupiedSquares()
+        {
+            occupiedNumbers.Clear();
+            foreach (TextMeshPro textObj in gridData.tileNumbers)
+            {
+                if (textObj.GetComponent<NumberSquare>().IsSomethingStandingOn())
+                    occupiedNumbers.Add(textObj);
+            }
+            //print(occupiedNumbers.Count);
         }
     }
 }

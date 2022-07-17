@@ -186,6 +186,9 @@ GameObject:
   - component: {fileID: 1876590596722464805}
   - component: {fileID: 1876590596722464811}
   - component: {fileID: 5890224473386045795}
+  - component: {fileID: 2939432308111773618}
+  - component: {fileID: 4893508218132824496}
+  - component: {fileID: 1334351381412749452}
   m_Layer: 1
   m_Name: Player
   m_TagString: Player
@@ -227,6 +230,9 @@ MonoBehaviour:
   lineRenderer: {fileID: 1876590596722464800}
   animator: {fileID: 5890224473386045795}
   text: {fileID: 1874872889}
+  textSkipUi: {fileID: 0}
+  playerTurn: {fileID: 2939432308111773618}
+  playerMove: {fileID: 4893508218132824496}
 --- !u!120 &1876590596722464800
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -414,3 +420,93 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &2939432308111773618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1876590596722464801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -1662866946
+      Data2: 1306270165
+      Data3: 767655319
+      Data4: -948176719
+    Path: event:/2D/Player turn
+  Event: 
+  PlayEvent: 0
+  StopEvent: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
+--- !u!114 &4893508218132824496
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1876590596722464801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -75181504
+      Data2: 1286819096
+      Data3: -1031044685
+      Data4: -601448854
+    Path: event:/3D/Player movement
+  Event: 
+  PlayEvent: 0
+  StopEvent: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
+--- !u!114 &1334351381412749452
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1876590596722464801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 5458850
+      Data2: 1212218749
+      Data3: 989398426
+      Data4: -555803402
+    Path: event:/3D/Player death
+  Event: 
+  PlayEvent: 2
+  StopEvent: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20

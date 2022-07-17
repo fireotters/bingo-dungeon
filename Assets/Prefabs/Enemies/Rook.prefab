@@ -15,6 +15,8 @@ GameObject:
   - component: {fileID: 606107166}
   - component: {fileID: 994991781092870153}
   - component: {fileID: 937100783041010127}
+  - component: {fileID: 8789766503661120670}
+  - component: {fileID: 4430055989785639030}
   m_Layer: 1
   m_Name: Rook
   m_TagString: Enemy
@@ -57,6 +59,7 @@ MonoBehaviour:
   corpsePrefab: {fileID: 1981591651481221961, guid: 157e10afdd907f744b367528efdc8bf0, type: 3}
   validMoves: []
   fatalMove: {x: 0, y: 0, z: 0}
+  enemyMovement: {fileID: 8789766503661120670}
 --- !u!120 &44528416679693979
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -260,3 +263,63 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.4
+--- !u!114 &8789766503661120670
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 44528416679693956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 1108880481
+      Data2: 1232186207
+      Data3: 1586879110
+      Data4: -359880609
+    Path: event:/3D/Enemy movement
+  Event: 
+  PlayEvent: 0
+  StopEvent: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
+--- !u!114 &4430055989785639030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 44528416679693956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 1411106321
+      Data2: 1153121082
+      Data3: 666353314
+      Data4: 1703434089
+    Path: event:/3D/Enemy killed
+  Event: 
+  PlayEvent: 0
+  StopEvent: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20

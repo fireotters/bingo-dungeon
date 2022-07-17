@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
+using FMODUnity;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -25,7 +26,7 @@ namespace Entities
         // Targetting
         [HideInInspector] public List<Vector3> validMoves = new List<Vector3>();
         [HideInInspector] public Vector3 fatalMove = Vector3.zero;
-
+        [SerializeField] private StudioEventEmitter enemyMovement;
 
         private void Start()
         {
@@ -159,7 +160,7 @@ namespace Entities
         public override bool TryMove(Vector3 destination, Action onFinish = null)
         {
             spriteRenderer.sortingOrder += 20;
-
+            enemyMovement.Play();
             transform.DOMove(destination, timeToMove).OnComplete(
                 () =>
                 {

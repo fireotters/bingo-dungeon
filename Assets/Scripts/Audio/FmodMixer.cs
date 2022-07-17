@@ -67,6 +67,7 @@ namespace Audio
             {
                 foreach (var eventEmitter in eventEmitters)
                 {
+                    eventEmitter.AllowFadeout = false;
                     eventEmitter.Stop();
                 }
             }

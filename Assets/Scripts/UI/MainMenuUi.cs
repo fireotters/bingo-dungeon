@@ -84,6 +84,7 @@ namespace UI
 
         public void OpenHelp()
         {
+            menuSong.Stop();
             SceneManager.LoadScene("Scenes/HelpMenu");
         }
 

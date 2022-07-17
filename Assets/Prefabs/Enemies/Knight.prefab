@@ -60,6 +60,7 @@ MonoBehaviour:
   validMoves: []
   fatalMove: {x: 0, y: 0, z: 0}
   enemyMovement: {fileID: 5785943693049300220}
+  enemyDeath: {fileID: 976634903478029400}
 --- !u!120 &3474587703491879011
 LineRenderer:
   m_ObjectHideFlags: 0

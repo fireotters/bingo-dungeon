@@ -11,11 +11,13 @@ namespace UI
         public GameObject optionsPanel;
         public GameObject gameOverPanel;
         private FmodMixer fmodMixer;
+        private StudioEventEmitter gameSong;
 
         private void Start()
         {
             fmodMixer = GetComponent<FmodMixer>();
-            GetComponent<StudioEventEmitter>().Play();
+            gameSong = GetComponent<StudioEventEmitter>();
+            gameSong.Play();
         }
 
         private void Update()
@@ -42,6 +44,7 @@ namespace UI
         private void GameIsPaused(bool intent)
         {
             // Show or hide pause panel and set timescale
+            gameSong.SetParameter("Menu", intent ? 1 : 0);
             gamePausePanel.SetActive(intent);
             Time.timeScale = intent ? 0 : 1;
             fmodMixer.FindAllSfxAndPlayPause(gameIsPaused: intent);

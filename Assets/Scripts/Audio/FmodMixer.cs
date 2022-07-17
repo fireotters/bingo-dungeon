@@ -19,7 +19,6 @@ namespace Audio
 
         public void ChangeMusicVolume(float dB)
         {
-            print($"Set music decibels to {dB}");
             music.setVolume(DecibelToLinear(dB));
             PlayerPrefs.SetFloat("Music", dB);
             PlayerPrefs.Save();
@@ -27,7 +26,6 @@ namespace Audio
 
         public void ChangeSfxVolume(float dB)
         {
-            print($"Set sfx decibels to {dB}");
             sfx.setVolume(DecibelToLinear(dB));
             PlayerPrefs.SetFloat("SFX", dB);
             PlayerPrefs.Save();

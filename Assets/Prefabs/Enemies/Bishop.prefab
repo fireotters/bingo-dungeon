@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 585594735355505066}
   - component: {fileID: 1267674098}
   - component: {fileID: 2161328426127790110}
+  - component: {fileID: 53611310420252518}
   m_Layer: 1
   m_Name: Bishop
   m_TagString: Untagged
@@ -49,7 +50,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tilemap: {fileID: 0}
-  range: 4
+  range: 16
   fourDir: 0
   timeToMove: 0
   playerObj: {fileID: 0}
@@ -244,3 +245,19 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!58 &53611310420252518
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 585594735355505068}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.4

@@ -11,8 +11,8 @@ namespace Entities
     {
 
         [Tooltip("Time to move in seconds")]
-        [SerializeField] float timeToMove;
-        WaitForSeconds waitTimeToMove;
+        private float timeToMove = .5f;
+        private float timeToStartTurn = .5f;
         [HideInInspector] public Transform playerObj;
         //[HideInInspector] public Board boardManager;
         public Transform moveReticuleGameObject;
@@ -28,7 +28,6 @@ namespace Entities
 
         void Start()
         {
-            waitTimeToMove = new WaitForSeconds(timeToMove);
             playerObj = GameObject.Find("Player").transform;
             //boardManager = GameObject.Find("Board").GetComponent<Board>();
             BlackPiece = Convert.ToBoolean(Random.Range(0, 2));
@@ -55,6 +54,7 @@ namespace Entities
             // If the player can be killed, do it. Else, pick a random valid destination.
             if (fatalMove != Vector3.zero)
             {
+                timeToMove *= 3; // Slow down piece which finishes off Player, accentuate the loss.
                 return fatalMove;
             }
             else if (validMoves == null || validMoves.Count == 0)
@@ -115,7 +115,7 @@ namespace Entities
         {
             spriteRenderer.sortingOrder += 20;
 
-            transform.DOMove(destination, 0.5f).OnComplete(
+            transform.DOMove(destination, timeToMove).OnComplete(
                 () =>
                 {
                     Damage();
@@ -133,7 +133,7 @@ namespace Entities
 
         IEnumerator EnemyTurn(System.Action finished)
         {
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(timeToStartTurn);
             DoMove(finished);
         }
 

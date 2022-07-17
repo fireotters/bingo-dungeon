@@ -50,9 +50,5 @@ public class BingoWheelUi : MonoBehaviour
         yield return new WaitForSeconds(3f);
         _animator.SetBool("Appear", false);
         _animator.SetBool("Sequence", false);
-
     }
-
-
-
 }

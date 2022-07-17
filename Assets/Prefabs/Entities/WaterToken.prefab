@@ -160,6 +160,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scaleSpeed: 2.5
+  initialScaleSpeed: 0
   amplitude: 0.25
   curve:
     serializedVersion: 2

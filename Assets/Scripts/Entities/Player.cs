@@ -74,10 +74,41 @@ namespace Entities
                             // Can only move if preview points exist
                             if (Input.GetMouseButton(0))
                             {
+                                float xTo = mousePos.x;
+                                float xFrom = gameObject.transform.position.x;
+                                float xDiff = xTo-xFrom;
+
+                                float yTo = mousePos.y;
+                                float yFrom = gameObject.transform.position.y;
+                                float yDiff = yTo - yFrom;
+
+                                int dir = 0;
+
+                                if (xDiff == 0 && yDiff > 0)
+                                    dir = 2;
+                                else if (xDiff < 0 && yDiff == 0)
+                                    dir = 3;
+                                else if (xDiff == 0 && yDiff < 0)
+                                    dir = 0;
+                                else if (xDiff > 0 && yDiff == 0)
+                                    dir = 1;
+                                else if(xDiff > 0 && yDiff > 0)
+                                    dir = 3;
+                                else if(xDiff > 0 && yDiff < 0)
+                                    dir = 3;
+                                else if(xDiff < 0 && yDiff > 0)
+                                    dir = 1;
+                                else if(xDiff < 0 && yDiff < 0)
+                                    dir = 1;
+
                                 animator.SetBool("Moving", true);
+                                animator.SetInteger("Dir", dir);
+                                animator.SetBool("Push", false);
                                 if (TryMove(mousePos, () =>
                                 {
                                     animator.SetBool("Moving", false);
+                                    animator.SetInteger("Dir", 0);
+                                    animator.SetBool("Push", false);
                                     lineRenderer.positionCount = 0;
                                     Damage();
                                     spriteRenderer.sortingOrder -= 20;

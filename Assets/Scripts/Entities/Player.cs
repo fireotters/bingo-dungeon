@@ -15,6 +15,7 @@ namespace Entities
         private Vector3 previousPos;
 		private List<Token> nearbyTokens = new List<Token>();
 		[SerializeField] TextMeshPro text;
+        [SerializeField] GameObject textSkipUi;
 
         private void Update()
         {
@@ -62,10 +63,26 @@ namespace Entities
             finished?.Invoke();
         }
 
+        public void SkipTurn()
+        {
+            StopAllCoroutines();
+            extraTurns = 0;
+            text.text = extraTurns.ToString();
+            text.gameObject.SetActive(false);
+            textSkipUi.gameObject.SetActive(false);
+            currentFinishAction?.Invoke();
+            currentFinishAction = null;
+            Debug.LogError("Rioni pls");
+        }
+
         IEnumerator PlayerTurn(Action finished)
         {
+            currentFinishAction = finished;
             if (extraTurns == range)
+            {
                 text.gameObject.SetActive(true);
+                textSkipUi.gameObject.SetActive(true);
+            }
             text.text = extraTurns.ToString();
             spriteRenderer.sortingOrder += 20;
 
@@ -151,13 +168,19 @@ namespace Entities
                                 animator.SetBool("Moving", true);
                                 animator.SetInteger("Dir", dir);
                                 animator.SetBool("Push", false);
+                                textSkipUi.gameObject.SetActive(false);
+
                                 if (TryMove(mousePos, () =>
                                 {
                                     extraTurns -= Mathf.FloorToInt(totalMoveCost);
                                     text.text = extraTurns.ToString();
 
                                     if (extraTurns == 0)
+                                    {
                                         text.gameObject.SetActive(false);
+                                    }
+                                    else
+                                        textSkipUi.gameObject.SetActive(true);
 
                                     animator.SetBool("Moving", false);
                                     animator.SetInteger("Dir", 0);

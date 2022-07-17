@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1876590596722464806}
-  - component: {fileID: 1876590596722464800}
   - component: {fileID: 1876590596722464804}
+  - component: {fileID: 1876590596722464800}
   - component: {fileID: 1876590596722464805}
   - component: {fileID: 1876590596722464811}
   - component: {fileID: 5890224473386045795}
@@ -36,6 +36,23 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1876590596722464804
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1876590596722464801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37c696c672cf46688c168c0b09b4714e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tilemap: {fileID: 0}
+  range: 5
+  fourDir: 1
+  lineRenderer: {fileID: 1876590596722464800}
+  animator: {fileID: 5890224473386045795}
 --- !u!120 &1876590596722464800
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -135,23 +152,6 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
---- !u!114 &1876590596722464804
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1876590596722464801}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 37c696c672cf46688c168c0b09b4714e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tilemap: {fileID: 0}
-  range: 5
-  fourDir: 1
-  lineRenderer: {fileID: 1876590596722464800}
-  animator: {fileID: 5890224473386045795}
 --- !u!212 &1876590596722464805
 SpriteRenderer:
   m_ObjectHideFlags: 0

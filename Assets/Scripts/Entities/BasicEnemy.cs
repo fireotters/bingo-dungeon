@@ -14,6 +14,7 @@ namespace Entities
         [SerializeField] float timeToMove;
         WaitForSeconds waitTimeToMove;
         [HideInInspector] public Transform playerObj;
+        //[HideInInspector] public Board boardManager;
         public Transform moveReticuleGameObject;
         bool BlackPiece;
         bool Pissed;
@@ -21,14 +22,15 @@ namespace Entities
         public GameObject corpsePrefab;
 
         // Targetting
-        public List<Vector3> validMoves = new List<Vector3>();
-        public Vector3 fatalMove = Vector3.zero;
+        [HideInInspector] public List<Vector3> validMoves = new List<Vector3>();
+        [HideInInspector] public Vector3 fatalMove = Vector3.zero;
 
 
         void Start()
         {
             waitTimeToMove = new WaitForSeconds(timeToMove);
             playerObj = GameObject.Find("Player").transform;
+            //boardManager = GameObject.Find("Board").GetComponent<Board>();
             BlackPiece = Convert.ToBoolean(Random.Range(0, 2));
             enemyAnimator = gameObject.GetComponent<Animator>();
             enemyAnimator.SetBool("Black", BlackPiece);
@@ -65,6 +67,8 @@ namespace Entities
             }
         }
 
+        //public abstract List<Vector3> FindProtectingSquares();
+
         public bool ValidateDestination(Vector3 modifier)
         {
             Vector3 destination = transform.position + modifier;
@@ -95,7 +99,8 @@ namespace Entities
             bool moved;
             do
             {
-                moved = TryMove(ChoosePosition(), onFinished);
+                Vector3 destination = ChoosePosition();
+                moved = TryMove(destination, onFinished);
 
                 attempts += 1;
                 if (attempts > attemptLimit)
@@ -103,13 +108,14 @@ namespace Entities
                     Debug.LogError("BasicEnemy Object '" + transform.name + "' has no moves to try! (Saved Unity from endless loop)");
                 }
             } while (!moved);
+            //boardManager.UpdatePieceProtections(FindProtectingSquares());
         }
 
         public override bool TryMove(Vector3 destination, Action onFinish = null)
         {
             spriteRenderer.sortingOrder += 20;
 
-            transform.DOMove(destination, 1f).OnComplete(
+            transform.DOMove(destination, 0.5f).OnComplete(
                 () =>
                 {
                     Damage();
@@ -127,7 +133,7 @@ namespace Entities
 
         IEnumerator EnemyTurn(System.Action finished)
         {
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.5f);
             DoMove(finished);
         }
 

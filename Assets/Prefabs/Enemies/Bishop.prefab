@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 585594735355505065}
+  - component: {fileID: 585594735355505069}
   - component: {fileID: 585594735355505064}
   - component: {fileID: 585594735355505066}
-  - component: {fileID: 585594735355505069}
   - component: {fileID: 1267674098}
   - component: {fileID: 2161328426127790110}
   m_Layer: 1
@@ -36,6 +36,27 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &585594735355505069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 585594735355505068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a8ef98bc58566245a65a1bb3cc2bc2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tilemap: {fileID: 0}
+  range: 4
+  fourDir: 0
+  timeToMove: 0
+  playerObj: {fileID: 0}
+  moveReticuleGameObject: {fileID: 2116351310106951641, guid: 526f03761721bcb42850480a01d43681, type: 3}
+  corpsePrefab: {fileID: 1981591651481221961, guid: c54fc52716d250048bfcef37bbd120b6, type: 3}
+  validMoves: []
+  fatalMove: {x: 0, y: 0, z: 0}
 --- !u!120 &585594735355505064
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -187,27 +208,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &585594735355505069
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 585594735355505068}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4a8ef98bc58566245a65a1bb3cc2bc2a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tilemap: {fileID: 0}
-  range: 4
-  fourDir: 0
-  timeToMove: 0
-  playerObj: {fileID: 0}
-  moveReticuleGameObject: {fileID: 2116351310106951641, guid: 526f03761721bcb42850480a01d43681, type: 3}
-  corpsePrefab: {fileID: 1981591651481221961, guid: c54fc52716d250048bfcef37bbd120b6, type: 3}
-  validMoves: []
-  fatalMove: {x: 0, y: 0, z: 0}
 --- !u!58 &1267674098
 CircleCollider2D:
   m_ObjectHideFlags: 0

@@ -13,12 +13,11 @@ namespace Entities
 
         private void Update()
         {
-            if((transform.position - previousPos).x <= 0)
-                spriteRenderer.flipX = true;
-            else
-                spriteRenderer.flipX = false;
+            var currentPos = transform.position;
+            
+            spriteRenderer.flipX = (currentPos - previousPos).x <= 0;
 
-             previousPos = transform.position;
+            previousPos = currentPos;
         }
 
         public override void DoTurn(Action finished)
@@ -35,6 +34,7 @@ namespace Entities
         {
             SignalBus<SignalGameEnded>.Fire(new SignalGameEnded { winCondition = false });
         }
+        
         IEnumerator LostTurn(Action finished)
         {
             yield return new WaitForSeconds(1);
@@ -64,6 +64,7 @@ namespace Entities
                         {
                             totalMoveCost += Vector3.Distance(previewLinePoints[i], previewLinePoints[i + 1]);
                         }
+                        
                         // Round down to allow more forgiving movement, but also round up to rein in movement a bit.
                         if (Math.Round(totalMoveCost) <= range)
                         {

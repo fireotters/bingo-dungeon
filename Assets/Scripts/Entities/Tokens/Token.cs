@@ -7,18 +7,17 @@ namespace Entities.Tokens
 {
     public enum TokenType
     {
-        NOTHING,
-        SHIELD,
-        WATER,
-        METEOR,
+        Nothing,
+        Shield,
+        Water,
+        Meteor
     }
     
     public abstract class Token : MonoBehaviour
     {
         public TextMeshPro assignedNum;
         public TurnManager turnManager;
-
-
+        
         private void OnCollisionEnter2D(Collision2D col)
         {
             OnTokenPickup(col);
@@ -27,7 +26,5 @@ namespace Entities.Tokens
         }
 
         protected abstract void OnTokenPickup(Collision2D col);
-
-
     }
 }

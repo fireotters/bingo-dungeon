@@ -21,16 +21,16 @@ public class BingoWheelUi : MonoBehaviour
         Color colorChosen;
         switch (tokenChosen)
         {
-            case TokenType.NOTHING:
+            case TokenType.Nothing:
                 colorChosen = Color.white;
                 break;
-            case TokenType.SHIELD:
+            case TokenType.Shield:
                 colorChosen = Color.green;
                 break;
-            case TokenType.WATER:
+            case TokenType.Water:
                 colorChosen = Color.cyan;
                 break;
-            case TokenType.METEOR:
+            case TokenType.Meteor:
                 colorChosen = Color.yellow;
                 break;
             default:

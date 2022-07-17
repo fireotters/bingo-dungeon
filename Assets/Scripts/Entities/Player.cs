@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using Entities.Tokens;
 using UnityEngine;
 
 namespace Entities
@@ -7,17 +9,29 @@ namespace Entities
     public class Player : AbstractEntity
     {
         public LineRenderer lineRenderer;
-
-        [SerializeField] Animator animator;
-        Vector3 previousPos;
+        [SerializeField] private Animator animator;
+        private Vector3 previousPos;
+        private Token nearbyToken;
 
         private void Update()
         {
             var currentPos = transform.position;
-            
             spriteRenderer.flipX = (currentPos - previousPos).x <= 0;
-
             previousPos = currentPos;
+        }
+
+        private void OnDestroy()
+        {
+            SignalBus<SignalGameEnded>.Fire(new SignalGameEnded { winCondition = false });
+        }
+
+        private void OnTriggerEnter2D(Collider2D col)
+        {
+            if (col.gameObject.transform.parent.TryGetComponent<Token>(out var foundToken))
+            {
+                print("next to a token");
+                nearbyToken = foundToken;
+            }
         }
 
         public override void DoTurn(Action finished)
@@ -30,11 +44,6 @@ namespace Entities
             ConsumeTurn();
         }
 
-        private void OnDestroy()
-        {
-            SignalBus<SignalGameEnded>.Fire(new SignalGameEnded { winCondition = false });
-        }
-        
         IEnumerator LostTurn(Action finished)
         {
             yield return new WaitForSeconds(1);
@@ -50,6 +59,15 @@ namespace Entities
                 var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 mousePos.z = 0;
 
+                if (nearbyToken) // can move a token
+                {
+                    if (TryMoveToken(mousePos))
+                    {
+                        finished?.Invoke();
+                        yield break;
+                    }
+                }
+                
                 if (IsInRange(mousePos))
                 {
                     var previewLinePoints = PreviewPath(mousePos);
@@ -64,7 +82,7 @@ namespace Entities
                         {
                             totalMoveCost += Vector3.Distance(previewLinePoints[i], previewLinePoints[i + 1]);
                         }
-                        
+
                         // Round down to allow more forgiving movement, but also round up to rein in movement a bit.
                         if (Math.Round(totalMoveCost) <= range)
                         {
@@ -76,13 +94,13 @@ namespace Entities
                             {
                                 animator.SetBool("Moving", true);
                                 if (TryMove(mousePos, () =>
-                                {
-                                    animator.SetBool("Moving", false);
-                                    lineRenderer.positionCount = 0;
-                                    Damage();
-                                    spriteRenderer.sortingOrder -= 20;
-                                    finished?.Invoke();
-                                }))
+                                    {
+                                        animator.SetBool("Moving", false);
+                                        lineRenderer.positionCount = 0;
+                                        Damage();
+                                        spriteRenderer.sortingOrder -= 20;
+                                        finished?.Invoke();
+                                    }))
                                     yield break;
                             }
                         }
@@ -91,14 +109,71 @@ namespace Entities
                             lineRenderer.positionCount = 0;
                         }
                     }
-
                 }
                 else
                 {
                     lineRenderer.positionCount = 0;
                 }
+
                 yield return null;
             }
+        }
+
+        private bool TryMoveToken(Vector3 mousePos)
+        {
+            Vector3[] possibleDirections =
+            {
+                new(0, 1), new(0, -1), new(1, 0), new(-1, 0),
+            };
+
+            var validPositionsToMove = FigureOutValidPositions(possibleDirections);
+            float previousDistance = 0;
+            var nearestPointToMousePos = Vector3.zero;
+
+            foreach (var validPosition in validPositionsToMove)
+            {
+                var distance = Vector3.Distance(mousePos, validPosition);
+                if (nearestPointToMousePos == Vector3.zero || distance < previousDistance)
+                    nearestPointToMousePos = validPosition;
+
+                previousDistance = distance;
+            }
+
+            var lineToDraw = new[] { nearbyToken.transform.position, nearestPointToMousePos };
+            lineRenderer.positionCount = lineToDraw.Length;
+            lineRenderer.SetPositions(lineToDraw);
+
+            if (Input.GetMouseButton(0))
+            {
+                nearbyToken.MoveTo(nearestPointToMousePos);
+                nearbyToken = null;
+                return true;
+            }
+
+            return false;
+        }
+
+        private List<Vector3> FigureOutValidPositions(Vector3[] possibleDirections)
+        {
+            var validPositions = new List<Vector3>();
+
+            foreach (var possibleDirection in possibleDirections)
+            {
+                var supposedFinalTokenPosition = nearbyToken.transform.position + possibleDirection;
+                if (supposedFinalTokenPosition != transform.position &&
+                    !IsPossibleDirectionAWall(supposedFinalTokenPosition))
+                {
+                    validPositions.Add(supposedFinalTokenPosition);
+                }
+            }
+
+            return validPositions;
+        }
+
+        private bool IsPossibleDirectionAWall(Vector3 supposedFinalTokenPosition)
+        {
+            var positionInTilemap = tilemap.WorldToCell(supposedFinalTokenPosition);
+            return tilemap.HasTile(positionInTilemap);
         }
     }
 }

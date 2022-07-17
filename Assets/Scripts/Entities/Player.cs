@@ -15,7 +15,7 @@ namespace Entities
         private Vector3 previousPos;
 		private List<Token> nearbyTokens = new List<Token>();
 		[SerializeField] TextMeshPro text;
-        [SerializeField] TextMeshProUGUI textSkipUi;
+        [SerializeField] GameObject textSkipUi;
 
         private void Update()
         {
@@ -65,12 +65,19 @@ namespace Entities
 
         public void SkipTurn()
         {
+            StopAllCoroutines();
             extraTurns = 0;
+            text.text = extraTurns.ToString();
+            text.gameObject.SetActive(false);
+            textSkipUi.gameObject.SetActive(false);
+            currentFinishAction?.Invoke();
+            currentFinishAction = null;
             Debug.LogError("Rioni pls");
         }
 
         IEnumerator PlayerTurn(Action finished)
         {
+            currentFinishAction = finished;
             if (extraTurns == range)
             {
                 text.gameObject.SetActive(true);
@@ -161,6 +168,8 @@ namespace Entities
                                 animator.SetBool("Moving", true);
                                 animator.SetInteger("Dir", dir);
                                 animator.SetBool("Push", false);
+                                textSkipUi.gameObject.SetActive(false);
+
                                 if (TryMove(mousePos, () =>
                                 {
                                     extraTurns -= Mathf.FloorToInt(totalMoveCost);
@@ -169,8 +178,9 @@ namespace Entities
                                     if (extraTurns == 0)
                                     {
                                         text.gameObject.SetActive(false);
-                                        textSkipUi.gameObject.SetActive(false);
                                     }
+                                    else
+                                        textSkipUi.gameObject.SetActive(true);
 
                                     animator.SetBool("Moving", false);
                                     animator.SetInteger("Dir", 0);

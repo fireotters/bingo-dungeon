@@ -3141,13 +3141,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 812958920}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+      - m_Target: {fileID: 1893682616}
+        m_TargetAssemblyTypeName: Entities.Player, Assembly-CSharp
+        m_MethodName: SkipTurn
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -9436,11 +9436,6 @@ Transform:
   m_Father: {fileID: 1598371975}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &812958920 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1876590596722464801, guid: de72a1fdbfc0ebf4b82ba4a7806f1450, type: 3}
-  m_PrefabInstance: {fileID: 1876590598165449363}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &816918968
 GameObject:
   m_ObjectHideFlags: 0
@@ -17629,6 +17624,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1876590596722464806, guid: de72a1fdbfc0ebf4b82ba4a7806f1450, type: 3}
   m_PrefabInstance: {fileID: 1876590598165449363}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1893682616 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1876590596722464804, guid: de72a1fdbfc0ebf4b82ba4a7806f1450, type: 3}
+  m_PrefabInstance: {fileID: 1876590598165449363}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37c696c672cf46688c168c0b09b4714e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1893929211
 GameObject:
   m_ObjectHideFlags: 0
@@ -19123,6 +19129,10 @@ PrefabInstance:
       propertyPath: tilemap
       value: 
       objectReference: {fileID: 525800421}
+    - target: {fileID: 1876590596722464804, guid: de72a1fdbfc0ebf4b82ba4a7806f1450, type: 3}
+      propertyPath: textSkipUi
+      value: 
+      objectReference: {fileID: 439424411}
     - target: {fileID: 1876590596722464806, guid: de72a1fdbfc0ebf4b82ba4a7806f1450, type: 3}
       propertyPath: m_RootOrder
       value: 0

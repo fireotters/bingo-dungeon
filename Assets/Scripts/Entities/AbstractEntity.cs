@@ -16,7 +16,7 @@ namespace Entities
         private int hitPoints = 1;
         protected int extraTurns;
         private const int MAX_HEALTH = 2;
-        Action currentFinishAction;
+        protected Action currentFinishAction;
 
         // Re-orders the sprites on-screen as they move, so that pieces which are below others will render above them.
         // For example, a bishop on a space above a knight... rendering in above the knight. The whole knight should be visible, obscuring the bishop.

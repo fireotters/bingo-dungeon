@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Entities.Tokens;
 using System;
+using FMODUnity;
 using TMPro;
 using UnityEngine.UI;
 
@@ -11,6 +12,7 @@ public class BingoWheelUi : MonoBehaviour
     private Animator _animator;
     [SerializeField] Image _ballImage;
     [SerializeField] TextMeshProUGUI _ballText;
+    [SerializeField] private StudioEventEmitter bingoRollSfx;
 
     private void Awake()
     {
@@ -47,6 +49,7 @@ public class BingoWheelUi : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);
         _animator.SetBool("Sequence", true);
+        bingoRollSfx.Play();
         yield return new WaitForSeconds(3f);
         _animator.SetBool("Appear", false);
         _animator.SetBool("Sequence", false);

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using Entities.Tokens;
 using UnityEngine;
 using TMPro;
-using Entities.Tokens;
+using DG.Tweening;
 
 namespace Entities
 {
@@ -11,16 +13,37 @@ namespace Entities
         public LineRenderer lineRenderer;
         [SerializeField] private Animator animator;
         private Vector3 previousPos;
-        private Token nearbyToken;
-        [SerializeField] TextMeshPro text;
+		private List<Token> nearbyTokens = new List<Token>();
+		[SerializeField] TextMeshPro text;
 
         private void Update()
         {
             var currentPos = transform.position;
-
             spriteRenderer.flipX = (currentPos - previousPos).x <= 0;
-
             previousPos = currentPos;
+        }
+
+        private void OnDestroy()
+        {
+            SignalBus<SignalGameEnded>.Fire(new SignalGameEnded { winCondition = false });
+        }
+
+        private void OnTriggerEnter2D(Collider2D col)
+        {
+            if (col.gameObject.transform.parent.TryGetComponent<Token>(out var foundToken))
+            {
+                print("next to a token");
+                nearbyTokens.Add(foundToken);
+                print(nearbyTokens.Count);
+            }
+        }
+        private void OnTriggerExit2D(Collider2D col)
+        {
+            if (col.gameObject.transform.parent.TryGetComponent<Token>(out var foundToken))
+            {
+                print("moved away from a token");
+                nearbyTokens.Remove(foundToken);
+            }
         }
 
         public override void DoTurn(Action finished)
@@ -31,11 +54,6 @@ namespace Entities
                 StartCoroutine(LostTurn(finished));
 
             ConsumeTurn();
-        }
-
-        private void OnDestroy()
-        {
-            SignalBus<SignalGameEnded>.Fire(new SignalGameEnded { winCondition = false });
         }
 
         IEnumerator LostTurn(Action finished)
@@ -55,6 +73,29 @@ namespace Entities
             {
                 var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 mousePos.z = 0;
+
+                if (nearbyTokens.Count > 0) // can move a token
+                {
+                    Token tokenSelected = MouseHoveringOverToken(mousePos, nearbyTokens);
+                    if (tokenSelected)
+                        if (Input.GetMouseButton(1))
+                        {
+                            Vector3 directionToMove = tokenSelected.transform.position - transform.position;
+                            Vector3 intendedDestination = tokenSelected.transform.position + directionToMove;
+
+                            Vector3Int destinationTile = tilemap.WorldToCell(intendedDestination);
+                            if (!tilemap.HasTile(destinationTile))
+                            {
+                                tokenSelected.transform.DOMove(intendedDestination, 0.6f);
+                                nearbyTokens.Remove(tokenSelected);
+
+                                extraTurns -= 1;
+                                text.text = extraTurns.ToString();
+                                finished?.Invoke();
+                                yield break;
+                            }
+                        }
+                }
 
                 if (IsInRange(mousePos))
                 {
@@ -134,14 +175,86 @@ namespace Entities
                             lineRenderer.positionCount = 0;
                         }
                     }
-
                 }
                 else
                 {
                     lineRenderer.positionCount = 0;
                 }
+
                 yield return null;
             }
+        }
+
+        private Token MouseHoveringOverToken(Vector3 mousePos, List<Token> listOfNearbyTokens)
+        {
+            foreach (Token token in listOfNearbyTokens)
+            {
+                if (Vector3.Distance(transform.position, token.transform.position) < 0.1f)
+                {
+                    continue; // Don't attempt to push tokens Player is standing on
+                }
+                if (Vector3.Distance(mousePos, token.transform.position) < 0.5f) {
+                    return token;
+                }
+            }
+            return null;
+        }
+
+        //private bool TryMoveToken(Vector3 mousePos)
+        //{
+        //    Vector3[] possibleDirections =
+        //    {
+        //        new(0, 1), new(0, -1), new(1, 0), new(-1, 0),
+        //    };
+
+        //    var validPositionsToMove = FigureOutValidPositions(possibleDirections);
+        //    float previousDistance = 0;
+        //    var nearestPointToMousePos = Vector3.zero;
+
+        //    foreach (var validPosition in validPositionsToMove)
+        //    {
+        //        var distance = Vector3.Distance(mousePos, validPosition);
+        //        if (nearestPointToMousePos == Vector3.zero || distance < previousDistance)
+        //            nearestPointToMousePos = validPosition;
+
+        //        previousDistance = distance;
+        //    }
+
+        //    var lineToDraw = new[] { nearbyToken.transform.position, nearestPointToMousePos };
+        //    lineRenderer.positionCount = lineToDraw.Length;
+        //    lineRenderer.SetPositions(lineToDraw);
+
+        //    if (Input.GetMouseButton(1))
+        //    {
+        //        nearbyToken.MoveTo(nearestPointToMousePos);
+        //        nearbyToken = null;
+        //        return true;
+        //    }
+
+        //    return false;
+        //}
+
+        //private List<Vector3> FigureOutValidPositions(Vector3[] possibleDirections)
+        //{
+        //    var validPositions = new List<Vector3>();
+
+        //    foreach (var possibleDirection in possibleDirections)
+        //    {
+        //        var supposedFinalTokenPosition = nearbyToken.transform.position + possibleDirection;
+        //        if (supposedFinalTokenPosition != transform.position &&
+        //            !IsPossibleDirectionAWall(supposedFinalTokenPosition))
+        //        {
+        //            validPositions.Add(supposedFinalTokenPosition);
+        //        }
+        //    }
+
+        //    return validPositions;
+        //}
+
+        private bool IsPossibleDirectionAWall(Vector3 supposedFinalTokenPosition)
+        {
+            var positionInTilemap = tilemap.WorldToCell(supposedFinalTokenPosition);
+            return tilemap.HasTile(positionInTilemap);
         }
     }
 }

@@ -55,7 +55,7 @@ namespace Entities
                 : AStar.FindPath(tilemap, transform.position, endPos);
         }
 
-        public virtual bool TryMove(Vector3 destination, System.Action onFinish = null)
+        public virtual bool TryMove(Vector3 destination, Action onFinish = null)
         {
             currentFinishAction = onFinish;
             if (IsInRange(destination))

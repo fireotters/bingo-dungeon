@@ -5,9 +5,9 @@ namespace Entities.Tokens
 {
     public class NothingToken : Token
     {
-        protected override void OnTokenPickup(Collision2D col)
-        {
-           Destroy(gameObject);
-        }
+        //protected override void OnTokenPickup(Collision2D col)
+        //{
+        //   Destroy(gameObject);
+        //}
     }
 }

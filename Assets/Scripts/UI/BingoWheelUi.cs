@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 public class BingoWheelUi : MonoBehaviour
 {
-    private Animator _animator;
+    [SerializeField] private Animator _animator;
     [SerializeField] Image _ballImage;
     [SerializeField] TextMeshProUGUI _ballText;
     [SerializeField] private StudioEventEmitter bingoRollSfx;

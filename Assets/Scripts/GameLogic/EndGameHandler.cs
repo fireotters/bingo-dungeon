@@ -1,3 +1,4 @@
+using FMODUnity;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,7 +8,8 @@ namespace GameLogic
     {
         CompositeDisposable disposables = new CompositeDisposable();
         [SerializeField] private GameObject gameOverOverlay;
-
+        [SerializeField] private StudioEventEmitter gameSong;
+        
         private void Start()
         {
             SignalBus<SignalGameEnded>.Subscribe(HandleEndGame).AddTo(disposables);
@@ -21,6 +23,7 @@ namespace GameLogic
             }
             else
             {
+                gameSong.SetParameter("Dead", 1);
                 gameOverOverlay.SetActive(true);
             }
         }

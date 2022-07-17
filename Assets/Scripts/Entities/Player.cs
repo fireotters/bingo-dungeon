@@ -5,6 +5,7 @@ using Entities.Tokens;
 using UnityEngine;
 using TMPro;
 using DG.Tweening;
+using FMODUnity;
 
 namespace Entities
 {
@@ -16,6 +17,7 @@ namespace Entities
 		private List<Token> nearbyTokens = new List<Token>();
 		[SerializeField] TextMeshPro text;
         [SerializeField] GameObject textSkipUi;
+        [SerializeField] private StudioEventEmitter playerTurn, playerMove;
 
         private void Update()
         {
@@ -79,6 +81,7 @@ namespace Entities
             currentFinishAction = finished;
             if (extraTurns == range)
             {
+                playerTurn.Play();
                 text.gameObject.SetActive(true);
                 textSkipUi.gameObject.SetActive(true);
             }
@@ -169,6 +172,8 @@ namespace Entities
                                 animator.SetBool("Push", false);
                                 textSkipUi.gameObject.SetActive(false);
 
+                                playerMove.Play();
+                                
                                 if (TryMove(mousePos, () =>
                                 {
                                     extraTurns -= Mathf.FloorToInt(totalMoveCost);

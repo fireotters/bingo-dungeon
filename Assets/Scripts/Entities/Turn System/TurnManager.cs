@@ -16,11 +16,12 @@ namespace Entities.Turn_System
         public Transform currentTurnPointer;
         public Transform entitiesContainer;
         public List<ITurnEntity> turnEntities;
+        public BingoWheelUi bingoWheelUi;
         public List<GameObject> turnEntitiesObjects;
         private int currentTurn;
         [SerializeField] private GridData gridData;
         [SerializeField] private Token[] tokens;
-        private List<TextMeshPro> alreadyRolledNumbers;
+        private List<TextMeshPro> occupiedNumbers;
         [SerializeField] private TileBase meteorTile;
         [SerializeField] private Tilemap obstacleTilemap;
         bool rollTurn = true;
@@ -31,7 +32,7 @@ namespace Entities.Turn_System
             SignalBus<SignalGameEnded>.Subscribe((gameEnded) => OnGameEnded()).AddTo(disposables);
             CreateListITurnEntity();
             turnEntitiesObjects = turnEntities.Cast<Component>().Select(x => x.gameObject).ToList();
-            alreadyRolledNumbers = new List<TextMeshPro>();
+            occupiedNumbers = new List<TextMeshPro>();
             turnEntities[0].DoTurn(NextTurn);
             UpdatePointer();
         }
@@ -41,13 +42,13 @@ namespace Entities.Turn_System
             disposables.Dispose();
         }
 
-        void OnGameEnded()
+        private void OnGameEnded()
         {
             rollTurn = false;
             currentTurnPointer.gameObject.SetActive(false);
         }
 
-        void UpdatePointer()
+        private void UpdatePointer()
         {
             var component = (turnEntities[currentTurn] as Component);
             if (component == null)
@@ -71,8 +72,6 @@ namespace Entities.Turn_System
             yield return new WaitForEndOfFrame();
             if (rollTurn)
             {
-
-
                 currentTurn++;
                 int currentTurnTemp = currentTurn % turnEntitiesObjects.Count;
                 var currentEntity = turnEntitiesObjects[currentTurnTemp];
@@ -84,11 +83,27 @@ namespace Entities.Turn_System
 
                 if (currentTurn >= turnEntities.Count)
                 {
+                    // Decide number
                     var selectedNumber = RollCage();
-                    alreadyRolledNumbers.Add(selectedNumber);
+                    occupiedNumbers.Add(selectedNumber);
                     print($"Rolled number: {selectedNumber}");
-                    DropTokenOn(selectedNumber);
+
+                    // Decide effect
+                    var type = TokenType.Nothing;
+                    // var values = Enum.GetValues(typeof(TokenType));
+                    // var type = (TokenType)values.GetValue(Random.Range(0, values.Length));
+
+                    // Hide pointer, summon Bingo UI
+                    currentTurnPointer.gameObject.SetActive(false);
+                    yield return new WaitForSeconds(.5f);
+                    bingoWheelUi.RunBingoWheelUi(Int16.Parse(selectedNumber.transform.name), type);
+                    yield return new WaitForSeconds(3f);
+
+                    // Drop token, return pointer
+                    DropTokenOn(type, selectedNumber);
                     currentTurn = 0;
+                    yield return new WaitForSeconds(.5f);
+                    currentTurnPointer.gameObject.SetActive(true);
                 }
 
                 UpdatePointer();
@@ -101,31 +116,48 @@ namespace Entities.Turn_System
             StartCoroutine(DoNextTurn());
         }
 
-        private void DropTokenOn(TextMeshPro number)
+        private void DropTokenOn(TokenType type, TextMeshPro number)
         {
-            var values = Enum.GetValues(typeof(TokenType));
-            var type = (TokenType)values.GetValue(Random.Range(0, values.Length));
-
             switch (type)
             {
-                case TokenType.NOTHING:
-                case TokenType.SHIELD:
-                case TokenType.WATER:
-                    Instantiate(tokens[(int)type], number.transform.position, Quaternion.identity);
+                case TokenType.Nothing:
+                case TokenType.Shield:
+                case TokenType.Water:
+                    var newToken = Instantiate(tokens[(int)type], number.transform.position, Quaternion.identity);
+                    newToken.assignedNum = number;
+                    newToken.turnManager = GetComponent<TurnManager>(); // Crossy: Oh help me, I don't understand this signalling library so I'm just passing turnmanager to every token
                     break;
-                case TokenType.METEOR:
+                case TokenType.Meteor:
                     obstacleTilemap.SetTile(obstacleTilemap.WorldToCell(number.transform.position), meteorTile);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+            //print(occupiedNumbers.Count);
         }
 
         private TextMeshPro RollCage()
         {
+            UpdateOccupiedSquares();
             var rolledNumber = gridData.tileNumbers[Random.Range(0, gridData.tileNumbers.Count)];
 
-            return alreadyRolledNumbers.Contains(rolledNumber) ? RollCage() : rolledNumber;
+            return occupiedNumbers.Contains(rolledNumber) ? RollCage() : rolledNumber;
+        }
+
+        public void TokenWasCollected(TextMeshPro freedNumber)
+        {
+            occupiedNumbers.Remove(freedNumber);
+        }
+
+        private void UpdateOccupiedSquares()
+        {
+            occupiedNumbers.Clear();
+            foreach (TextMeshPro textObj in gridData.tileNumbers)
+            {
+                if (textObj.GetComponent<NumberSquare>().IsSomethingStandingOn())
+                    occupiedNumbers.Add(textObj);
+            }
+            //print(occupiedNumbers.Count);
         }
     }
 }

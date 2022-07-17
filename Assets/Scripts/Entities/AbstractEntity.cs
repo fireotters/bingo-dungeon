@@ -86,7 +86,9 @@ namespace Entities
         protected bool IsInRange(Vector3 endPos)
         {
             Vector3Int distance = tilemap.WorldToCell(endPos) - tilemap.WorldToCell(transform.position);
-            return distance.magnitude < (range + 1);
+            bool isWithinRange = distance.magnitude < (range + 1);
+            bool isNotSquarePlayerIsOn = distance.magnitude > 0.1f;
+            return isWithinRange && isNotSquarePlayerIsOn;
         }
 
         protected void Damage()

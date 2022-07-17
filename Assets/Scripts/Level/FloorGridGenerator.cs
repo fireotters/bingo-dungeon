@@ -9,6 +9,7 @@ namespace Level
     public class FloorGridGenerator : MonoBehaviour
     {
         [SerializeField] private Tilemap floorTilemap, obstacleTilemap;
+        [SerializeField] private CheckForBingo checkForBingo;
         [SerializeField] private int radius;
         [SerializeField] private TextMeshPro numberText;
         [SerializeField] private GridData gridData;
@@ -19,6 +20,9 @@ namespace Level
 
         private void Start()
         {
+            if (checkForBingo == null)
+                Debug.LogError("FloorGridGenerator: Assign 'checkForBingo' - CheckBingoManager!!");
+
             gridLayout = transform.parent.GetComponentInParent<GridLayout>();
             numbersParent = GameObject.Find("Numbers");
             gridData.tileNumbers = new List<TextMeshPro>();
@@ -29,6 +33,7 @@ namespace Level
         private void GenerateFloorNumbers()
         {
             var floorSize = floorTilemap.cellBounds.size;
+            var boardNotation = 0;
 
             foreach (var pos in floorTilemap.cellBounds.allPositionsWithin)
             {
@@ -41,8 +46,11 @@ namespace Level
 
                     tileNumber.name = generatedNumber;
                     tileNumber.text = generatedNumber;
+                    tileNumber.GetComponent<NumberSquare>().notation = boardNotation;
+                    tileNumber.GetComponent<NumberSquare>().checkForBingo = checkForBingo;
                     gridData.tileNumbers.Add(tileNumber);
                 }
+                boardNotation++;
             }
         }
 

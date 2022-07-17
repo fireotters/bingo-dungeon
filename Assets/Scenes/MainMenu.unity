@@ -5987,7 +5987,7 @@ MonoBehaviour:
       Data2: 1228063111
       Data3: 462333367
       Data4: 82753582
-    Path: event:/2D/UI/Menu
+    Path: event:/2D/Music/Menu theme
   Event: 
   PlayEvent: 1
   StopEvent: 0

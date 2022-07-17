@@ -1,3 +1,5 @@
+using System;
+using Audio;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,7 +10,6 @@ namespace UI
         [Header("Option Panel")] 
         
         [SerializeField] private Slider _optionMusicSlider;
-
         public Slider optionSFXSlider;
 
         // Functions related to Options menu

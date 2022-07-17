@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 7617504088332824588}
   m_Layer: 1
   m_Name: Queen
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -52,7 +52,6 @@ MonoBehaviour:
   tilemap: {fileID: 0}
   range: 16
   fourDir: 0
-  timeToMove: 0
   playerObj: {fileID: 0}
   moveReticuleGameObject: {fileID: 2116351310106951641, guid: 526f03761721bcb42850480a01d43681, type: 3}
   corpsePrefab: {fileID: 1981591651481221961, guid: cfaf4afd67a7c8d4f8c0b780d14b6de3, type: 3}

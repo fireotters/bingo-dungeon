@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using DG.Tweening;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -9,11 +10,11 @@ namespace Entities
 {
     public abstract class BasicEnemy : AbstractEntity
     {
-
-        [Tooltip("Time to move in seconds")]
-        private float timeToMove = .5f;
+        [Tooltip("Time to move in seconds")] private float timeToMove = .5f;
         private float timeToStartTurn = .5f;
+
         [HideInInspector] public Transform playerObj;
+
         //[HideInInspector] public Board boardManager;
         public Transform moveReticuleGameObject;
         bool BlackPiece;
@@ -26,7 +27,7 @@ namespace Entities
         [HideInInspector] public Vector3 fatalMove = Vector3.zero;
 
 
-        void Start()
+        private void Start()
         {
             playerObj = GameObject.Find("Player").transform;
             //boardManager = GameObject.Find("Board").GetComponent<Board>();
@@ -34,8 +35,6 @@ namespace Entities
             enemyAnimator = gameObject.GetComponent<Animator>();
             enemyAnimator.SetBool("Black", BlackPiece);
             SignalBus<SignalPieceAdded>.Fire(default);
-
-            //StartCoroutine(EnemyPatrol());
         }
 
         private void OnDestroy()
@@ -46,9 +45,8 @@ namespace Entities
         public virtual Vector3 ChoosePosition()
         {
             // Movement constraints are set in each Enemy's script
-
             // Spawn movement reticules to illustrate piece range
-            foreach (Vector3 validMove in validMoves)
+            foreach (var validMove in validMoves)
                 Instantiate(moveReticuleGameObject, validMove, Quaternion.identity);
 
             // If the player can be killed, do it. Else, pick a random valid destination.
@@ -61,19 +59,32 @@ namespace Entities
                 return transform.position;
             else
             {
-                // TODO calculate the move most threatening to the player by using A* some way.
-                int randomNum = Random.Range(0, validMoves.Count);
-                return validMoves[randomNum];
+                var playerPos = playerObj.transform.position;
+                var movesCloserToPlayer = validMoves.Where(v3 =>
+                {
+                    var playerToDestinationDist = Vector3.Distance(playerPos, v3);
+                    var playerToEnemyDist = Vector3.Distance(transform.position, playerPos);
+                    return playerToDestinationDist < playerToEnemyDist;
+                }).ToList();
+                var movesAwayFromPlayer = validMoves.Where(v3 =>
+                {
+                    var playerToDestinationDist = Vector3.Distance(playerPos, v3);
+                    var playerToEnemyDist = Vector3.Distance(transform.position, playerPos);
+                    return playerToDestinationDist > playerToEnemyDist;
+                }).ToList();
+                var chanceToRetreat = Random.Range(1, 4);
+                
+                return chanceToRetreat < 2 ?
+                        movesAwayFromPlayer[Random.Range(0, movesAwayFromPlayer.Count)] :
+                        movesCloserToPlayer[Random.Range(0, movesCloserToPlayer.Count)];
             }
         }
-
-        //public abstract List<Vector3> FindProtectingSquares();
 
         public bool ValidateDestination(Vector3 modifier)
         {
             Vector3 destination = transform.position + modifier;
             Vector3Int destinationTile = tilemap.WorldToCell(destination);
-            if (tilemap.HasTile(destinationTile))
+            if (tilemap.HasTile(destinationTile) || IsCellOccupiedByEnemy())
             {
                 return false; // Tell the enemy to no longer search for valid tiles in this direction.
             }
@@ -83,12 +94,32 @@ namespace Entities
                 {
                     fatalMove = destination;
                 }
+
                 validMoves.Add(destination);
                 return true;
             }
         }
 
-        private void DoMove(System.Action onFinished = null)
+        private bool IsCellOccupiedByEnemy()
+        {
+            var searchLayer = LayerMask.NameToLayer("Pieces");
+            var colliders = Physics2D.OverlapCircleAll(transform.position, 0.5f, searchLayer);
+
+            foreach (var colliderFound in colliders)
+            {
+                if (colliderFound.gameObject != gameObject)
+                {
+                    if (colliderFound.gameObject.CompareTag("Enemy"))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        private void DoMove(Action onFinished = null)
         {
             // Reset targetting variables
             validMoves = new List<Vector3>();
@@ -105,10 +136,10 @@ namespace Entities
                 attempts += 1;
                 if (attempts > attemptLimit)
                 {
-                    Debug.LogError("BasicEnemy Object '" + transform.name + "' has no moves to try! (Saved Unity from endless loop)");
+                    Debug.LogError("BasicEnemy Object '" + transform.name +
+                                   "' has no moves to try! (Saved Unity from endless loop)");
                 }
             } while (!moved);
-            //boardManager.UpdatePieceProtections(FindProtectingSquares());
         }
 
         public override bool TryMove(Vector3 destination, Action onFinish = null)
@@ -122,7 +153,7 @@ namespace Entities
                     onFinish?.Invoke();
                     spriteRenderer.sortingOrder -= 20;
                 }
-                );
+            );
             return true;
         }
 

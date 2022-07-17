@@ -1,7 +1,9 @@
-﻿using UnityEngine;
-using TMPro;
+﻿using System;
+using DG.Tweening;
 using Entities.Turn_System;
-using System.Collections;
+using TMPro;
+using Unity.VisualScripting;
+using UnityEngine;
 
 namespace Entities.Tokens
 {
@@ -17,14 +19,26 @@ namespace Entities.Tokens
     {
         public TextMeshPro assignedNum;
         public TurnManager turnManager;
-        
-        private void OnCollisionEnter2D(Collision2D col)
+        private Vector3 debugDestination;
+
+        //private void OnCollisionEnter2D(Collision2D col)
+        //{
+        //    OnTokenPickup(col);
+        //    turnManager.TokenWasCollected(assignedNum);
+        //    Destroy(gameObject);
+        //}
+
+        public void MoveTo(Vector3 destination)
         {
-            OnTokenPickup(col);
-            turnManager.TokenWasCollected(assignedNum);
-            Destroy(gameObject);
+            debugDestination = destination;
+            transform.DOMove(destination, 1f);
         }
 
-        protected abstract void OnTokenPickup(Collision2D col);
+        private void OnDrawGizmos()
+        {
+            Gizmos.DrawWireSphere(debugDestination, .5f);
+        }
+
+        //protected abstract void OnTokenPickup(Collision2D col);
     }
 }

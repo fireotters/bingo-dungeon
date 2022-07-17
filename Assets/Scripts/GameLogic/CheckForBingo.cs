@@ -35,6 +35,11 @@ public class CheckForBingo : MonoBehaviour
         }
 
         print("Is there Bingo? " + CheckForBingoResult());
+
+        if (CheckForBingoResult())
+        {
+            SignalBus<SignalGameEnded>.Fire(new SignalGameEnded(){ winCondition = true});
+        }
     }
 
     private void Update()

@@ -19,7 +19,10 @@ namespace GameLogic
         private void HandleEndGame(SignalGameEnded context)
         {
             if (context.winCondition)
+            {
+                gameSong.SetParameter("Win", 1);
                 gameWinOverlay.SetActive(true);
+            }
             else
             {
                 gameSong.SetParameter("Dead", 1);

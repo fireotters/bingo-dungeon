@@ -8,6 +8,7 @@ namespace UI
     {
         [Header("Game UI")] public GameObject gamePausePanel;
         public GameObject optionsPanel;
+        public GameObject gameOverPanel;
         private FmodMixer fmodMixer;
 
         private void Start()

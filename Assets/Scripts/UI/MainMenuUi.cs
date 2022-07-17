@@ -79,8 +79,7 @@ namespace UI
         public void StartGame()
         {
             menuSong.Stop();
-            Debug.LogError("Put the first gamescene in!!");
-            SceneManager.LoadScene("Scenes/TemplateGameScene");
+            SceneManager.LoadScene("Scenes/LevelScenes/Level1");
         }
 
         public void OpenHelp()

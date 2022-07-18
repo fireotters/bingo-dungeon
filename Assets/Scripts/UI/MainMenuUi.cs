@@ -79,6 +79,11 @@ namespace UI
         public void StartGame()
         {
             menuSong.Stop();
+            Invoke(nameof(StartGame2), 0.2f);
+        }
+
+        private void StartGame2()
+        {
             SceneManager.LoadScene("Scenes/LevelScenes/Level1");
         }
 

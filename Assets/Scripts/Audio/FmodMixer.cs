@@ -15,10 +15,19 @@ namespace Audio
         {
             sfx = RuntimeManager.GetBus("bus:/Sfx");
             music = RuntimeManager.GetBus("bus:/Music");
+
+
+            float dbMusic = PlayerPrefs.GetFloat("Music");
+            float dbSfx = PlayerPrefs.GetFloat("SFX");
+
+            music.setVolume(DecibelToLinear(dbMusic));
+            sfx.setVolume(DecibelToLinear(dbSfx));
         }
 
         public void ChangeMusicVolume(float dB)
         {
+            if (dB <= -39f)
+                dB = -200f;
             music.setVolume(DecibelToLinear(dB));
             PlayerPrefs.SetFloat("Music", dB);
             PlayerPrefs.Save();

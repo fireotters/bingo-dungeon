@@ -45,6 +45,11 @@ namespace UI
 
         public void BackToMainMenu()
         {
+            Invoke(nameof(BackToMainMenu2), 0.2f);
+        }
+
+        private void BackToMainMenu2()
+        {
             SceneManager.LoadScene("Scenes/MainMenu");
         }
     }

@@ -78,15 +78,20 @@ namespace Entities.Turn_System
                 else
                 {
                     currentTurn++;
+                    bool finished = false;
+
                     int currentTurnTemp = currentTurn % turnEntitiesObjects.Count;
                     var currentEntity = turnEntitiesObjects[currentTurnTemp];
-                    if (currentEntity == null || !currentEntity.activeInHierarchy)
+                    while (currentEntity == null || !currentEntity.activeInHierarchy)
                     {
                         turnEntities.RemoveAt(currentTurnTemp);
                         turnEntitiesObjects.RemoveAt(currentTurnTemp);
+                        
+                        currentTurnTemp = currentTurn % turnEntitiesObjects.Count;
+                        currentEntity = turnEntitiesObjects[currentTurnTemp];
                     }
 
-                    if (currentTurn >= turnEntities.Count)
+                    if (currentTurn >= turnEntities.Count || finished)
                     {
                         // Decide number
                         var selectedNumber = RollCage();

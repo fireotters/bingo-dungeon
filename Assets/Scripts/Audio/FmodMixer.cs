@@ -42,7 +42,9 @@ namespace Audio
             {
                 foreach (var eventEmitter in eventEmitters)
                 {
-                    if (!eventEmitter.Event.Contains("Stage theme"))
+                    // EventReference.Path cannot be used in builds. This GUID represents the Stage Music.
+                    // Pause every sound except the Stage Music.
+                    if (eventEmitter.EventReference.Guid.ToString() != "{3f293b51-10ca-4c8a-bff9-897937d8445f}")
                     {
                         switch (gameIsPaused)
                         {

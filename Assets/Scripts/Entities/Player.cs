@@ -84,6 +84,16 @@ namespace Entities
             currentFinishAction = null;
         }
 
+        public void WaitAfterKillingThenSkipTurn()
+        {
+            // Killing an enemy and immediately skipping turns caused enemy movement sounds to be doubled
+            extraTurns = 0;
+            text.text = extraTurns.ToString();
+            text.gameObject.SetActive(false);
+            textSkipUi.gameObject.SetActive(false);
+            Invoke(nameof(SkipTurn), 0.4f);
+        }
+
         IEnumerator PlayerTurn(Action finished)
         {
             currentFinishAction = finished;

@@ -73,8 +73,10 @@ namespace Entities.Turn_System
             yield return new WaitForEndOfFrame();
             if (rollTurn)
             {
-                if (turnEntities[currentTurn].GetTurns() > 0)
-                    turnEntities[currentTurn].DoTurn(NextTurn);
+                // Unpredictably, currentTurn will be higher than the max. In this case, skip to next round.
+                if (currentTurn < turnEntities.Count)
+                    if (turnEntities[currentTurn].GetTurns() > 0)
+                        turnEntities[currentTurn].DoTurn(NextTurn);
                 else
                 {
                     currentTurn++;

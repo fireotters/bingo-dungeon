@@ -14,7 +14,7 @@ namespace Entities
         public bool fourDir;
         private int lostTurns;
         private int hitPoints = 1;
-        protected int extraTurns;
+        protected float extraTurns;
         private const int MAX_HEALTH = 2;
         protected Action currentFinishAction;
 
@@ -145,7 +145,7 @@ namespace Entities
             extraTurns = range;
         }
 
-        public int GetTurns()
+        public float GetTurns()
         {
             return extraTurns;
         }

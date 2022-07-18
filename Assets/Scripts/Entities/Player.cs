@@ -12,11 +12,13 @@ namespace Entities
 {
     public class Player : AbstractEntity
     {
-        public LineRenderer lineRenderer;
-        [SerializeField] private Animator animator;
+        private LineRenderer _lineRenderer;
+        private Animator _animator;
         private Vector3 previousPos;
-		private List<Token> nearbyTokens = new List<Token>();
-		[SerializeField] TextMeshPro text;
+        private List<Token> nearbyTokens = new List<Token>();
+        private TextMeshPro _textTurnsRemaining, _textMovementCost;
+        private GameObject _textTrHalfSign, _textMcHalfSign;
+        private Vector3 _modifierTextMovementCost = new Vector3(-0.1f, 0, 0);
         [SerializeField] GameObject textSkipUi;
         [SerializeField] private StudioEventEmitter playerTurn, playerMove;
         private GameUi gameUi;
@@ -24,6 +26,12 @@ namespace Entities
         public override void Awake()
         {
             gameUi = FindObjectOfType<Canvas>().GetComponent<GameUi>();
+            _lineRenderer = GetComponent<LineRenderer>();
+            _animator = GetComponent<Animator>();
+            _textTurnsRemaining = transform.Find("TextTurnsRemaining").GetComponent<TextMeshPro>();
+            _textMovementCost = transform.Find("TextMovementCost").GetComponent<TextMeshPro>();
+            _textTrHalfSign = _textTurnsRemaining.transform.Find("Half Sign").gameObject;
+            _textMcHalfSign = _textMovementCost.transform.Find("Half Sign").gameObject;
             base.Awake();
         }
 
@@ -39,22 +47,16 @@ namespace Entities
             SignalBus<SignalGameEnded>.Fire(new SignalGameEnded { winCondition = false });
         }
 
+        // Player only checks triggers for Tokens which come into range
         private void OnTriggerEnter2D(Collider2D col)
         {
             if (col.gameObject.transform.parent.TryGetComponent<Token>(out var foundToken))
-            {
-                print("next to a token");
                 nearbyTokens.Add(foundToken);
-                print(nearbyTokens.Count);
-            }
         }
         private void OnTriggerExit2D(Collider2D col)
         {
             if (col.gameObject.transform.parent.TryGetComponent<Token>(out var foundToken))
-            {
-                print("moved away from a token");
                 nearbyTokens.Remove(foundToken);
-            }
         }
 
         public override void DoTurn(Action finished)
@@ -77,8 +79,8 @@ namespace Entities
         {
             StopAllCoroutines();
             extraTurns = 0;
-            text.text = extraTurns.ToString();
-            text.gameObject.SetActive(false);
+            _textTurnsRemaining.text = extraTurns.ToString();
+            _textTurnsRemaining.gameObject.SetActive(false);
             textSkipUi.gameObject.SetActive(false);
             currentFinishAction?.Invoke();
             currentFinishAction = null;
@@ -88,8 +90,8 @@ namespace Entities
         {
             // Killing an enemy and immediately skipping turns caused enemy movement sounds to be doubled
             extraTurns = 0;
-            text.text = extraTurns.ToString();
-            text.gameObject.SetActive(false);
+            _textTurnsRemaining.text = extraTurns.ToString();
+            _textTurnsRemaining.gameObject.SetActive(false);
             textSkipUi.gameObject.SetActive(false);
             Invoke(nameof(SkipTurn), 0.4f);
         }
@@ -100,10 +102,11 @@ namespace Entities
             if (extraTurns == range)
             {
                 playerTurn.Play();
-                text.gameObject.SetActive(true);
+                _textTurnsRemaining.gameObject.SetActive(true);
                 textSkipUi.gameObject.SetActive(true);
             }
-            text.text = extraTurns.ToString();
+            _textTurnsRemaining.text = Mathf.FloorToInt(extraTurns).ToString();
+            _textTrHalfSign.SetActive(extraTurns % 1f == .5f);
 
             while (true)
             {
@@ -131,7 +134,7 @@ namespace Entities
                                 nearbyTokens.Remove(tokenSelected);
 
                                 extraTurns -= 1;
-                                text.text = extraTurns.ToString();
+                                _textTurnsRemaining.text = extraTurns.ToString();
                                 finished?.Invoke();
                                 yield break;
                             }
@@ -146,20 +149,27 @@ namespace Entities
                     {
                         // Dodgy move cost setup, because our A* implementation cannot return move costs.
                         // This measures how long a line is, and from that determine the cost.
-                        // This is so that Player can't go around thin walls to destinations which are considered 'In Range'
                         float totalMoveCost = 0;
                         for (int i = 0; i < previewLinePoints.Count - 1; i++)
                         {
-                            totalMoveCost += Vector3.Distance(previewLinePoints[i], previewLinePoints[i + 1]);
+                            float x = Vector3.Distance(previewLinePoints[i], previewLinePoints[i + 1]);
+                            if (x % 1f != 0f)
+                                // Round up any diagonal lines to their closest multiple of 1.5, instead of 1.4142
+                                x = 1.5f * Mathf.FloorToInt((x + .75f) / 1.5f);
+                            totalMoveCost += x;
                         }
 
-                        // Round down to allow more forgiving movement, but also round up to rein in movement a bit.
-                        if (Math.Round(totalMoveCost) <= extraTurns)
+                        if (totalMoveCost <= extraTurns + 0.5f)
                         {
-                            lineRenderer.positionCount = previewLinePoints.Count;
-                            lineRenderer.SetPositions(previewLinePoints.ToArray());
+                            // Render a line & movement cost sign if a move is valid.
+                            _lineRenderer.positionCount = previewLinePoints.Count;
+                            _lineRenderer.SetPositions(previewLinePoints.ToArray());
+                            _textMovementCost.text = Mathf.FloorToInt(totalMoveCost).ToString();
+                            _textMovementCost.transform.position = previewLinePoints[^1] + _modifierTextMovementCost;
+                            _textMovementCost.gameObject.SetActive(true);
+                            _textMcHalfSign.SetActive(totalMoveCost % 1f == .5f);
 
-                            // Can only move if preview points exist
+
                             if (Input.GetMouseButton(0))
                             {
                                 float xTo = mousePos.x;
@@ -189,29 +199,30 @@ namespace Entities
                                 else if (xDiff < 0 && yDiff < 0)
                                     dir = 1;
 
-                                animator.SetBool("Moving", true);
-                                animator.SetInteger("Dir", dir);
-                                animator.SetBool("Push", false);
-                                textSkipUi.gameObject.SetActive(false);
+                                _animator.SetBool("Moving", true);
+                                _animator.SetInteger("Dir", dir);
+                                _animator.SetBool("Push", false);
 
+                                textSkipUi.gameObject.SetActive(false);
+                                _textMovementCost.gameObject.SetActive(false);
                                 playerMove.Play();
                                 
                                 if (TryMove(mousePos, () =>
                                 {
-                                    extraTurns -= Mathf.FloorToInt(totalMoveCost);
-                                    text.text = extraTurns.ToString();
+                                    extraTurns -= totalMoveCost;
+                                    _textTurnsRemaining.text = extraTurns.ToString();
 
-                                    if (extraTurns == 0)
+                                    if (extraTurns <= 0)
                                     {
-                                        text.gameObject.SetActive(false);
+                                        _textTurnsRemaining.gameObject.SetActive(false);
                                     }
                                     else
                                         textSkipUi.gameObject.SetActive(true);
 
-                                    animator.SetBool("Moving", false);
-                                    animator.SetInteger("Dir", 0);
-                                    animator.SetBool("Push", false);
-                                    lineRenderer.positionCount = 0;
+                                    _animator.SetBool("Moving", false);
+                                    _animator.SetInteger("Dir", 0);
+                                    _animator.SetBool("Push", false);
+                                    _lineRenderer.positionCount = 0;
                                     spriteRenderer.sortingOrder = -(int)transform.position.y;
                                     Damage();
                                     finished?.Invoke();
@@ -221,13 +232,15 @@ namespace Entities
                         }
                         else
                         {
-                            lineRenderer.positionCount = 0;
+                            _lineRenderer.positionCount = 0;
+                            _textMovementCost.gameObject.SetActive(false);
                         }
                     }
                 }
                 else
                 {
-                    lineRenderer.positionCount = 0;
+                    _lineRenderer.positionCount = 0;
+                    _textMovementCost.gameObject.SetActive(false);
                 }
 
                 yield return null;
@@ -248,57 +261,6 @@ namespace Entities
             }
             return null;
         }
-
-        //private bool TryMoveToken(Vector3 mousePos)
-        //{
-        //    Vector3[] possibleDirections =
-        //    {
-        //        new(0, 1), new(0, -1), new(1, 0), new(-1, 0),
-        //    };
-
-        //    var validPositionsToMove = FigureOutValidPositions(possibleDirections);
-        //    float previousDistance = 0;
-        //    var nearestPointToMousePos = Vector3.zero;
-
-        //    foreach (var validPosition in validPositionsToMove)
-        //    {
-        //        var distance = Vector3.Distance(mousePos, validPosition);
-        //        if (nearestPointToMousePos == Vector3.zero || distance < previousDistance)
-        //            nearestPointToMousePos = validPosition;
-
-        //        previousDistance = distance;
-        //    }
-
-        //    var lineToDraw = new[] { nearbyToken.transform.position, nearestPointToMousePos };
-        //    lineRenderer.positionCount = lineToDraw.Length;
-        //    lineRenderer.SetPositions(lineToDraw);
-
-        //    if (Input.GetMouseButton(1))
-        //    {
-        //        nearbyToken.MoveTo(nearestPointToMousePos);
-        //        nearbyToken = null;
-        //        return true;
-        //    }
-
-        //    return false;
-        //}
-
-        //private List<Vector3> FigureOutValidPositions(Vector3[] possibleDirections)
-        //{
-        //    var validPositions = new List<Vector3>();
-
-        //    foreach (var possibleDirection in possibleDirections)
-        //    {
-        //        var supposedFinalTokenPosition = nearbyToken.transform.position + possibleDirection;
-        //        if (supposedFinalTokenPosition != transform.position &&
-        //            !IsPossibleDirectionAWall(supposedFinalTokenPosition))
-        //        {
-        //            validPositions.Add(supposedFinalTokenPosition);
-        //        }
-        //    }
-
-        //    return validPositions;
-        //}
 
         private bool IsPossibleDirectionAWall(Vector3 supposedFinalTokenPosition)
         {

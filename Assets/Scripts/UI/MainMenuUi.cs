@@ -1,8 +1,7 @@
+using FMODUnity;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Serialization;
-using Audio;
 
 namespace UI
 {
@@ -15,12 +14,13 @@ namespace UI
         }
 
         [Header("Main Menu UI")]
-        [FormerlySerializedAs("optionsPanel")] [SerializeField] private OptionsMenu optionsMenu;
         [SerializeField] private TextMeshProUGUI versionText;
         [SerializeField] private GameObject desktopButtons, webButtons;
+        private StudioEventEmitter menuSong;
         
         private void Start()
         {
+            menuSong = GetComponent<StudioEventEmitter>();
 #if UNITY_WEBGL
             desktopButtons.SetActive(false);
             webButtons.SetActive(true);
@@ -31,19 +31,13 @@ namespace UI
             
             // Set version number
             SetVersionText();
-            // Find SFX Slider & tell MusicManager where it is
-            MusicManager.i.sfxDemo = optionsMenu.optionSFXSlider.GetComponent<AudioSource>();
-
+            
             // Set up PlayerPrefs when game is first ever loaded
             if (!PlayerPrefs.HasKey("Music"))
             {
                 PlayerPrefs.SetFloat("Music", 0.8f);
                 PlayerPrefs.SetFloat("SFX", 0.8f);
             }
-
-            // Change music track & set volume. Disable low pass filter.
-            MusicManager.i.ChangeMusicTrack(0);
-            MusicManager.i.audLowPass.enabled = false;
         }
 
         private void SetVersionText()
@@ -62,20 +56,19 @@ namespace UI
 
         public void Transition(int b)
         {
-            var intent = (SceneNavigationIntent) b;
             
             if (levelTransitionOverlay != null)
             {
                 levelTransitionOverlay.SetBool("levelEndedOrDead", true);    
             }
 
-            switch (intent)
+            switch (b)
             {
-                case SceneNavigationIntent.HelpMenu:
-                    Invoke(nameof(OpenHelp), 2);
+                case 0:
+                    Invoke(nameof(OpenHelp), 0);
                     break;
-                case SceneNavigationIntent.StartGame:
-                    Invoke(nameof(StartGame), 2);
+                case 1:
+                    Invoke(nameof(StartGame), 0);
                     break;
                 default:
                     Debug.LogError("This option is not defined!");
@@ -85,11 +78,13 @@ namespace UI
 
         public void StartGame()
         {
-            SceneManager.LoadScene("Scenes/GameScene");
+            menuSong.Stop();
+            SceneManager.LoadScene("Scenes/LevelScenes/Level1");
         }
 
         public void OpenHelp()
         {
+            menuSong.Stop();
             SceneManager.LoadScene("Scenes/HelpMenu");
         }
 

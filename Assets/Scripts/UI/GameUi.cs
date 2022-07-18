@@ -1,4 +1,5 @@
 using Audio;
+using FMODUnity;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,14 +9,16 @@ namespace UI
     {
         [Header("Game UI")] public GameObject gamePausePanel;
         public GameObject optionsPanel;
+        public GameObject gameOverPanel;
+        private FmodMixer fmodMixer;
+        private StudioEventEmitter gameSong;
+        public string sceneToLoad;
 
         private void Start()
         {
-            // levelTransitionOverlay.gameObject.SetActive(true);
-            // Change music track
-            var optionsMenu = optionsPanel.GetComponent<OptionsMenu>();
-            MusicManager.i.sfxDemo = optionsMenu.optionSFXSlider.GetComponent<AudioSource>();
-            MusicManager.i.ChangeMusicTrack(1);
+            fmodMixer = GetComponent<FmodMixer>();
+            gameSong = GetComponent<StudioEventEmitter>();
+            gameSong.Play();
         }
 
         private void Update()
@@ -42,14 +45,20 @@ namespace UI
         private void GameIsPaused(bool intent)
         {
             // Show or hide pause panel and set timescale
+            gameSong.SetParameter("Menu", intent ? 1 : 0);
             gamePausePanel.SetActive(intent);
             Time.timeScale = intent ? 0 : 1;
-            MusicManager.i.FindAllSfxAndPlayPause(gameIsPaused: intent);
+            fmodMixer.FindAllSfxAndPlayPause(gameIsPaused: intent);
         }
 
         public void ResumeGame()
         {
             GameIsPaused(false);
+        }
+
+        public void ResetCurrentLevel()
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
         
         public void ToggleOptionsPanel()
@@ -57,8 +66,16 @@ namespace UI
             optionsPanel.SetActive(!optionsPanel.activeInHierarchy);
         }
 
+        public void LoadNextScene()
+        {
+            gameSong.Stop();
+            SceneManager.LoadScene(sceneToLoad);
+            Time.timeScale = 1;
+        }
+
         public void ExitGameFromPause()
         {
+            fmodMixer.KillEverySound();
             SceneManager.LoadScene("MainMenu");
             Time.timeScale = 1;
         }

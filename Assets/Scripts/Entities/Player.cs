@@ -20,7 +20,7 @@ namespace Entities
         private GameObject _textTrHalfSign, _textMcHalfSign;
         private Vector3 _modifierTextMovementCost = new Vector3(-0.1f, 0, 0);
         [SerializeField] GameObject textSkipUi;
-        [SerializeField] private StudioEventEmitter playerTurn, playerMove;
+        [SerializeField] private StudioEventEmitter playerTurn, playerMove, playerDeath;
         private GameUi gameUi;
 
         public override void Awake()
@@ -266,6 +266,18 @@ namespace Entities
         {
             var positionInTilemap = tilemap.WorldToCell(supposedFinalTokenPosition);
             return tilemap.HasTile(positionInTilemap);
+        }
+
+        protected override void TakeDamage()
+        {
+            var expectedHealthValue = hitPoints - 1;
+            
+            if (expectedHealthValue <= 0)
+            {
+                playerDeath.Play();
+            }
+
+            base.TakeDamage();
         }
     }
 }

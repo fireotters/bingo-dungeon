@@ -13,7 +13,7 @@ namespace Entities
         public int range;
         public bool fourDir;
         private int lostTurns;
-        private int hitPoints = 1;
+        protected int hitPoints = 1;
         protected float extraTurns;
         private const int MAX_HEALTH = 2;
         protected Action currentFinishAction;
@@ -124,7 +124,7 @@ namespace Entities
             }
         }
         
-        public void TakeDamage()
+        protected virtual void TakeDamage()
         {
             hitPoints--;
             print($"AAAAAAAAAAARGGGGGGGGGGGYHHHHHHHHHHHHHHHHHHHHHH MY BOOOONES (health is now {hitPoints})");

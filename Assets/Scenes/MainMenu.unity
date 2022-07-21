@@ -8491,6 +8491,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 995272799}
     m_Modifications:
+    - target: {fileID: 5435942658387390980, guid: 2a36c7ce67dfdfa4a9260d12d94d3d06, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5435942658387390980, guid: 2a36c7ce67dfdfa4a9260d12d94d3d06, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5435942658491795605, guid: 2a36c7ce67dfdfa4a9260d12d94d3d06, type: 3}
       propertyPath: m_Name
       value: OptionsMenu
@@ -8586,6 +8594,38 @@ PrefabInstance:
     - target: {fileID: 5435942659338415085, guid: 2a36c7ce67dfdfa4a9260d12d94d3d06, type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: ChangeSfxVolume
+      objectReference: {fileID: 0}
+    - target: {fileID: 5435942659677996220, guid: 2a36c7ce67dfdfa4a9260d12d94d3d06, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5435942659677996220, guid: 2a36c7ce67dfdfa4a9260d12d94d3d06, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5435942660154216949, guid: 2a36c7ce67dfdfa4a9260d12d94d3d06, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5435942660154216949, guid: 2a36c7ce67dfdfa4a9260d12d94d3d06, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5435942660154216949, guid: 2a36c7ce67dfdfa4a9260d12d94d3d06, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5435942660171789644, guid: 2a36c7ce67dfdfa4a9260d12d94d3d06, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5435942660171789644, guid: 2a36c7ce67dfdfa4a9260d12d94d3d06, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5435942660171789644, guid: 2a36c7ce67dfdfa4a9260d12d94d3d06, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5435942660211236271, guid: 2a36c7ce67dfdfa4a9260d12d94d3d06, type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target

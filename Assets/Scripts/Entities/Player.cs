@@ -12,27 +12,39 @@ namespace Entities
 {
     public class Player : AbstractEntity
     {
-        private LineRenderer _lineRenderer;
         private Animator _animator;
         private Vector3 previousPos;
         private List<Token> nearbyTokens = new List<Token>();
-        private TextMeshPro _textTurnsRemaining, _textMovementCost;
-        private GameObject _textTrHalfSign, _textMcHalfSign;
-        private Vector3 _modifierTextMovementCost = new Vector3(-0.1f, 0, 0);
-        [SerializeField] GameObject textSkipUi;
         [SerializeField] private StudioEventEmitter playerTurn, playerMove;
-        private GameUi gameUi;
+        private GameUi _gameUi;
+
+        // Movement Cursor Related Variables
+        private LineRenderer _lineRenderer;
+        private Turn_System.TurnManager _turnManager;
+        private TextMeshPro _textTurnsRemaining, _textMovementCost;
+        private GameObject _movementCursor, _cursorOptionAttack, _cursorOptionDestination, _textTrHalfSign, _textMcHalfSign;
+        [SerializeField] GameObject textSkipUi;
+        private List<Transform> _currentEnemyTransforms = new List<Transform>();
+        private Vector3 _lastFrameCursorPos = Vector3.zero;
 
         public override void Awake()
         {
-            gameUi = FindObjectOfType<Canvas>().GetComponent<GameUi>();
+            _gameUi = FindObjectOfType<Canvas>().GetComponent<GameUi>();
+            _turnManager = FindObjectOfType<Turn_System.TurnManager>().GetComponent<Turn_System.TurnManager>();
             _lineRenderer = GetComponent<LineRenderer>();
-            _animator = GetComponent<Animator>();
+
+            _movementCursor = transform.Find("MovementCursor").gameObject;
+            _cursorOptionAttack = _movementCursor.transform.Find("AttackCursor").gameObject;
+            _cursorOptionDestination = _movementCursor.transform.Find("DestinationCursor").gameObject;
+
             _textTurnsRemaining = transform.Find("TextTurnsRemaining").GetComponent<TextMeshPro>();
-            _textMovementCost = transform.Find("TextMovementCost").GetComponent<TextMeshPro>();
+            _textMovementCost = _movementCursor.transform.Find("TextMovementCost").GetComponent<TextMeshPro>();
             _textTrHalfSign = _textTurnsRemaining.transform.Find("Half Sign").gameObject;
             _textMcHalfSign = _textMovementCost.transform.Find("Half Sign").gameObject;
-            base.Awake();
+
+            _animator = transform.Find("Sprite").GetComponent<Animator>();
+            spriteRenderer = transform.Find("Sprite").GetComponent<SpriteRenderer>();
+            spriteRenderer.sortingOrder = -(int)transform.position.y;
         }
 
         private void Update()
@@ -104,6 +116,11 @@ namespace Entities
                 playerTurn.Play();
                 _textTurnsRemaining.gameObject.SetActive(true);
                 textSkipUi.gameObject.SetActive(true);
+
+                // Fetch all current enemies from TurnManager
+                _currentEnemyTransforms.Clear();
+                foreach (GameObject x in _turnManager.turnEntitiesObjects)
+                    _currentEnemyTransforms.Add(x.transform);
             }
             _textTurnsRemaining.text = Mathf.FloorToInt(extraTurns).ToString();
             _textTrHalfSign.SetActive(extraTurns % 1f == .5f);
@@ -113,7 +130,7 @@ namespace Entities
 
                 var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 mousePos.z = 0;
-                if (gameUi.gamePausePanel.activeInHierarchy)
+                if (_gameUi.gamePausePanel.activeInHierarchy)
                 {
                     mousePos = new Vector3(6000, 6000, 0);
                 }
@@ -164,10 +181,19 @@ namespace Entities
                             // Render a line & movement cost sign if a move is valid.
                             _lineRenderer.positionCount = previewLinePoints.Count;
                             _lineRenderer.SetPositions(previewLinePoints.ToArray());
+                            _movementCursor.SetActive(true);
+                            _movementCursor.transform.position = previewLinePoints[^1];
                             _textMovementCost.text = Mathf.FloorToInt(totalMoveCost).ToString();
-                            _textMovementCost.transform.position = previewLinePoints[^1] + _modifierTextMovementCost;
-                            _textMovementCost.gameObject.SetActive(true);
                             _textMcHalfSign.SetActive(totalMoveCost % 1f == .5f);
+
+                            // Show a 'damage' sprite if cursor is over an enemy
+                            if (_lastFrameCursorPos != _movementCursor.transform.position)
+                            {
+                                bool showAttackCursor = IsMouseHoveringOverEnemy(_movementCursor.transform.position);
+                                _cursorOptionAttack.SetActive(showAttackCursor);
+                                _cursorOptionDestination.SetActive(!showAttackCursor);
+                            }
+                            _lastFrameCursorPos = _movementCursor.transform.position;
 
 
                             if (Input.GetMouseButton(0))
@@ -203,8 +229,17 @@ namespace Entities
                                 _animator.SetInteger("Dir", dir);
                                 _animator.SetBool("Push", false);
 
+                                // Spawn a fake destination cursor
+                                GameObject fakeDestinationCursor = Instantiate(_cursorOptionDestination, new Vector3(6000,6000, 0), Quaternion.identity);
+                                if (_cursorOptionDestination.activeInHierarchy)
+                                {
+                                    fakeDestinationCursor.transform.position = _movementCursor.transform.position;
+                                    fakeDestinationCursor.GetComponent<SpriteRenderer>().sortingLayerName = "Pieces (incl. Player)";
+                                    fakeDestinationCursor.GetComponent<SpriteRenderer>().sortingOrder = -19;
+                                }
+
                                 textSkipUi.gameObject.SetActive(false);
-                                _textMovementCost.gameObject.SetActive(false);
+                                _movementCursor.SetActive(false);
                                 playerMove.Play();
                                 
                                 if (TryMove(mousePos, () =>
@@ -224,6 +259,7 @@ namespace Entities
                                     _animator.SetBool("Push", false);
                                     _lineRenderer.positionCount = 0;
                                     spriteRenderer.sortingOrder = -(int)transform.position.y;
+                                    Destroy(fakeDestinationCursor);
                                     Damage();
                                     finished?.Invoke();
                                 }))
@@ -233,14 +269,14 @@ namespace Entities
                         else
                         {
                             _lineRenderer.positionCount = 0;
-                            _textMovementCost.gameObject.SetActive(false);
+                            _movementCursor.SetActive(false);
                         }
                     }
                 }
                 else
                 {
                     _lineRenderer.positionCount = 0;
-                    _textMovementCost.gameObject.SetActive(false);
+                    _movementCursor.SetActive(false);
                 }
 
                 yield return null;
@@ -260,6 +296,18 @@ namespace Entities
                 }
             }
             return null;
+        }
+
+        private bool IsMouseHoveringOverEnemy(Vector3 movementCursorPos)
+        {
+            foreach (Transform enemy in _currentEnemyTransforms)
+            {
+                if (Vector3.Distance(movementCursorPos, enemy.position) < 0.1f)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private bool IsPossibleDirectionAWall(Vector3 supposedFinalTokenPosition)

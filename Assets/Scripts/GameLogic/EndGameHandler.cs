@@ -18,15 +18,19 @@ namespace GameLogic
 
         private void HandleEndGame(SignalGameEnded context)
         {
-            if (context.winCondition)
+            // At times when exiting a level, HandleEndGame will trigge while the overlays are no longer available. Check for null first.
+            if (gameWinOverlay != null && gameOverOverlay != null)
             {
-                gameSong.SetParameter("Win", 1);
-                gameWinOverlay.SetActive(true);
-            }
-            else
-            {
-                gameSong.SetParameter("Dead", 1);
-                gameOverOverlay.SetActive(true);
+                if (context.winCondition)
+                {
+                    gameSong.SetParameter("Win", 1);
+                    gameWinOverlay.SetActive(true);
+                }
+                else
+                {
+                    gameSong.SetParameter("Dead", 1);
+                    gameOverOverlay.SetActive(true);
+                }
             }
         }
 

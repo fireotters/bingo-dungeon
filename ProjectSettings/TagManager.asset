@@ -50,6 +50,9 @@ TagManager:
   - name: Pieces (incl. Player)
     uniqueID: 3382632429
     locked: 0
+  - name: Movement Cursors & Text
+    uniqueID: 835164151
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0

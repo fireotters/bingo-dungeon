@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7872934545410277620}
   - component: {fileID: 2437729341816416843}
   - component: {fileID: 2538156106797530907}
+  - component: {fileID: 1573960973876777933}
   m_Layer: 5
   m_Name: QuitButton
   m_TagString: Untagged
@@ -192,11 +193,11 @@ MonoBehaviour:
   CollisionTag: 
   EventReference:
     Guid:
-      Data1: 84477325
-      Data2: 1138351983
-      Data3: -1420170619
-      Data4: 197227875
-    Path: event:/2D/UI/Hover
+      Data1: -1165780312
+      Data2: 1208114414
+      Data3: -942105673
+      Data4: 378774287
+    Path: event:/2D/UI/OnHover
   Event: 
   PlayEvent: 0
   StopEvent: 0
@@ -207,6 +208,35 @@ MonoBehaviour:
   OverrideAttenuation: 0
   OverrideMinDistance: 1
   OverrideMaxDistance: 20
+--- !u!114 &1573960973876777933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7872934545410277618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2538156106797530907}
+          m_TargetAssemblyTypeName: FMODUnity.StudioEventEmitter, FMODUnity
+          m_MethodName: Play
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &7872934545616310461
 GameObject:
   m_ObjectHideFlags: 0
@@ -300,6 +330,7 @@ GameObject:
   - component: {fileID: 7872934545858430282}
   - component: {fileID: 6796589968001777559}
   - component: {fileID: 3199829092343604148}
+  - component: {fileID: 4343041149568747090}
   m_Layer: 5
   m_Name: OptionsButton
   m_TagString: Untagged
@@ -478,11 +509,11 @@ MonoBehaviour:
   CollisionTag: 
   EventReference:
     Guid:
-      Data1: 84477325
-      Data2: 1138351983
-      Data3: -1420170619
-      Data4: 197227875
-    Path: event:/2D/UI/Hover
+      Data1: -1165780312
+      Data2: 1208114414
+      Data3: -942105673
+      Data4: 378774287
+    Path: event:/2D/UI/OnHover
   Event: 
   PlayEvent: 0
   StopEvent: 0
@@ -493,6 +524,35 @@ MonoBehaviour:
   OverrideAttenuation: 0
   OverrideMinDistance: 1
   OverrideMaxDistance: 20
+--- !u!114 &4343041149568747090
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7872934545858430280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 3199829092343604148}
+          m_TargetAssemblyTypeName: FMODUnity.StudioEventEmitter, FMODUnity
+          m_MethodName: Play
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &7872934545892022970
 GameObject:
   m_ObjectHideFlags: 0
@@ -686,11 +746,11 @@ MonoBehaviour:
   CollisionTag: 
   EventReference:
     Guid:
-      Data1: 84477325
-      Data2: 1138351983
-      Data3: -1420170619
-      Data4: 197227875
-    Path: event:/2D/UI/Hover
+      Data1: -1165780312
+      Data2: 1208114414
+      Data3: -942105673
+      Data4: 378774287
+    Path: event:/2D/UI/OnHover
   Event: 
   PlayEvent: 0
   StopEvent: 0

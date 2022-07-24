@@ -15,7 +15,7 @@ namespace Entities
         private Animator _animator;
         private Vector3 previousPos;
         private List<Token> nearbyTokens = new List<Token>();
-        [SerializeField] private StudioEventEmitter playerTurn, playerMove;
+        [SerializeField] private StudioEventEmitter playerTurn, playerMove, playerDeath;
         private GameUi _gameUi;
 
         // Movement Cursor Related Variables
@@ -314,6 +314,18 @@ namespace Entities
         {
             var positionInTilemap = tilemap.WorldToCell(supposedFinalTokenPosition);
             return tilemap.HasTile(positionInTilemap);
+        }
+
+        protected override void TakeDamage()
+        {
+            var expectedHealthValue = hitPoints - 1;
+            
+            if (expectedHealthValue <= 0)
+            {
+                playerDeath.Play();
+            }
+
+            base.TakeDamage();
         }
     }
 }

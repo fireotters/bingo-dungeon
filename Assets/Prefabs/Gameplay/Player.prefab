@@ -644,6 +644,7 @@ MonoBehaviour:
   fourDir: 0
   playerTurn: {fileID: 2939432308111773618}
   playerMove: {fileID: 4893508218132824496}
+  playerDeath: {fileID: 1334351381412749452}
   textSkipUi: {fileID: 0}
 --- !u!120 &1876590596722464800
 LineRenderer:
@@ -841,7 +842,7 @@ MonoBehaviour:
       Data4: -555803402
     Path: event:/3D/Player death
   Event: 
-  PlayEvent: 2
+  PlayEvent: 0
   StopEvent: 0
   AllowFadeout: 1
   TriggerOnce: 0

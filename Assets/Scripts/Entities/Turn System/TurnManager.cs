@@ -16,7 +16,7 @@ namespace Entities.Turn_System
         public Transform currentTurnPointer;
         public Transform entitiesContainer;
         public List<ITurnEntity> turnEntities;
-        public BingoWheelUi bingoWheelUi;
+        private BingoWheelUi _bingoWheelUi;
         public List<GameObject> turnEntitiesObjects;
         private int currentTurn;
         [SerializeField] private GridData gridData;
@@ -35,6 +35,7 @@ namespace Entities.Turn_System
             occupiedNumbers = new List<TextMeshPro>();
             turnEntities[0].InitTurn();
             turnEntities[0].DoTurn(NextTurn);
+            _bingoWheelUi = FindObjectOfType<Canvas>().transform.Find("DialogBingoUI").GetComponent<BingoWheelUi>();
             UpdatePointer();
         }
 
@@ -107,7 +108,7 @@ namespace Entities.Turn_System
                         // Hide pointer, summon Bingo UI
                         currentTurnPointer.gameObject.SetActive(false);
                         yield return new WaitForSeconds(.5f);
-                        bingoWheelUi.RunBingoWheelUi(Int16.Parse(selectedNumber.transform.name), type);
+                        _bingoWheelUi.RunBingoWheelUi(Int16.Parse(selectedNumber.transform.name), type);
                         yield return new WaitForSeconds(3f);
 
                         // Drop token, return pointer

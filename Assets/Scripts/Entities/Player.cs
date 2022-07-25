@@ -23,13 +23,14 @@ namespace Entities
         private Turn_System.TurnManager _turnManager;
         private TextMeshPro _textTurnsRemaining, _textMovementCost;
         private GameObject _movementCursor, _cursorOptionAttack, _cursorOptionDestination, _textTrHalfSign, _textMcHalfSign;
-        [SerializeField] GameObject textSkipUi;
+        private GameObject _btnEndTurn;
         private List<Transform> _currentEnemyTransforms = new List<Transform>();
         private Vector3 _lastFrameCursorPos = Vector3.zero;
 
         public override void Awake()
         {
             _gameUi = FindObjectOfType<Canvas>().GetComponent<GameUi>();
+            _btnEndTurn = FindObjectOfType<Canvas>().transform.Find("EndTurnButton").gameObject;
             _turnManager = FindObjectOfType<Turn_System.TurnManager>().GetComponent<Turn_System.TurnManager>();
             _lineRenderer = GetComponent<LineRenderer>();
 
@@ -93,7 +94,7 @@ namespace Entities
             extraTurns = 0;
             _textTurnsRemaining.text = extraTurns.ToString();
             _textTurnsRemaining.gameObject.SetActive(false);
-            textSkipUi.gameObject.SetActive(false);
+            _btnEndTurn.SetActive(false);
             currentFinishAction?.Invoke();
             currentFinishAction = null;
         }
@@ -104,7 +105,7 @@ namespace Entities
             extraTurns = 0;
             _textTurnsRemaining.text = extraTurns.ToString();
             _textTurnsRemaining.gameObject.SetActive(false);
-            textSkipUi.gameObject.SetActive(false);
+            _btnEndTurn.SetActive(false);
             Invoke(nameof(SkipTurn), 0.4f);
         }
 
@@ -115,7 +116,7 @@ namespace Entities
             {
                 playerTurn.Play();
                 _textTurnsRemaining.gameObject.SetActive(true);
-                textSkipUi.gameObject.SetActive(true);
+                _btnEndTurn.SetActive(true);
 
                 // Fetch all current enemies from TurnManager
                 _currentEnemyTransforms.Clear();
@@ -238,7 +239,7 @@ namespace Entities
                                     fakeDestinationCursor.GetComponent<SpriteRenderer>().sortingOrder = -19;
                                 }
 
-                                textSkipUi.gameObject.SetActive(false);
+                                _btnEndTurn.SetActive(false);
                                 _movementCursor.SetActive(false);
                                 playerMove.Play();
                                 
@@ -252,7 +253,7 @@ namespace Entities
                                         _textTurnsRemaining.gameObject.SetActive(false);
                                     }
                                     else
-                                        textSkipUi.gameObject.SetActive(true);
+                                        _btnEndTurn.SetActive(true);
 
                                     _animator.SetBool("Moving", false);
                                     _animator.SetInteger("Dir", 0);

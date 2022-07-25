@@ -2,6 +2,7 @@ using Audio;
 using FMODUnity;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace UI
 {
@@ -10,6 +11,7 @@ namespace UI
         [Header("Game UI")] public GameObject gamePausePanel;
         public GameObject optionsPanel;
         public GameObject gameOverPanel;
+        public Button endTurnButton;
         private FmodMixer fmodMixer;
         private StudioEventEmitter gameSong;
         public string sceneToLoad;
@@ -18,6 +20,8 @@ namespace UI
         {
             fmodMixer = GetComponent<FmodMixer>();
             gameSong = GetComponent<StudioEventEmitter>();
+            Entities.Player _player = FindObjectOfType<Entities.Player>();
+            endTurnButton.onClick.AddListener(_player.WaitAfterKillingThenEndTurn);
             gameSong.Play();
         }
 

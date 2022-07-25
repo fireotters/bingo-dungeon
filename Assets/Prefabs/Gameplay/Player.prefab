@@ -640,7 +640,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tilemap: {fileID: 0}
-  range: 4
+  range: 3
   fourDir: 0
   playerTurn: {fileID: 2939432308111773618}
   playerMove: {fileID: 4893508218132824496}

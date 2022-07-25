@@ -88,7 +88,7 @@ namespace Entities
             finished?.Invoke();
         }
 
-        public void SkipTurn()
+        public void EndTurn()
         {
             StopAllCoroutines();
             extraTurns = 0;
@@ -99,14 +99,14 @@ namespace Entities
             currentFinishAction = null;
         }
 
-        public void WaitAfterKillingThenSkipTurn()
+        public void WaitAfterKillingThenEndTurn()
         {
             // Killing an enemy and immediately skipping turns caused enemy movement sounds to be doubled
             extraTurns = 0;
             _textTurnsRemaining.text = extraTurns.ToString();
             _textTurnsRemaining.gameObject.SetActive(false);
             _btnEndTurn.SetActive(false);
-            Invoke(nameof(SkipTurn), 0.4f);
+            Invoke(nameof(EndTurn), 0.4f);
         }
 
         IEnumerator PlayerTurn(Action finished)
@@ -148,10 +148,10 @@ namespace Entities
                             Vector3Int destinationTile = tilemap.WorldToCell(intendedDestination);
                             if (!tilemap.HasTile(destinationTile))
                             {
+                                // Moving a tokens is free.
                                 tokenSelected.transform.DOMove(intendedDestination, 0.6f);
                                 nearbyTokens.Remove(tokenSelected);
 
-                                extraTurns -= 1;
                                 _textTurnsRemaining.text = extraTurns.ToString();
                                 finished?.Invoke();
                                 yield break;

@@ -11,8 +11,8 @@ namespace Entities
 {
     public abstract class BasicEnemy : AbstractEntity
     {
-        [Tooltip("Time to move in seconds")] private float timeToMove = .5f;
-        private float timeToStartTurn = .5f;
+        [Tooltip("Time to move in seconds")] private float timeToMove = .3f;
+        private float timeToStartTurn = .1f;
 
         [HideInInspector] public Transform playerObj;
 

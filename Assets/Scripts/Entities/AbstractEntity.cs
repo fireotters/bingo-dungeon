@@ -108,7 +108,7 @@ namespace Entities
                         // If the player destroys an enemy, skip the player's turn
                         if (transform.name == "Player")
                         {
-                            GetComponent<Player>().WaitAfterKillingThenSkipTurn();
+                            GetComponent<Player>().WaitAfterKillingThenEndTurn();
                         }
                     }
                 }

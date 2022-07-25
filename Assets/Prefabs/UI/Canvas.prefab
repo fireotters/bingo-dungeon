@@ -816,8 +816,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelTransitionOverlay: {fileID: 0}
   gamePausePanel: {fileID: 5871841619916156956}
-  optionsPanel: {fileID: 0}
+  optionsPanel: {fileID: 7713068782463851580}
   gameOverPanel: {fileID: 6219922664801357915}
+  endTurnButton: {fileID: 4341101249899446563}
   sceneToLoad: MainMenu
 --- !u!114 &4341101249688090790
 MonoBehaviour:
@@ -2856,5 +2857,10 @@ PrefabInstance:
 --- !u!224 &7713068782463851522 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5435942658491795627, guid: 2a36c7ce67dfdfa4a9260d12d94d3d06, type: 3}
+  m_PrefabInstance: {fileID: 2340194214020797609}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7713068782463851580 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5435942658491795605, guid: 2a36c7ce67dfdfa4a9260d12d94d3d06, type: 3}
   m_PrefabInstance: {fileID: 2340194214020797609}
   m_PrefabAsset: {fileID: 0}

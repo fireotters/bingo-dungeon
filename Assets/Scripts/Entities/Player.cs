@@ -6,6 +6,7 @@ using UnityEngine;
 using TMPro;
 using DG.Tweening;
 using FMODUnity;
+using Signals;
 using UI;
 
 namespace Entities
@@ -56,7 +57,7 @@ namespace Entities
 
         private void OnDestroy()
         {
-            SignalBus<SignalGameEnded>.Fire(new SignalGameEnded { winCondition = false });
+            SignalBus<SignalGameEnded>.Fire(new SignalGameEnded { WinCondition = false });
         }
 
         // Player only checks triggers for Tokens which come into range
@@ -96,6 +97,7 @@ namespace Entities
             textSkipUi.gameObject.SetActive(false);
             currentFinishAction?.Invoke();
             currentFinishAction = null;
+            SignalBus<SignalToggleFfw>.Fire(new SignalToggleFfw() { Enabled = true });
         }
 
         public void WaitAfterKillingThenSkipTurn()
@@ -110,6 +112,7 @@ namespace Entities
 
         IEnumerator PlayerTurn(Action finished)
         {
+            SignalBus<SignalToggleFfw>.Fire(new SignalToggleFfw() { Enabled = false });
             currentFinishAction = finished;
             if (extraTurns == range)
             {
@@ -127,7 +130,6 @@ namespace Entities
 
             while (true)
             {
-
                 var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 mousePos.z = 0;
                 if (_gameUi.gamePausePanel.activeInHierarchy)
@@ -153,6 +155,7 @@ namespace Entities
                                 extraTurns -= 1;
                                 _textTurnsRemaining.text = extraTurns.ToString();
                                 finished?.Invoke();
+                                SignalBus<SignalToggleFfw>.Fire(new SignalToggleFfw() { Enabled = true });
                                 yield break;
                             }
                         }
@@ -261,6 +264,7 @@ namespace Entities
                                     spriteRenderer.sortingOrder = -(int)transform.position.y;
                                     Destroy(fakeDestinationCursor);
                                     Damage();
+                                    SignalBus<SignalToggleFfw>.Fire(new SignalToggleFfw() { Enabled = true });
                                     finished?.Invoke();
                                 }))
                                     yield break;

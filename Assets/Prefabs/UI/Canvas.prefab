@@ -1590,11 +1590,11 @@ MonoBehaviour:
   CollisionTag: 
   EventReference:
     Guid:
-      Data1: 84477325
-      Data2: 1138351983
-      Data3: -1420170619
-      Data4: 197227875
-    Path: event:/2D/UI/Hover
+      Data1: -1165780312
+      Data2: 1208114414
+      Data3: -942105673
+      Data4: 378774287
+    Path: event:/2D/UI/OnHover
   Event: 
   PlayEvent: 0
   StopEvent: 0
@@ -1826,11 +1826,11 @@ MonoBehaviour:
   CollisionTag: 
   EventReference:
     Guid:
-      Data1: 84477325
-      Data2: 1138351983
-      Data3: -1420170619
-      Data4: 197227875
-    Path: event:/2D/UI/Hover
+      Data1: -1165780312
+      Data2: 1208114414
+      Data3: -942105673
+      Data4: 378774287
+    Path: event:/2D/UI/OnHover
   Event: 
   PlayEvent: 0
   StopEvent: 0

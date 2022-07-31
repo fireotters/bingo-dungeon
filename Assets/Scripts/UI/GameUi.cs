@@ -1,6 +1,7 @@
 using Audio;
 using FMODUnity;
 using Signals;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,6 +12,8 @@ namespace UI
         [Header("Game UI")] public GameObject gamePausePanel;
         public GameObject optionsPanel;
         public GameObject gameOverPanel;
+        public TextMeshProUGUI ffwText;
+        private readonly string ffwDisabledText = "FFW Disabled", ffwEnabledText = "FFW Enabled";
         private FmodMixer _fmodMixer;
         private StudioEventEmitter _gameSong;
         private bool _isGamePaused, _isFfwActive;
@@ -29,6 +32,8 @@ namespace UI
         private void Update()
         {
             CheckKeyInputs();
+
+            ffwText.text = _isFfwActive ? ffwEnabledText : ffwDisabledText;
         }
 
         private void CheckKeyInputs()

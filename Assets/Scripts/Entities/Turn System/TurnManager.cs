@@ -27,6 +27,10 @@ namespace Entities.Turn_System
         bool rollTurn = true;
         CompositeDisposable disposables = new CompositeDisposable();
 
+        // Tracking token locations (so the player cannot push tokens on top of each other)
+        [HideInInspector] public List<Token> tokenEntities;
+        [HideInInspector] public List<Vector3> tokenLocations;
+
         private void Start()
         {
             SignalBus<SignalGameEnded>.Subscribe((gameEnded) => OnGameEnded()).AddTo(disposables);
@@ -139,7 +143,15 @@ namespace Entities.Turn_System
         {
             var newToken = Instantiate(blankToken, number.transform.position, Quaternion.identity);
             newToken.ChangeColor(chosenColor);
+            tokenEntities.Add(newToken);
             //print(occupiedNumbers.Count);
+        }
+
+        public void UpdateTokenLocations()
+        {
+            tokenLocations.Clear();
+            foreach (Token token in tokenEntities)
+                tokenLocations.Add(token.transform.position);
         }
 
         private TextMeshPro RollCage()

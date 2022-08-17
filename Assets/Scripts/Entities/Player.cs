@@ -111,6 +111,7 @@ namespace Entities
 
         IEnumerator PlayerTurn(Action finished)
         {
+            _turnManager.UpdateTokenLocations();
             currentFinishAction = finished;
             if (extraTurns == range)
             {
@@ -146,15 +147,19 @@ namespace Entities
                             Vector3 intendedDestination = tokenSelected.transform.position + directionToMove;
 
                             Vector3Int destinationTile = tilemap.WorldToCell(intendedDestination);
+                            // Move the token if the destination doesn't have a wall or another token
                             if (!tilemap.HasTile(destinationTile))
                             {
-                                // Moving a tokens is free.
-                                tokenSelected.transform.DOMove(intendedDestination, 0.6f);
-                                nearbyTokens.Remove(tokenSelected);
+                                if (!_turnManager.tokenLocations.Contains(intendedDestination))
+                                {
+                                    // Moving a tokens is free.
+                                    tokenSelected.transform.DOMove(intendedDestination, 0.6f);
+                                    nearbyTokens.Remove(tokenSelected);
 
-                                _textTurnsRemaining.text = extraTurns.ToString();
-                                finished?.Invoke();
-                                yield break;
+                                    _textTurnsRemaining.text = extraTurns.ToString();
+                                    finished?.Invoke();
+                                    yield break;
+                                }
                             }
                         }
                 }

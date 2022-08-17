@@ -7,8 +7,8 @@ public class CheckForBingo : MonoBehaviour
 {
     public TextMeshProUGUI debugBingoDisplay;
 
-    // TODO After Jam: The FloorGridGenerator fills out numbers from bottom to top, left to right. Instead of top to bottom.
-    // Not important right now. The Bingo logic will still work, even upside down.
+    // Important Note: The FloorGridGenerator fills out numbers from bottom to top, left to right. Instead of top to bottom.
+    // Not important to fix this. The Bingo logic will still work, even upside down.
     private int[] board =
     {
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,

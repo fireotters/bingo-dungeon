@@ -7,24 +7,34 @@ using UnityEngine;
 
 namespace Entities.Tokens
 {
-    public enum TokenType
+    public static class TokenColors
     {
-        Nothing,
-        Shield,
-        Water,
-        Meteor
+        public static Color[] tokenColors =
+        {
+            new Color(0.25f, 0.75f, 0.85f),  // Light Blue
+            new Color(0.20f, 0.35f, 0.65f),  // Blue
+            new Color(0.35f, 0.25f, 0.80f),  // Purple
+            new Color(0.85f, 0.35f, 0.65f),  // Pink
+            new Color(0.85f, 0.25f, 0.20f),  // Red
+            new Color(0.85f, 0.45f, 0.20f),  // Orange
+            new Color(0.90f, 0.90f, 0.30f),  // Yellow
+            new Color(0.30f, 0.70f, 0.20f),  // Green
+        };
     }
     
     public class Token : MonoBehaviour
     {
-        public TextMeshPro assignedNum;
-        public TurnManager turnManager;
         private Vector3 debugDestination;
+        private SpriteRenderer _spriteRender;
 
-        public void MoveTo(Vector3 destination)
+        private void Awake()
         {
-            debugDestination = destination;
-            transform.DOMove(destination, 1f);
+            _spriteRender = GetComponent<SpriteRenderer>();
+        }
+
+        public void ChangeColor(Color chosenColor)
+        {
+            _spriteRender.color = chosenColor;
         }
 
         private void OnDrawGizmos()

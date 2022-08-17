@@ -18,27 +18,8 @@ public class BingoWheelUi : MonoBehaviour
     {
         _animator = GetComponent<Animator>();
     }
-    public void RunBingoWheelUi(int numChosen, TokenType tokenChosen)
+    public void RunBingoWheelUi(int numChosen, Color colorChosen)
     {
-        Color colorChosen;
-        switch (tokenChosen)
-        {
-            case TokenType.Nothing:
-                colorChosen = Color.white;
-                break;
-            case TokenType.Shield:
-                colorChosen = Color.green;
-                break;
-            case TokenType.Water:
-                colorChosen = Color.cyan;
-                break;
-            case TokenType.Meteor:
-                colorChosen = Color.yellow;
-                break;
-            default:
-                throw new ArgumentOutOfRangeException();
-        }
-
         _animator.SetBool("Appear", true);
         _ballImage.color = colorChosen;
         _ballText.text = numChosen.ToString();

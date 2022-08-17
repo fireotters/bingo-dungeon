@@ -20,7 +20,7 @@ namespace Entities.Turn_System
         public List<GameObject> turnEntitiesObjects;
         private int currentTurn;
         [SerializeField] private GridData gridData;
-        [SerializeField] private Token[] tokens;
+        [SerializeField] private Token blankToken;
         private List<TextMeshPro> occupiedNumbers;
         [SerializeField] private TileBase meteorTile;
         [SerializeField] private Tilemap obstacleTilemap;
@@ -101,18 +101,17 @@ namespace Entities.Turn_System
                         occupiedNumbers.Add(selectedNumber);
                         print($"Rolled number: {selectedNumber}");
 
-                        // Decide effect
-                        var values = Enum.GetValues(typeof(TokenType));
-                        var type = (TokenType)values.GetValue(Random.Range(0, values.Length));
+                        // Decide color (now, so the bingo UI can show the same color as what's dropped later)
+                        var chosenColor = DecideTokenColor();
 
                         // Hide pointer, summon Bingo UI
                         currentTurnPointer.gameObject.SetActive(false);
                         yield return new WaitForSeconds(.5f);
-                        _bingoWheelUi.RunBingoWheelUi(Int16.Parse(selectedNumber.transform.name), type);
+                        _bingoWheelUi.RunBingoWheelUi(Int16.Parse(selectedNumber.transform.name), chosenColor);
                         yield return new WaitForSeconds(2f);
 
                         // Drop token, return pointer
-                        DropTokenOn(type, selectedNumber);
+                        DropTokenOn(selectedNumber, chosenColor);
                         currentTurn = 0;
                         yield return new WaitForSeconds(.5f);
                         currentTurnPointer.gameObject.SetActive(true);
@@ -130,21 +129,16 @@ namespace Entities.Turn_System
             StartCoroutine(DoNextTurn());
         }
 
-        private void DropTokenOn(TokenType type, TextMeshPro number)
+        private Color DecideTokenColor()
         {
-            switch (type)
-            {
-                case TokenType.Nothing:
-                case TokenType.Shield:
-                case TokenType.Water:
-                case TokenType.Meteor:
-                    var newToken = Instantiate(tokens[(int)type], number.transform.position, Quaternion.identity);
-                    newToken.assignedNum = number;
-                    newToken.turnManager = GetComponent<TurnManager>(); // Crossy: Oh help me, I don't understand this signalling library so I'm just passing turnmanager to every token
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            var colors = TokenColors.tokenColors;
+            return (Color)colors.GetValue(Random.Range(0, colors.Length));
+        }
+
+        private void DropTokenOn(TextMeshPro number, Color chosenColor)
+        {
+            var newToken = Instantiate(blankToken, number.transform.position, Quaternion.identity);
+            newToken.ChangeColor(chosenColor);
             //print(occupiedNumbers.Count);
         }
 

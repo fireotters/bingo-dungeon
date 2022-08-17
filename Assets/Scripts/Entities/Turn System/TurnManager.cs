@@ -109,7 +109,7 @@ namespace Entities.Turn_System
                         currentTurnPointer.gameObject.SetActive(false);
                         yield return new WaitForSeconds(.5f);
                         _bingoWheelUi.RunBingoWheelUi(Int16.Parse(selectedNumber.transform.name), type);
-                        yield return new WaitForSeconds(3f);
+                        yield return new WaitForSeconds(2f);
 
                         // Drop token, return pointer
                         DropTokenOn(type, selectedNumber);

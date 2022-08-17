@@ -47,10 +47,10 @@ public class BingoWheelUi : MonoBehaviour
 
     private IEnumerator BingoSequence()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
         _animator.SetBool("Sequence", true);
         bingoRollSfx.Play();
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(1.5f);
         _animator.SetBool("Appear", false);
         _animator.SetBool("Sequence", false);
     }

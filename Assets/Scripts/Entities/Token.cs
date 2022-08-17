@@ -15,18 +15,11 @@ namespace Entities.Tokens
         Meteor
     }
     
-    public abstract class Token : MonoBehaviour
+    public class Token : MonoBehaviour
     {
         public TextMeshPro assignedNum;
         public TurnManager turnManager;
         private Vector3 debugDestination;
-
-        //private void OnCollisionEnter2D(Collision2D col)
-        //{
-        //    OnTokenPickup(col);
-        //    turnManager.TokenWasCollected(assignedNum);
-        //    Destroy(gameObject);
-        //}
 
         public void MoveTo(Vector3 destination)
         {
@@ -38,7 +31,5 @@ namespace Entities.Tokens
         {
             Gizmos.DrawWireSphere(debugDestination, .5f);
         }
-
-        //protected abstract void OnTokenPickup(Collision2D col);
     }
 }

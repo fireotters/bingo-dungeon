@@ -94,7 +94,7 @@ namespace Entities
             extraTurns = 0;
             _textTurnsRemaining.text = extraTurns.ToString();
             _textTurnsRemaining.gameObject.SetActive(false);
-            textSkipUi.gameObject.SetActive(false);
+            textSkipUi.SetActive(false);
             currentFinishAction?.Invoke();
             currentFinishAction = null;
             SignalBus<SignalToggleFfw>.Fire(new SignalToggleFfw() { Enabled = true });
@@ -106,7 +106,7 @@ namespace Entities
             extraTurns = 0;
             _textTurnsRemaining.text = extraTurns.ToString();
             _textTurnsRemaining.gameObject.SetActive(false);
-            textSkipUi.gameObject.SetActive(false);
+            textSkipUi.SetActive(false);
             Invoke(nameof(SkipTurn), 0.4f);
         }
 
@@ -118,7 +118,7 @@ namespace Entities
             {
                 playerTurn.Play();
                 _textTurnsRemaining.gameObject.SetActive(true);
-                textSkipUi.gameObject.SetActive(true);
+                textSkipUi.SetActive(true);
 
                 // Fetch all current enemies from TurnManager
                 _currentEnemyTransforms.Clear();
@@ -241,7 +241,7 @@ namespace Entities
                                     fakeDestinationCursor.GetComponent<SpriteRenderer>().sortingOrder = -19;
                                 }
 
-                                textSkipUi.gameObject.SetActive(false);
+                                textSkipUi.SetActive(false);
                                 _movementCursor.SetActive(false);
                                 playerMove.Play();
                                 
@@ -255,7 +255,7 @@ namespace Entities
                                         _textTurnsRemaining.gameObject.SetActive(false);
                                     }
                                     else
-                                        textSkipUi.gameObject.SetActive(true);
+                                        textSkipUi.SetActive(true);
 
                                     _animator.SetBool("Moving", false);
                                     _animator.SetInteger("Dir", 0);
@@ -312,12 +312,6 @@ namespace Entities
                 }
             }
             return false;
-        }
-
-        private bool IsPossibleDirectionAWall(Vector3 supposedFinalTokenPosition)
-        {
-            var positionInTilemap = tilemap.WorldToCell(supposedFinalTokenPosition);
-            return tilemap.HasTile(positionInTilemap);
         }
 
         protected override void TakeDamage()

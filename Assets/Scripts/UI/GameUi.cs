@@ -20,12 +20,12 @@ namespace UI
         public string sceneToLoad;
         private readonly CompositeDisposable _disposables = new();
 
-
         private void Start()
         {
             _fmodMixer = GetComponent<FmodMixer>();
             _gameSong = GetComponent<StudioEventEmitter>();
             _gameSong.Play();
+            ffwText.text = _isFfwActive ? ffwEnabledText : ffwDisabledText;
             SignalBus<SignalToggleFfw>.Subscribe(ToggleFfw).AddTo(_disposables);
         }
 

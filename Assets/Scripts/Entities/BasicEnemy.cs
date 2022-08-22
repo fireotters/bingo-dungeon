@@ -170,6 +170,7 @@ namespace Entities
             enemyMovement.Play();
             if (fatalMove != Vector3.zero)
             {
+                SignalBus<SignalToggleFfw>.Fire(new SignalToggleFfw { Enabled = false });
                 enemyMovement.SetParameter("Deadly", 1);
             }
             transform.DOMove(destination, timeToMove).OnComplete(

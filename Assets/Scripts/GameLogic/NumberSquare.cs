@@ -4,15 +4,9 @@ using UnityEngine;
 
 public class NumberSquare : MonoBehaviour
 {
-    private Collider2D _collider;
     public List<Transform> currentTouchingObjects = new List<Transform>();
     public int notation;
     public CheckForBingo checkForBingo;
-
-    private void Awake()
-    {
-        _collider = GetComponent<Collider2D>();
-    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {

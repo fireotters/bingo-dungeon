@@ -21,7 +21,7 @@ namespace Entities.Turn_System
         private int currentTurn;
         [SerializeField] private GridData gridData;
         [SerializeField] private Token blankToken;
-        private List<TextMeshPro> occupiedNumbers;
+        private List<TextMeshPro> _occupiedNumbers = new List<TextMeshPro>();
         [SerializeField] private TileBase meteorTile;
         [SerializeField] private Tilemap obstacleTilemap;
         bool rollTurn = true;
@@ -36,11 +36,23 @@ namespace Entities.Turn_System
             SignalBus<SignalGameEnded>.Subscribe((gameEnded) => OnGameEnded()).AddTo(disposables);
             CreateListITurnEntity();
             turnEntitiesObjects = turnEntities.Cast<Component>().Select(x => x.gameObject).ToList();
-            occupiedNumbers = new List<TextMeshPro>();
             turnEntities[0].InitTurn();
             turnEntities[0].DoTurn(NextTurn);
             _bingoWheelUi = FindObjectOfType<Canvas>().transform.Find("DialogBingoUI").GetComponent<BingoWheelUi>();
             UpdatePointer();
+
+            // Drop the first two tokens
+            Invoke(nameof(DropInitialTokens), 0.1f);
+        }
+
+        private void DropInitialTokens()
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                var selectedNumber = DecideTokenNumber();
+                var chosenColor = DecideTokenColor();
+                DropTokenOn(selectedNumber, chosenColor, playSound:false);
+            }
         }
 
         private void OnDestroy()
@@ -100,22 +112,18 @@ namespace Entities.Turn_System
 
                     if (currentTurn >= turnEntities.Count || finished)
                     {
-                        // Decide number
-                        var selectedNumber = RollCage();
-                        occupiedNumbers.Add(selectedNumber);
-                        print($"Rolled number: {selectedNumber}");
-
-                        // Decide color (now, so the bingo UI can show the same color as what's dropped later)
+                        // Decide number & color
+                        var chosenNumber = DecideTokenNumber();
                         var chosenColor = DecideTokenColor();
 
                         // Hide pointer, summon Bingo UI
                         currentTurnPointer.gameObject.SetActive(false);
                         yield return new WaitForSeconds(.5f);
-                        _bingoWheelUi.RunBingoWheelUi(Int16.Parse(selectedNumber.transform.name), chosenColor);
+                        _bingoWheelUi.RunBingoWheelUi(Int16.Parse(chosenNumber.transform.name), chosenColor);
                         yield return new WaitForSeconds(2f);
 
                         // Drop token, return pointer
-                        DropTokenOn(selectedNumber, chosenColor);
+                        DropTokenOn(chosenNumber, chosenColor);
                         currentTurn = 0;
                         yield return new WaitForSeconds(.5f);
                         currentTurnPointer.gameObject.SetActive(true);
@@ -139,12 +147,14 @@ namespace Entities.Turn_System
             return (Color)colors.GetValue(Random.Range(0, colors.Length));
         }
 
-        private void DropTokenOn(TextMeshPro number, Color chosenColor)
+        private void DropTokenOn(TextMeshPro number, Color chosenColor, bool playSound = true)
         {
             var newToken = Instantiate(blankToken, number.transform.position, Quaternion.identity);
+            if (!playSound)
+                Destroy(newToken.GetComponent<FMODUnity.StudioEventEmitter>());
+
             newToken.ChangeColor(chosenColor);
             tokenEntities.Add(newToken);
-            //print(occupiedNumbers.Count);
         }
 
         public void UpdateTokenLocations()
@@ -154,28 +164,19 @@ namespace Entities.Turn_System
                 tokenLocations.Add(token.transform.position);
         }
 
-        private TextMeshPro RollCage()
+        // Decide which tile to drop a token on by checking if a suggested tile is already occupied.
+        private TextMeshPro DecideTokenNumber(bool firstAttempt = true)
         {
-            UpdateOccupiedSquares();
-            var rolledNumber = gridData.tileNumbers[Random.Range(0, gridData.tileNumbers.Count)];
-
-            return occupiedNumbers.Contains(rolledNumber) ? RollCage() : rolledNumber;
-        }
-
-        public void TokenWasCollected(TextMeshPro freedNumber)
-        {
-            occupiedNumbers.Remove(freedNumber);
-        }
-
-        private void UpdateOccupiedSquares()
-        {
-            occupiedNumbers.Clear();
-            foreach (TextMeshPro textObj in gridData.tileNumbers)
+            if (firstAttempt)
             {
-                if (textObj.GetComponent<NumberSquare>().IsSomethingStandingOn())
-                    occupiedNumbers.Add(textObj);
+                _occupiedNumbers.Clear();
+                foreach (TextMeshPro textObj in gridData.tileNumbers)
+                    if (textObj.GetComponent<NumberSquare>().IsSomethingStandingOn())
+                        _occupiedNumbers.Add(textObj);
             }
-            //print(occupiedNumbers.Count);
+
+            var rolledNumber = gridData.tileNumbers[Random.Range(0, gridData.tileNumbers.Count)];
+            return _occupiedNumbers.Contains(rolledNumber) ? DecideTokenNumber(false) : rolledNumber;
         }
     }
 }

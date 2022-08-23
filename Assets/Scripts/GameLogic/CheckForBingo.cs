@@ -26,18 +26,14 @@ public class CheckForBingo : MonoBehaviour
     public void UpdateTokenPlacement(int notation, bool addOrRemove)
     {
         if (addOrRemove == true)
-        {
             board[notation] = 1;
-        }
         else
-        {
             board[notation] = 0;
-        }
 
-        print("Is there Bingo? " + CheckForBingoResult());
 
         if (CheckForBingoResult())
         {
+            print("Win by Bingo");
             SignalBus<SignalGameEnded>.Fire(new SignalGameEnded(){ winCondition = true});
         }
     }

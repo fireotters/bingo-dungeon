@@ -28,7 +28,7 @@ namespace Entities.Turn_System
         CompositeDisposable disposables = new CompositeDisposable();
 
         // Tracking token locations (so the player cannot push tokens on top of each other)
-        [HideInInspector] public List<Token> tokenEntities;
+        public List<Token> tokenEntities;
         [HideInInspector] public List<Vector3> tokenLocations;
 
         private void Start()
@@ -175,6 +175,30 @@ namespace Entities.Turn_System
 
             var rolledNumber = gridData.tileNumbers[Random.Range(0, gridData.tileNumbers.Count)];
             return _occupiedNumbers.Contains(rolledNumber) ? DecideTokenNumber(false) : rolledNumber;
+        }
+
+
+        // Remove tokens on a certain color of tile. (They're separate methods because values can't be passed through UnityActions)
+        public void RemoveTokensOnBlackSquares()
+        {
+            RemoveTokensOnSquares("black");
+        }
+        public void RemoveTokensOnWhiteSquares()
+        {
+            RemoveTokensOnSquares("white");
+        }
+
+        public void RemoveTokensOnSquares(string color)
+        {
+            List<Token> tokenEntitiesCopy = new List<Token>(tokenEntities);
+            foreach (Token token in tokenEntitiesCopy)
+            {
+                if (token.colorOfCurrentSquare == color)
+                {
+                    tokenEntities.Remove(token);
+                    Destroy(token.gameObject);
+                }
+            }
         }
     }
 }

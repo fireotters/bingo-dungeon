@@ -158,6 +158,7 @@ namespace Entities
                                     // Moving a tokens is free.
                                     tokenSelected.transform.DOMove(intendedDestination, 0.6f);
                                     nearbyTokens.Remove(tokenSelected);
+                                    tokenSelected.UpdateCurrentSquareColor();
 
                                     _textTurnsRemaining.text = extraTurns.ToString();
                                     finished?.Invoke();

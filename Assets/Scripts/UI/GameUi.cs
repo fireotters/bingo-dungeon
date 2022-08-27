@@ -10,7 +10,7 @@ namespace UI
     {
         [Header("Game UI")] public GameObject gamePausePanel;
         public GameObject optionsPanel, gameOverPanel, gameStuckPanel;
-        public Button endTurnButton, retryLevelButton;
+        public Button endTurnButton, retryLevelButton, eraseBlackTilesButton, eraseWhiteTilesButton;
         private FmodMixer fmodMixer;
         private StudioEventEmitter gameSong;
         public string sceneToLoad;
@@ -22,10 +22,15 @@ namespace UI
 
             fmodMixer = GetComponent<FmodMixer>();
             gameSong = GetComponent<StudioEventEmitter>();
+            gameSong.Play();
+
+            // Assign some UI buttons to objects in scene
             Entities.Player _player = FindObjectOfType<Entities.Player>();
+            Entities.Turn_System.TurnManager _turnManager = FindObjectOfType<Entities.Turn_System.TurnManager>();
             endTurnButton.onClick.AddListener(_player.WaitAfterKillingThenEndTurn);
             retryLevelButton.onClick.AddListener(ResetCurrentLevel);
-            gameSong.Play();
+            eraseBlackTilesButton.onClick.AddListener(_turnManager.RemoveTokensOnBlackSquares);
+            eraseWhiteTilesButton.onClick.AddListener(_turnManager.RemoveTokensOnWhiteSquares);
         }
 
         private void Update()

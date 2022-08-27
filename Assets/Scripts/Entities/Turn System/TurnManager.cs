@@ -42,17 +42,15 @@ namespace Entities.Turn_System
             UpdatePointer();
 
             // Drop the first two tokens
-            Invoke(nameof(DropInitialTokens), 0.1f);
+            Invoke(nameof(DropInitialToken), 0.05f);
+            Invoke(nameof(DropInitialToken), 0.1f);
         }
 
-        private void DropInitialTokens()
+        private void DropInitialToken()
         {
-            for (int i = 0; i < 2; i++)
-            {
-                var selectedNumber = DecideTokenNumber();
-                var chosenColor = DecideTokenColor();
-                DropTokenOn(selectedNumber, chosenColor, playSound:false);
-            }
+            var selectedNumber = DecideTokenNumber();
+            var chosenColor = DecideTokenColor();
+            DropTokenOn(selectedNumber, chosenColor, playSound:false);
         }
 
         private void OnDestroy()

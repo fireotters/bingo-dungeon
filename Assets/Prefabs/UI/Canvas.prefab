@@ -1978,6 +1978,7 @@ MonoBehaviour:
   gamePausePanel: {fileID: 5871841619916156956}
   optionsPanel: {fileID: 7713068782463851580}
   gameOverPanel: {fileID: 6219922664801357915}
+  gameStuckPanel: {fileID: 5532013903274146828}
   endTurnButton: {fileID: 4341101249899446563}
   retryLevelButton: {fileID: 2790693349993332380}
   sceneToLoad: MainMenu
@@ -2368,7 +2369,7 @@ GameObject:
   - component: {fileID: 5422434543467201284}
   - component: {fileID: 8806695323574870079}
   m_Layer: 5
-  m_Name: StuckDialog
+  m_Name: OverlayStuck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

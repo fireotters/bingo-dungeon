@@ -9,8 +9,7 @@ namespace UI
     public class GameUi : BaseUi
     {
         [Header("Game UI")] public GameObject gamePausePanel;
-        public GameObject optionsPanel;
-        public GameObject gameOverPanel;
+        public GameObject optionsPanel, gameOverPanel, gameStuckPanel;
         public Button endTurnButton, retryLevelButton;
         private FmodMixer fmodMixer;
         private StudioEventEmitter gameSong;
@@ -63,7 +62,9 @@ namespace UI
 
         public void ResetCurrentLevel()
         {
+            gameSong.Stop();
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            Time.timeScale = 1;
         }
         
         public void ToggleOptionsPanel()

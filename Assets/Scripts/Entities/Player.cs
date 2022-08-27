@@ -135,7 +135,7 @@ namespace Entities
 
                 var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 mousePos.z = 0;
-                if (_gameUi.gamePausePanel.activeInHierarchy)
+                if (_gameUi.gamePausePanel.activeInHierarchy || _gameUi.gameStuckPanel.activeInHierarchy)
                 {
                     mousePos = new Vector3(6000, 6000, 0);
                 }

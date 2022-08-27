@@ -11,7 +11,7 @@ namespace UI
         [Header("Game UI")] public GameObject gamePausePanel;
         public GameObject optionsPanel;
         public GameObject gameOverPanel;
-        public Button endTurnButton;
+        public Button endTurnButton, retryLevelButton;
         private FmodMixer fmodMixer;
         private StudioEventEmitter gameSong;
         public string sceneToLoad;
@@ -22,6 +22,7 @@ namespace UI
             gameSong = GetComponent<StudioEventEmitter>();
             Entities.Player _player = FindObjectOfType<Entities.Player>();
             endTurnButton.onClick.AddListener(_player.WaitAfterKillingThenEndTurn);
+            retryLevelButton.onClick.AddListener(ResetCurrentLevel);
             gameSong.Play();
         }
 

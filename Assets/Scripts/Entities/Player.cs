@@ -29,6 +29,9 @@ namespace Entities
 
         public override void Awake()
         {
+            if (transform.position.x * 10 % 5 != 0 || transform.position.y * 10 % 5 != 0)
+                Debug.LogError(transform.name + ": transform.pos.x & y must be set to a coord ending with .5! ");
+
             _gameUi = FindObjectOfType<Canvas>().GetComponent<GameUi>();
             _btnEndTurn = FindObjectOfType<Canvas>().transform.Find("EndTurnButton").gameObject;
             _turnManager = FindObjectOfType<Turn_System.TurnManager>().GetComponent<Turn_System.TurnManager>();

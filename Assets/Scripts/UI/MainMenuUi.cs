@@ -54,28 +54,6 @@ namespace UI
             }
         }
 
-        public void Transition(int b)
-        {
-            
-            if (levelTransitionOverlay != null)
-            {
-                levelTransitionOverlay.SetBool("levelEndedOrDead", true);    
-            }
-
-            switch (b)
-            {
-                case 0:
-                    Invoke(nameof(OpenHelp), 0);
-                    break;
-                case 1:
-                    Invoke(nameof(StartGame), 0);
-                    break;
-                default:
-                    Debug.LogError("This option is not defined!");
-                    break;
-            }
-        }
-
         public void StartGame()
         {
             menuSong.Stop();

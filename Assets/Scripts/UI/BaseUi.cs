@@ -4,9 +4,6 @@ namespace UI
 {
     public class BaseUi : MonoBehaviour
     {
-        [Header("Base UI")]
-        public Animator levelTransitionOverlay;
-
         public void SwapFullscreen()
         {
             if (Screen.fullScreen)

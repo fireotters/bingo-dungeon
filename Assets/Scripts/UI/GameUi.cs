@@ -17,6 +17,9 @@ namespace UI
 
         private void Start()
         {
+            if (sceneToLoad == "")
+                Debug.LogError("GameUi: sceneToLoad not set! Finishing level will crash the game.");
+
             fmodMixer = GetComponent<FmodMixer>();
             gameSong = GetComponent<StudioEventEmitter>();
             Entities.Player _player = FindObjectOfType<Entities.Player>();
@@ -84,6 +87,14 @@ namespace UI
             fmodMixer.KillEverySound();
             SceneManager.LoadScene("MainMenu");
             Time.timeScale = 1;
+        }
+
+        public void DebugSuperSpeed()
+        {
+            if (Time.timeScale == 1)
+                Time.timeScale = 5;
+            else
+                Time.timeScale = 1;
         }
     }
 }

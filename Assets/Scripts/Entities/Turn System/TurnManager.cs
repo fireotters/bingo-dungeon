@@ -27,6 +27,9 @@ namespace Entities.Turn_System
         bool rollTurn = true;
         CompositeDisposable disposables = new CompositeDisposable();
 
+        private int turnsToNextTokenClear = 4;
+        private UI.GameUi _gameUi;
+
         // Tracking token locations (so the player cannot push tokens on top of each other)
         public List<Token> tokenEntities;
         [HideInInspector] public List<Vector3> tokenLocations;
@@ -38,8 +41,10 @@ namespace Entities.Turn_System
             turnEntitiesObjects = turnEntities.Cast<Component>().Select(x => x.gameObject).ToList();
             turnEntities[0].InitTurn();
             turnEntities[0].DoTurn(NextTurn);
-            _bingoWheelUi = FindObjectOfType<Canvas>().transform.Find("DialogBingoUI").GetComponent<BingoWheelUi>();
+            _bingoWheelUi = FindObjectOfType<Canvas>().transform.Find("OverlayBingoUI").GetComponent<BingoWheelUi>();
+            _gameUi = FindObjectOfType<Canvas>().GetComponent<UI.GameUi>();
             UpdatePointer();
+            _gameUi.UpdateTokenClearCooldown(turnsToNextTokenClear);
 
             // Drop the first two tokens
             Invoke(nameof(DropInitialToken), 0.05f);
@@ -90,46 +95,59 @@ namespace Entities.Turn_System
             {
                 // Unpredictably, currentTurn will be higher than the max. In this case, skip to next round.
                 if (currentTurn < turnEntities.Count)
-                    if (turnEntities[currentTurn].GetTurns() > 0)
-                        turnEntities[currentTurn].DoTurn(NextTurn);
-                else
                 {
-                    currentTurn++;
-                    bool finished = false;
-
-                    int currentTurnTemp = currentTurn % turnEntitiesObjects.Count;
-                    var currentEntity = turnEntitiesObjects[currentTurnTemp];
-                    while (currentEntity == null || !currentEntity.activeInHierarchy)
+                    if (turnEntities[currentTurn].GetTurns() > 0)
                     {
-                        turnEntities.RemoveAt(currentTurnTemp);
-                        turnEntitiesObjects.RemoveAt(currentTurnTemp);
-                        
-                        currentTurnTemp = currentTurn % turnEntitiesObjects.Count;
-                        currentEntity = turnEntitiesObjects[currentTurnTemp];
+                        turnEntities[currentTurn].DoTurn(NextTurn);
                     }
-
-                    if (currentTurn >= turnEntities.Count || finished)
+                    else
                     {
-                        // Decide number & color
-                        var chosenNumber = DecideTokenNumber();
-                        var chosenColor = DecideTokenColor();
+                        currentTurn++;
+                        bool finished = false;
 
-                        // Hide pointer, summon Bingo UI
-                        currentTurnPointer.gameObject.SetActive(false);
-                        yield return new WaitForSeconds(.5f);
-                        _bingoWheelUi.RunBingoWheelUi(Int16.Parse(chosenNumber.transform.name), chosenColor);
-                        yield return new WaitForSeconds(2f);
+                        int currentTurnTemp = currentTurn % turnEntitiesObjects.Count;
+                        var currentEntity = turnEntitiesObjects[currentTurnTemp];
+                        while (currentEntity == null || !currentEntity.activeInHierarchy)
+                        {
+                            turnEntities.RemoveAt(currentTurnTemp);
+                            turnEntitiesObjects.RemoveAt(currentTurnTemp);
 
-                        // Drop token, return pointer
-                        DropTokenOn(chosenNumber, chosenColor);
-                        currentTurn = 0;
-                        yield return new WaitForSeconds(.5f);
-                        currentTurnPointer.gameObject.SetActive(true);
+                            currentTurnTemp = currentTurn % turnEntitiesObjects.Count;
+                            currentEntity = turnEntitiesObjects[currentTurnTemp];
+                        }
+
+                        if (currentTurn >= turnEntities.Count || finished)
+                        {
+                            // Update token clear cooldown
+                            if (turnsToNextTokenClear > 0)
+                                turnsToNextTokenClear -= 1;
+                            _gameUi.UpdateTokenClearCooldown(turnsToNextTokenClear);
+
+                            currentTurnPointer.gameObject.SetActive(false);
+                            // Drop a token if less than 10 exist
+                            if (tokenEntities.Count < 10)
+                            {
+                                // Decide number & color
+                                var chosenNumber = DecideTokenNumber();
+                                var chosenColor = DecideTokenColor();
+
+                                // Hide pointer, summon Bingo UI
+                                yield return new WaitForSeconds(.5f);
+                                _bingoWheelUi.RunBingoWheelUi(Int16.Parse(chosenNumber.transform.name), chosenColor);
+                                yield return new WaitForSeconds(2f);
+
+                                // Drop token, return pointer
+                                DropTokenOn(chosenNumber, chosenColor);
+                            }
+                            currentTurn = 0;
+                            yield return new WaitForSeconds(.5f);
+                            currentTurnPointer.gameObject.SetActive(true);
+                        }
+
+                        UpdatePointer();
+                        turnEntities[currentTurn].InitTurn();
+                        turnEntities[currentTurn].DoTurn(NextTurn);
                     }
-
-                    UpdatePointer();
-                    turnEntities[currentTurn].InitTurn();
-                    turnEntities[currentTurn].DoTurn(NextTurn);
                 }
             }
         }
@@ -198,6 +216,11 @@ namespace Entities.Turn_System
                     tokenEntities.Remove(token);
                     Destroy(token.gameObject);
                 }
+            }
+            if (tokenEntities.Count != tokenEntitiesCopy.Count)
+            {
+                _gameUi.UpdateTokenClearCooldown(4, playDestroySound:true);
+                turnsToNextTokenClear = 4;
             }
         }
     }

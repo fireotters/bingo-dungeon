@@ -3,17 +3,28 @@ using FMODUnity;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 
 namespace UI
 {
     public class GameUi : BaseUi
     {
-        [Header("Game UI")] public GameObject gamePausePanel;
+        public string sceneToLoad;
+
+        [Header("Menus")]
+        public GameObject gamePausePanel;
         public GameObject optionsPanel, gameOverPanel, gameStuckPanel;
+
+        [Header("Player UI")]
+        public Image tokenClearCooldownImage;
+        public TextMeshProUGUI tokenClearCooldownText, tokenClearCooldownBlockText;
+        public GameObject tokenClearCooldownBlock;
         public Button endTurnButton, retryLevelButton, eraseBlackTilesButton, eraseWhiteTilesButton;
+
+        [Header("Music & Sound")]
+        public StudioEventEmitter tokenDestroySound;
         private FmodMixer fmodMixer;
         private StudioEventEmitter gameSong;
-        public string sceneToLoad;
 
         private void Start()
         {
@@ -100,6 +111,23 @@ namespace UI
                 Time.timeScale = 5;
             else
                 Time.timeScale = 1;
+        }
+
+        public void UpdateTokenClearCooldown(int turnsToSet, bool playDestroySound = false)
+        {
+            print("Turns til Token Clear Ability: " + turnsToSet);
+            tokenClearCooldownText.text = turnsToSet.ToString();
+            tokenClearCooldownBlockText.text = "----- " + turnsToSet.ToString() + " turns left -----";
+            tokenClearCooldownImage.fillAmount = (4 - turnsToSet) / 4f;
+            if (playDestroySound)
+            {
+                tokenDestroySound.Play();
+                tokenClearCooldownBlock.SetActive(true);
+            }
+            if (turnsToSet == 0)
+            {
+                tokenClearCooldownBlock.SetActive(false);
+            }
         }
     }
 }

@@ -23,7 +23,7 @@ namespace Entities
         private Turn_System.TurnManager _turnManager;
         private TextMeshPro _textTurnsRemaining, _textMovementCost;
         private GameObject _movementCursor, _cursorOptionAttack, _cursorOptionDestination, _textTrHalfSign, _textMcHalfSign;
-        private GameObject _btnEndTurn;
+        private GameObject _uiPlayerButtons;
         private List<Transform> _currentEnemyTransforms = new List<Transform>();
         private Vector3 _lastFrameCursorPos = Vector3.zero;
 
@@ -33,7 +33,7 @@ namespace Entities
                 Debug.LogError(transform.name + ": transform.pos.x & y must be set to a coord ending with .5! ");
 
             _gameUi = FindObjectOfType<Canvas>().GetComponent<GameUi>();
-            _btnEndTurn = FindObjectOfType<Canvas>().transform.Find("EndTurnButton").gameObject;
+            _uiPlayerButtons = FindObjectOfType<Canvas>().transform.Find("GameplayButtons").gameObject;
             _turnManager = FindObjectOfType<Turn_System.TurnManager>().GetComponent<Turn_System.TurnManager>();
             _lineRenderer = GetComponent<LineRenderer>();
 
@@ -97,7 +97,7 @@ namespace Entities
             extraTurns = 0;
             _textTurnsRemaining.text = extraTurns.ToString();
             _textTurnsRemaining.gameObject.SetActive(false);
-            _btnEndTurn.SetActive(false);
+            _uiPlayerButtons.SetActive(false);
             currentFinishAction?.Invoke();
             currentFinishAction = null;
         }
@@ -108,7 +108,7 @@ namespace Entities
             extraTurns = 0;
             _textTurnsRemaining.text = extraTurns.ToString();
             _textTurnsRemaining.gameObject.SetActive(false);
-            _btnEndTurn.SetActive(false);
+            _uiPlayerButtons.SetActive(false);
             Invoke(nameof(EndTurn), 0.4f);
         }
 
@@ -120,7 +120,7 @@ namespace Entities
             {
                 playerTurn.Play();
                 _textTurnsRemaining.gameObject.SetActive(true);
-                _btnEndTurn.SetActive(true);
+                _uiPlayerButtons.SetActive(true);
 
                 // Fetch all current enemies from TurnManager
                 _currentEnemyTransforms.Clear();
@@ -248,7 +248,7 @@ namespace Entities
                                     fakeDestinationCursor.GetComponent<SpriteRenderer>().sortingOrder = -19;
                                 }
 
-                                _btnEndTurn.SetActive(false);
+                                _uiPlayerButtons.SetActive(false);
                                 _movementCursor.SetActive(false);
                                 playerMove.Play();
                                 
@@ -262,7 +262,7 @@ namespace Entities
                                         _textTurnsRemaining.gameObject.SetActive(false);
                                     }
                                     else
-                                        _btnEndTurn.SetActive(true);
+                                        _uiPlayerButtons.SetActive(true);
 
                                     _animator.SetBool("Moving", false);
                                     _animator.SetInteger("Dir", 0);

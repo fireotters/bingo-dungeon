@@ -9,7 +9,6 @@ namespace Audio
     {
         private Bus sfx;
         private Bus music;
-        [SerializeField] private StudioEventEmitter sfxDemoEmitter;
         
         private void Start()
         {
@@ -26,7 +25,7 @@ namespace Audio
 
         public void ChangeMusicVolume(float dB)
         {
-            if (dB <= -39f)
+            if (dB <= -19.5f)
                 dB = -200f;
             music.setVolume(DecibelToLinear(dB));
             PlayerPrefs.SetFloat("Music", dB);
@@ -35,14 +34,11 @@ namespace Audio
 
         public void ChangeSfxVolume(float dB)
         {
+            if (dB <= -19.5f)
+                dB = -200f;
             sfx.setVolume(DecibelToLinear(dB));
             PlayerPrefs.SetFloat("SFX", dB);
             PlayerPrefs.Save();
-
-            if (!sfxDemoEmitter.IsPlaying())
-            {
-                sfxDemoEmitter.Play();
-            }
         }
 
         public void FindAllSfxAndPlayPause(bool gameIsPaused)

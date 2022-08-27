@@ -10,6 +10,12 @@ namespace UI
         
         [SerializeField] private Slider _optionMusicSlider;
         public Slider optionSFXSlider;
+        private Audio.FmodMixer fmodMixer;
+
+        private void Awake()
+        {
+            fmodMixer = FindObjectOfType<Canvas>().GetComponent<Audio.FmodMixer>();
+        }
 
         private void OnEnable()
         {
@@ -19,6 +25,16 @@ namespace UI
         private void OnDisable()
         {
             OptionsClose();
+        }
+
+        public void PassMusicVolChange(float dB)
+        {
+            fmodMixer.ChangeMusicVolume(dB);
+        }
+
+        public void PassSfxVolChange(float dB)
+        {
+            fmodMixer.ChangeSfxVolume(dB);
         }
 
         // Functions related to Options menu

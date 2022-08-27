@@ -1994,7 +1994,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32dc717346d083c4891d0496d214d7a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sfxDemoEmitter: {fileID: 0}
 --- !u!114 &4341101249688090789
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4699,6 +4698,41 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2a36c7ce67dfdfa4a9260d12d94d3d06, type: 3}
+--- !u!1 &7713068782236761926 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5435942659338415087, guid: 2a36c7ce67dfdfa4a9260d12d94d3d06, type: 3}
+  m_PrefabInstance: {fileID: 2340194214020797609}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2539745296435350825
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7713068782236761926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -1662866946
+      Data2: 1306270165
+      Data3: 767655319
+      Data4: -948176719
+    Path: event:/2D/Player turn
+  Event: 
+  PlayEvent: 0
+  StopEvent: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!224 &7713068782463851522 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5435942658491795627, guid: 2a36c7ce67dfdfa4a9260d12d94d3d06, type: 3}

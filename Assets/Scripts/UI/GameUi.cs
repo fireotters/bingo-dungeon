@@ -20,7 +20,7 @@ namespace UI
         public Image tokenClearCooldownImage;
         public TextMeshProUGUI tokenClearCooldownText, tokenClearCooldownBlockText;
         public GameObject tokenClearCooldownBlock;
-        public Button endTurnButton, retryLevelButton, eraseBlackTilesButton, eraseWhiteTilesButton;
+        public Button endTurnButton, retryLevelButton, retryLevelButton2, eraseBlackTilesButton, eraseWhiteTilesButton;
         public GameObject uiGoingForBingo, uiGoingForPieces;
 
         [Header("Music & Sound")]
@@ -52,6 +52,7 @@ namespace UI
             Entities.Turn_System.TurnManager _turnManager = FindObjectOfType<Entities.Turn_System.TurnManager>();
             endTurnButton.onClick.AddListener(_player.WaitAfterKillingThenEndTurn);
             retryLevelButton.onClick.AddListener(ResetCurrentLevel);
+            retryLevelButton2.onClick.AddListener(ResetCurrentLevel);
             eraseBlackTilesButton.onClick.AddListener(_turnManager.RemoveTokensOnBlackSquares);
             eraseWhiteTilesButton.onClick.AddListener(_turnManager.RemoveTokensOnWhiteSquares);
 

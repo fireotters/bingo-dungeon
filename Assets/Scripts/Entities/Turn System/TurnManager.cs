@@ -109,8 +109,11 @@ namespace Entities.Turn_System
             yield return new WaitForEndOfFrame();
             if (piecesJustBecamePissed)
             {
-                yield return new WaitForSeconds(1.5f);
                 piecesJustBecamePissed = false;
+                float tempTime = Time.timeScale;
+                Time.timeScale = 1f;
+                yield return new WaitForSeconds(2f);
+                Time.timeScale = tempTime;
             }
             if (rollTurn)
             {

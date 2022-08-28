@@ -53,6 +53,21 @@ namespace UI
                 versionText.text = $"Version {Application.version}";
             }
         }
+        public void Transition(int b)
+        {
+            switch (b)
+            {
+                case 0:
+                    Invoke(nameof(OpenHelp), 0);
+                    break;
+                case 1:
+                    Invoke(nameof(StartGame), 0);
+                    break;
+                default:
+                    Debug.LogError("This option is not defined!");
+                    break;
+            }
+        }
 
         public void StartGame()
         {

@@ -161,8 +161,8 @@ namespace Entities
                                     tokenSelected.transform.DOMove(intendedDestination, 0.6f);
                                     nearbyTokens.Remove(tokenSelected);
                                     tokenSelected.UpdateCurrentSquareColor();
+                                }
 
-                                extraTurns -= 1; //TODO what is this for
                                 _textTurnsRemaining.text = extraTurns.ToString();
                                 finished?.Invoke();
                                 SignalBus<SignalToggleFfw>.Fire(new SignalToggleFfw() { Enabled = true });

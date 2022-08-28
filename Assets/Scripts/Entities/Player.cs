@@ -6,6 +6,7 @@ using UnityEngine;
 using TMPro;
 using DG.Tweening;
 using FMODUnity;
+using Signals;
 using UI;
 
 namespace Entities
@@ -60,7 +61,7 @@ namespace Entities
 
         private void OnDestroy()
         {
-            SignalBus<SignalGameEnded>.Fire(new SignalGameEnded { winCondition = false });
+            SignalBus<SignalGameEnded>.Fire(new SignalGameEnded { WinCondition = false });
         }
 
         // Player only checks triggers for Tokens which come into range
@@ -100,6 +101,7 @@ namespace Entities
             _uiPlayerButtons.SetActive(false);
             currentFinishAction?.Invoke();
             currentFinishAction = null;
+            SignalBus<SignalToggleFfw>.Fire(new SignalToggleFfw() { Enabled = true });
         }
 
         public void WaitAfterKillingThenEndTurn()
@@ -114,6 +116,7 @@ namespace Entities
 
         IEnumerator PlayerTurn(Action finished)
         {
+            SignalBus<SignalToggleFfw>.Fire(new SignalToggleFfw() { Enabled = false });
             _turnManager.UpdateTokenLocations();
             currentFinishAction = finished;
             if (extraTurns == range)
@@ -132,7 +135,6 @@ namespace Entities
 
             while (true)
             {
-
                 var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 mousePos.z = 0;
                 if (_gameUi.gamePausePanel.activeInHierarchy || _gameUi.gameStuckPanel.activeInHierarchy)
@@ -160,10 +162,11 @@ namespace Entities
                                     nearbyTokens.Remove(tokenSelected);
                                     tokenSelected.UpdateCurrentSquareColor();
 
-                                    _textTurnsRemaining.text = extraTurns.ToString();
-                                    finished?.Invoke();
-                                    yield break;
-                                }
+                                extraTurns -= 1; //TODO what is this for
+                                _textTurnsRemaining.text = extraTurns.ToString();
+                                finished?.Invoke();
+                                SignalBus<SignalToggleFfw>.Fire(new SignalToggleFfw() { Enabled = true });
+                                yield break;
                             }
                         }
                 }
@@ -271,6 +274,7 @@ namespace Entities
                                     spriteRenderer.sortingOrder = -(int)transform.position.y;
                                     Destroy(fakeDestinationCursor);
                                     Damage();
+                                    SignalBus<SignalToggleFfw>.Fire(new SignalToggleFfw() { Enabled = true });
                                     finished?.Invoke();
                                 }))
                                     yield break;
@@ -318,12 +322,6 @@ namespace Entities
                 }
             }
             return false;
-        }
-
-        private bool IsPossibleDirectionAWall(Vector3 supposedFinalTokenPosition)
-        {
-            var positionInTilemap = tilemap.WorldToCell(supposedFinalTokenPosition);
-            return tilemap.HasTile(positionInTilemap);
         }
 
         protected override void TakeDamage()

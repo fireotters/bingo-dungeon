@@ -1,7 +1,21 @@
-public struct SignalGameEnded
+namespace Signals
 {
-    public bool winCondition;
+    public struct SignalGameEnded
+    {
+        public bool WinCondition;
+    }
+
+    public struct SignalToggleFfw
+    {
+        public bool Enabled;
+    }
+
+    public struct SignalPieceAdded
+    {
+    }
+
+    public struct SignalEnemyDied
+    {
+    }
 }
 
-public struct SignalPieceAdded { }
-public struct SignalEnemyDied {}

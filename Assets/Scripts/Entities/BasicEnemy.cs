@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
 using FMODUnity;
+using Signals;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -166,6 +167,7 @@ namespace Entities
             enemyMovement.Play();
             if (fatalMove != Vector3.zero)
             {
+                SignalBus<SignalToggleFfw>.Fire(new SignalToggleFfw { Enabled = false });
                 enemyMovement.SetParameter("Deadly", 1);
             }
             transform.DOMove(destination, timeToMove).OnComplete(

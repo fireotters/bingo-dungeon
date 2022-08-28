@@ -1,5 +1,7 @@
 using Audio;
 using FMODUnity;
+using Signals;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -23,8 +25,13 @@ namespace UI
 
         [Header("Music & Sound")]
         public StudioEventEmitter tokenDestroySound;
-        private FmodMixer fmodMixer;
-        private StudioEventEmitter gameSong;
+        private FmodMixer _fmodMixer;
+        private StudioEventEmitter _gameSong;
+        
+        [Header("FFW")]
+        public TextMeshProUGUI ffwText;
+        private readonly string ffwDisabledText = "FFW Disabled", ffwEnabledText = "FFW Enabled";
+        private bool _isGamePaused, _isFfwActive;
 
         private void Start()
         {
@@ -42,11 +49,17 @@ namespace UI
             retryLevelButton.onClick.AddListener(ResetCurrentLevel);
             eraseBlackTilesButton.onClick.AddListener(_turnManager.RemoveTokensOnBlackSquares);
             eraseWhiteTilesButton.onClick.AddListener(_turnManager.RemoveTokensOnWhiteSquares);
+            
+            // FFW
+            ffwText.text = _isFfwActive ? ffwEnabledText : ffwDisabledText;
+            SignalBus<SignalToggleFfw>.Subscribe(ToggleFfw).AddTo(_disposables);
         }
 
         private void Update()
         {
             CheckKeyInputs();
+
+            ffwText.text = _isFfwActive ? ffwEnabledText : ffwDisabledText;
         }
 
         private void CheckKeyInputs()
@@ -63,15 +76,29 @@ namespace UI
                     optionsPanel.SetActive(!optionsPanel.activeInHierarchy);
                 }
             }
+
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                _isFfwActive = !_isFfwActive;
+            }
+        }
+
+        private void ToggleFfw(SignalToggleFfw signal)
+        {
+            if (_isFfwActive)
+            {
+                Time.timeScale = signal.Enabled ? 3 : 1;
+            }
         }
 
         private void GameIsPaused(bool intent)
         {
             // Show or hide pause panel and set timescale
-            gameSong.SetParameter("Menu", intent ? 1 : 0);
+            _isGamePaused = intent;
+            _gameSong.SetParameter("Menu", intent ? 1 : 0);
             gamePausePanel.SetActive(intent);
             Time.timeScale = intent ? 0 : 1;
-            fmodMixer.FindAllSfxAndPlayPause(gameIsPaused: intent);
+            _fmodMixer.FindAllSfxAndPlayPause(gameIsPaused: intent);
         }
 
         public void ResumeGame()
@@ -85,7 +112,7 @@ namespace UI
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             Time.timeScale = 1;
         }
-        
+
         public void ToggleOptionsPanel()
         {
             optionsPanel.SetActive(!optionsPanel.activeInHierarchy);
@@ -93,14 +120,14 @@ namespace UI
 
         public void LoadNextScene()
         {
-            gameSong.Stop();
+            _gameSong.Stop();
             SceneManager.LoadScene(sceneToLoad);
             Time.timeScale = 1;
         }
 
         public void ExitGameFromPause()
         {
-            fmodMixer.KillEverySound();
+            _fmodMixer.KillEverySound();
             SceneManager.LoadScene("MainMenu");
             Time.timeScale = 1;
         }

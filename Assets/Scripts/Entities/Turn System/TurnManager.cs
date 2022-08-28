@@ -17,14 +17,12 @@ namespace Entities.Turn_System
         public Transform currentTurnPointer;
         public Transform entitiesContainer;
         public List<ITurnEntity> turnEntities;
-        private BingoWheelUi _bingoWheelUi;
         public List<GameObject> turnEntitiesObjects;
+        private BingoWheelUi _bingoWheelUi;
         private int currentTurn;
         [SerializeField] private GridData gridData;
         [SerializeField] private Token blankToken;
         private List<TextMeshPro> _occupiedNumbers = new List<TextMeshPro>();
-        [SerializeField] private TileBase meteorTile;
-        [SerializeField] private Tilemap obstacleTilemap;
         bool rollTurn = true;
         CompositeDisposable disposables = new CompositeDisposable();
 
@@ -34,10 +32,18 @@ namespace Entities.Turn_System
         // Tracking token locations (so the player cannot push tokens on top of each other)
         public List<Token> tokenEntities;
         [HideInInspector] public List<Vector3> tokenLocations;
+        private bool tokensCanSpawn = true;
 
         private void Start()
         {
             SignalBus<SignalGameEnded>.Subscribe((_) => OnGameEnded()).AddTo(disposables);
+            SignalBus<SignalEnemyDied>.Subscribe((x) =>
+            {
+                tokensCanSpawn = false;
+                RemoveTokensOnSquares("white");
+                RemoveTokensOnSquares("black");
+            }).AddTo(disposables);
+
             CreateListITurnEntity();
             turnEntitiesObjects = turnEntities.Cast<Component>().Select(x => x.gameObject).ToList();
             turnEntities[0].InitTurn();
@@ -126,7 +132,7 @@ namespace Entities.Turn_System
 
                             currentTurnPointer.gameObject.SetActive(false);
                             // Drop a token if less than 10 exist
-                            if (tokenEntities.Count < 10)
+                            if (tokenEntities.Count < 10 && tokensCanSpawn)
                             {
                                 // Decide number & color
                                 var chosenNumber = DecideTokenNumber();
@@ -166,7 +172,7 @@ namespace Entities.Turn_System
 
         private void DropTokenOn(TextMeshPro number, Color chosenColor, bool playSound = true)
         {
-            var newToken = Instantiate(blankToken, number.transform.position, Quaternion.identity);
+            var newToken = Instantiate(blankToken, number.transform.position, Quaternion.identity, entitiesContainer);
             if (!playSound)
                 Destroy(newToken.GetComponent<FMODUnity.StudioEventEmitter>());
 

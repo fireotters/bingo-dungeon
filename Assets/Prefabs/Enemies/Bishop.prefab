@@ -51,18 +51,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a8ef98bc58566245a65a1bb3cc2bc2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tilemap: {fileID: 0}
   range: 16
   fourDir: 0
   playerObj: {fileID: 0}
   moveReticuleGameObject: {fileID: 2116351310106951641, guid: 526f03761721bcb42850480a01d43681, type: 3}
   corpsePrefab: {fileID: 1981591651481221961, guid: c54fc52716d250048bfcef37bbd120b6, type: 3}
-  _pissedSprites:
-  - {fileID: 21300000, guid: b6eb9dd10685efe41bb257975b65096c, type: 3}
-  - {fileID: 21300000, guid: d789bc5bccf35dc46962b9be14327d6c, type: 3}
-  _normalSprites:
-  - {fileID: 21300000, guid: bd2e486bcb7e8424b81254ece3b8bc12, type: 3}
-  - {fileID: 21300000, guid: b657afb801227534ca5a20b6d4b6f8cc, type: 3}
   validMoves: []
   fatalMove: {x: 0, y: 0, z: 0}
   enemyMovement: {fileID: -853179937615616533}
@@ -244,7 +237,7 @@ Animator:
   m_GameObject: {fileID: 585594735355505068}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 9e6c3098431d0c64799b3443d29545db, type: 2}
+  m_Controller: {fileID: 9100000, guid: 68689b35f63e02141af5dc9b6f9869f2, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

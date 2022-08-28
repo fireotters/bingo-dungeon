@@ -7,7 +7,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: DestroyedW
+  m_Name: Bi-DestroyedW
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -21,7 +21,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: d5c2968f8c9703941b4cf755dc56e2b8, type: 2}
+  m_Motion: {fileID: 7400000, guid: cde57362bcd132749a7fd6e111823e12, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -34,7 +34,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: DestroyedB
+  m_Name: Bi-DestroyedB
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -48,7 +48,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 802df9380cb4f56448765d4f4dc1910b, type: 2}
+  m_Motion: {fileID: 7400000, guid: 6b9cfca158f15f44f95777e8d7c6f4eb, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 

@@ -32,13 +32,17 @@ namespace Entities.Turn_System
         // Tracking token locations (so the player cannot push tokens on top of each other)
         public List<Token> tokenEntities;
         [HideInInspector] public List<Vector3> tokenLocations;
+
+        // Pieces Aggressive mode
         private bool tokensCanSpawn = true;
+        private bool piecesJustBecamePissed = false;
 
         private void Start()
         {
             SignalBus<SignalGameEnded>.Subscribe((_) => OnGameEnded()).AddTo(disposables);
             SignalBus<SignalEnemyDied>.Subscribe((x) =>
             {
+                piecesJustBecamePissed = true;
                 tokensCanSpawn = false;
                 RemoveTokensOnSquares("white", false);
                 RemoveTokensOnSquares("black", false);
@@ -103,6 +107,11 @@ namespace Entities.Turn_System
         {
             yield return new WaitForEndOfFrame();
             yield return new WaitForEndOfFrame();
+            if (piecesJustBecamePissed)
+            {
+                yield return new WaitForSeconds(1.5f);
+                piecesJustBecamePissed = false;
+            }
             if (rollTurn)
             {
                 // Unpredictably, currentTurn will be higher than the max. In this case, skip to next round.

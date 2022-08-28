@@ -23,8 +23,6 @@ namespace Entities
         public GameObject corpsePrefab;
 
         private bool _pissed = false;
-        [SerializeField] private Sprite[] _pissedSprites;
-        [SerializeField] private Sprite[] _normalSprites;
 
         // Targetting
         [HideInInspector] public List<Vector3> validMoves = new List<Vector3>();

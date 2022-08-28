@@ -54,7 +54,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PissedB
+  m_Name: Bi-PissedB
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -68,7 +68,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: d8a3d207ebd56e64e9eac68cb122b2bf, type: 2}
+  m_Motion: {fileID: 7400000, guid: ac344bd17da8027489d6b2249a011c7e, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -184,7 +184,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: IdleAfterPissedW
+  m_Name: Bi-IdleAfterPissedW
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -197,7 +197,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 1fd536a5abd73474595341d351efa1fb, type: 2}
+  m_Motion: {fileID: 7400000, guid: 35651e1461ce52f49865449921fd8a2b, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -232,7 +232,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: IdleW
+  m_Name: Bi-IdleW
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -247,7 +247,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: be28736f9796ac14399a0abaacfefb16, type: 2}
+  m_Motion: {fileID: 7400000, guid: 0ca293f6a3a625b45afa3268f21a2986, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -260,7 +260,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PissedW
+  m_Name: Bi-PissedW
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -274,7 +274,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: b38704499f3e7ce46ba867b8884ff3cf, type: 2}
+  m_Motion: {fileID: 7400000, guid: 15130f372ac444d468dc417fbec8d6b8, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -312,7 +312,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: IdleAfterPissedB
+  m_Name: Bi-IdleAfterPissedB
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -325,7 +325,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 2c09b7781ca3abe41b942f2df42eb6f4, type: 2}
+  m_Motion: {fileID: 7400000, guid: 0bc1fb0573397414bb35742b8cfd6018, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -363,7 +363,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: IdleB
+  m_Name: Bi-IdleB
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -377,7 +377,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 5d1cb9fb421a25341940b9411c3ecac8, type: 2}
+  m_Motion: {fileID: 7400000, guid: 3bbcab9e484b21140a4d98a3d0434561, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 

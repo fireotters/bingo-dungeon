@@ -57,6 +57,12 @@ MonoBehaviour:
   playerObj: {fileID: 0}
   moveReticuleGameObject: {fileID: 2116351310106951641, guid: 526f03761721bcb42850480a01d43681, type: 3}
   corpsePrefab: {fileID: 1981591651481221961, guid: 157e10afdd907f744b367528efdc8bf0, type: 3}
+  _pissedSprites:
+  - {fileID: 21300000, guid: dc5d24673b30afd4cbd3c28d343fd488, type: 3}
+  - {fileID: 21300000, guid: 1501baa5c234273409242ca2af5654c4, type: 3}
+  _normalSprites:
+  - {fileID: 21300000, guid: 74bc595c04f825d46bba76b1446f9aef, type: 3}
+  - {fileID: 21300000, guid: 75dc4f32748cde64d98227b7a7ff5992, type: 3}
   validMoves: []
   fatalMove: {x: 0, y: 0, z: 0}
   enemyMovement: {fileID: 8789766503661120670}
@@ -199,7 +205,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -912334867
-  m_SortingLayer: -1
+  m_SortingLayer: -2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 75dc4f32748cde64d98227b7a7ff5992, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

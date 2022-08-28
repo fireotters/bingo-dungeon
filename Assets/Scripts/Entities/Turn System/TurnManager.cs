@@ -40,14 +40,12 @@ namespace Entities.Turn_System
             SignalBus<SignalEnemyDied>.Subscribe((x) =>
             {
                 tokensCanSpawn = false;
-                RemoveTokensOnSquares("white");
-                RemoveTokensOnSquares("black");
+                RemoveTokensOnSquares("white", false);
+                RemoveTokensOnSquares("black", false);
             }).AddTo(disposables);
 
             CreateListITurnEntity();
             turnEntitiesObjects = turnEntities.Cast<Component>().Select(x => x.gameObject).ToList();
-            turnEntities[0].InitTurn();
-            turnEntities[0].DoTurn(NextTurn);
             _bingoWheelUi = FindObjectOfType<Canvas>().transform.Find("OverlayBingoUI").GetComponent<BingoWheelUi>();
             _gameUi = FindObjectOfType<Canvas>().GetComponent<UI.GameUi>();
             UpdatePointer();
@@ -56,6 +54,7 @@ namespace Entities.Turn_System
             // Drop the first two tokens
             Invoke(nameof(DropInitialToken), 0.05f);
             Invoke(nameof(DropInitialToken), 0.1f);
+            Invoke(nameof(StartPlayer), 0.2f);
         }
 
         private void DropInitialToken()
@@ -63,6 +62,12 @@ namespace Entities.Turn_System
             var selectedNumber = DecideTokenNumber();
             var chosenColor = DecideTokenColor();
             DropTokenOn(selectedNumber, chosenColor, playSound:false);
+        }
+
+        private void StartPlayer()
+        {
+            turnEntities[0].InitTurn();
+            turnEntities[0].DoTurn(NextTurn);
         }
 
         private void OnDestroy()
@@ -206,14 +211,14 @@ namespace Entities.Turn_System
         // Remove tokens on a certain color of tile. (They're separate methods because values can't be passed through UnityActions)
         public void RemoveTokensOnBlackSquares()
         {
-            RemoveTokensOnSquares("black");
+            RemoveTokensOnSquares("black", true);
         }
         public void RemoveTokensOnWhiteSquares()
         {
-            RemoveTokensOnSquares("white");
+            RemoveTokensOnSquares("white", true);
         }
 
-        public void RemoveTokensOnSquares(string color)
+        public void RemoveTokensOnSquares(string color, bool playDestroySound)
         {
             List<Token> tokenEntitiesCopy = new List<Token>(tokenEntities);
             foreach (Token token in tokenEntitiesCopy)
@@ -226,7 +231,7 @@ namespace Entities.Turn_System
             }
             if (tokenEntities.Count != tokenEntitiesCopy.Count)
             {
-                _gameUi.UpdateTokenClearCooldown(4, playDestroySound:true);
+                _gameUi.UpdateTokenClearCooldown(4, playDestroySound: playDestroySound);
                 turnsToNextTokenClear = 4;
             }
         }

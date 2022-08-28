@@ -57,6 +57,12 @@ MonoBehaviour:
   playerObj: {fileID: 0}
   moveReticuleGameObject: {fileID: 2116351310106951641, guid: 526f03761721bcb42850480a01d43681, type: 3}
   corpsePrefab: {fileID: 1981591651481221961, guid: cfaf4afd67a7c8d4f8c0b780d14b6de3, type: 3}
+  _pissedSprites:
+  - {fileID: 21300000, guid: fb5460225c65571469e8ce8e7cfeb1e7, type: 3}
+  - {fileID: 21300000, guid: 15ebc92c74bbee049b97909fdbc153b4, type: 3}
+  _normalSprites:
+  - {fileID: 21300000, guid: e72d9103cd67db64caf8e59ae199026a, type: 3}
+  - {fileID: 21300000, guid: 29a63930a34d6884aaf06131bf8f0f11, type: 3}
   validMoves: []
   fatalMove: {x: 0, y: 0, z: 0}
   enemyMovement: {fileID: 6366917544621461690}

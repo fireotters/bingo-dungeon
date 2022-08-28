@@ -17,26 +17,42 @@ namespace Entities
 
         [HideInInspector] public Transform playerObj;
 
-        //[HideInInspector] public Board boardManager;
         public Transform moveReticuleGameObject;
         bool BlackPiece;
-        bool Pissed;
         Animator enemyAnimator;
         public GameObject corpsePrefab;
+
+        private bool _pissed = false;
+        [SerializeField] private Sprite[] _pissedSprites;
+        [SerializeField] private Sprite[] _normalSprites;
 
         // Targetting
         [HideInInspector] public List<Vector3> validMoves = new List<Vector3>();
         [HideInInspector] public Vector3 fatalMove = Vector3.zero;
         [SerializeField] private StudioEventEmitter enemyMovement, enemyDeath;
 
+        CompositeDisposable _disposables = new CompositeDisposable();
+
         private void Start()
         {
+            // Find Components
+            enemyAnimator = GetComponent<Animator>();
             playerObj = GameObject.Find("Player").transform;
-            //boardManager = GameObject.Find("Board").GetComponent<Board>();
+
+            // Colour the piece
             BlackPiece = Convert.ToBoolean(Random.Range(0, 2));
-            enemyAnimator = gameObject.GetComponent<Animator>();
             enemyAnimator.SetBool("Black", BlackPiece);
+
+            // SignalBus Actions
             SignalBus<SignalPieceAdded>.Fire(default);
+            SignalBus<SignalEnemyDied>.Subscribe((x) =>
+            {
+                if (!_pissed)
+                {
+                    _pissed = true;
+                    enemyAnimator.SetBool("Pissed", true);
+                }
+            }).AddTo(_disposables);
         }
 
         private void OnDestroy()
@@ -47,7 +63,7 @@ namespace Entities
         [ContextMenu("Snap")]
         public void SnapToClosesTile()
         {
-            transform.position = tilemap.WorldToCell(transform.position) + tilemap.cellSize/2;
+            transform.position = _tilemap.WorldToCell(transform.position) + _tilemap.cellSize/2;
         }
 
         public virtual Vector3 ChoosePosition()
@@ -102,8 +118,8 @@ namespace Entities
         public bool ValidateDestination(Vector3 modifier)
         {
             Vector3 destination = transform.position + modifier;
-            Vector3Int destinationTile = tilemap.WorldToCell(destination);
-            if (tilemap.HasTile(destinationTile) || IsCellOccupiedByEnemy(destination))
+            Vector3Int destinationTile = _tilemap.WorldToCell(destination);
+            if (_tilemap.HasTile(destinationTile) || IsCellOccupiedByEnemy(destination))
             {
                 return false; // Tell the enemy to no longer search for valid tiles in this direction.
             }
@@ -200,7 +216,6 @@ namespace Entities
             if (corpsePrefab != null)
             {
                 corpsePrefab.GetComponent<Corpse>().BlackPiece = BlackPiece;
-                corpsePrefab.GetComponent<Corpse>().Pissed = Pissed;
                 Instantiate(corpsePrefab, transform.position, Quaternion.identity);
             }
         }

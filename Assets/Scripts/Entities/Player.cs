@@ -30,15 +30,22 @@ namespace Entities
 
         private readonly CompositeDisposable _disposables = new();
 
-        public override void Awake()
+        protected override void Awake()
         {
-            if (transform.position.x * 10 % 5 != 0 || transform.position.y * 10 % 5 != 0)
-                Debug.LogError(transform.name + ": transform.pos.x & y must be set to a coord ending with .5! ");
-
             _gameUi = FindObjectOfType<Canvas>().GetComponent<GameUi>();
             _uiPlayerButtons = FindObjectOfType<Canvas>().transform.Find("GameplayButtons").gameObject;
             _turnManager = FindObjectOfType<Turn_System.TurnManager>().GetComponent<Turn_System.TurnManager>();
             _lineRenderer = GetComponent<LineRenderer>();
+            spriteRenderer = transform.Find("Sprite").GetComponent<SpriteRenderer>();
+
+            base.Awake();
+        }
+
+        private void Start()
+        {
+            if (transform.position.x * 10 % 5 != 0 || transform.position.y * 10 % 5 != 0)
+                Debug.LogError(transform.name + ": transform.pos.x & y must be set to a coord ending with .5! ");
+
 
             _movementCursor = transform.Find("MovementCursor").gameObject;
             _cursorOptionAttack = _movementCursor.transform.Find("AttackCursor").gameObject;
@@ -50,7 +57,6 @@ namespace Entities
             _textMcHalfSign = _textMovementCost.transform.Find("Half Sign").gameObject;
 
             _animator = transform.Find("Sprite").GetComponent<Animator>();
-            spriteRenderer = transform.Find("Sprite").GetComponent<SpriteRenderer>();
             spriteRenderer.sortingOrder = -(int)transform.position.y;
 
             // Pieces aggressive
@@ -159,9 +165,9 @@ namespace Entities
                             Vector3 directionToMove = tokenSelected.transform.position - transform.position;
                             Vector3 intendedDestination = tokenSelected.transform.position + directionToMove;
 
-                            Vector3Int destinationTile = tilemap.WorldToCell(intendedDestination);
+                            Vector3Int destinationTile = _tilemap.WorldToCell(intendedDestination);
                             // Move the token if the destination doesn't have a wall or another token
-                            if (!tilemap.HasTile(destinationTile))
+                            if (!_tilemap.HasTile(destinationTile))
                             {
                                 if (!_turnManager.tokenLocations.Contains(intendedDestination))
                                 {

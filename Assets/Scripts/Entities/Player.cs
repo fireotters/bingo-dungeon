@@ -28,6 +28,8 @@ namespace Entities
         private List<Transform> _currentEnemyTransforms = new List<Transform>();
         private Vector3 _lastFrameCursorPos = Vector3.zero;
 
+        private readonly CompositeDisposable _disposables = new();
+
         public override void Awake()
         {
             if (transform.position.x * 10 % 5 != 0 || transform.position.y * 10 % 5 != 0)
@@ -50,6 +52,12 @@ namespace Entities
             _animator = transform.Find("Sprite").GetComponent<Animator>();
             spriteRenderer = transform.Find("Sprite").GetComponent<SpriteRenderer>();
             spriteRenderer.sortingOrder = -(int)transform.position.y;
+
+            // Pieces aggressive
+            SignalBus<SignalEnemyDied>.Subscribe((x) =>
+            {
+                nearbyTokens.Clear();
+            }).AddTo(_disposables);
         }
 
         private void Update()

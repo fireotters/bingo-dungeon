@@ -21,6 +21,7 @@ namespace UI
         public TextMeshProUGUI tokenClearCooldownText, tokenClearCooldownBlockText;
         public GameObject tokenClearCooldownBlock;
         public Button endTurnButton, retryLevelButton, eraseBlackTilesButton, eraseWhiteTilesButton;
+        public GameObject uiGoingForBingo, uiGoingForPieces;
 
         [Header("Music & Sound")]
         public StudioEventEmitter tokenDestroySound;
@@ -33,6 +34,8 @@ namespace UI
         public GameObject ffwDisabledIcon, ffwEnabledIcon;
         public GameObject debugFfwDisabledIcon, debugFfwEnabledIcon;
         private bool _isFfwActive;
+
+        private bool bingoUiVisible = true;
         private readonly CompositeDisposable _disposables = new();
 
         private void Start()
@@ -58,6 +61,17 @@ namespace UI
             ffwDisabledIcon.SetActive(!_isFfwActive);
             ffwEnabledIcon.SetActive(_isFfwActive);
             SignalBus<SignalToggleFfw>.Subscribe(ToggleFfwTimeScale).AddTo(_disposables);
+
+            // Pieces aggressive
+            SignalBus<SignalEnemyDied>.Subscribe((x) =>
+            {
+                if (bingoUiVisible)
+                {
+                    bingoUiVisible = false;
+                    uiGoingForBingo.SetActive(false);
+                    uiGoingForPieces.SetActive(true);
+                }
+            }).AddTo(_disposables);
         }
 
         private void Update()

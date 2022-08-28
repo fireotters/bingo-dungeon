@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using Signals;
 using UnityEngine;
 
 public class PieceCounter : MonoBehaviour
@@ -14,7 +13,7 @@ public class PieceCounter : MonoBehaviour
         {
             numOfPieces--;
             if (numOfPieces <= 0)
-                SignalBus<SignalGameEnded>.Fire(new SignalGameEnded { winCondition = true });
+                SignalBus<SignalGameEnded>.Fire(new SignalGameEnded { WinCondition = true });
         }).AddTo(disposables);
     }
 

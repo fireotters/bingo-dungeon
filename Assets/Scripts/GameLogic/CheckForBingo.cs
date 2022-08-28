@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using Signals;
 using TMPro;
 using UnityEngine;
 
@@ -38,7 +37,7 @@ public class CheckForBingo : MonoBehaviour
 
         if (CheckForBingoResult())
         {
-            SignalBus<SignalGameEnded>.Fire(new SignalGameEnded(){ winCondition = true});
+            SignalBus<SignalGameEnded>.Fire(new SignalGameEnded() { WinCondition = true });
         }
     }
 

@@ -1,4 +1,5 @@
 using FMODUnity;
+using Signals;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -21,7 +22,7 @@ namespace GameLogic
             // At times when exiting a level, HandleEndGame will trigge while the overlays are no longer available. Check for null first.
             if (gameWinOverlay != null && gameOverOverlay != null)
             {
-                if (context.winCondition)
+                if (context.WinCondition)
                 {
                     gameSong.SetParameter("Win", 1);
                     gameWinOverlay.SetActive(true);

@@ -6,6 +6,7 @@ using UnityEngine;
 using TMPro;
 using DG.Tweening;
 using FMODUnity;
+using Signals;
 using UI;
 
 namespace Entities
@@ -56,7 +57,7 @@ namespace Entities
 
         private void OnDestroy()
         {
-            SignalBus<SignalGameEnded>.Fire(new SignalGameEnded { winCondition = false });
+            SignalBus<SignalGameEnded>.Fire(new SignalGameEnded { WinCondition = false });
         }
 
         // Player only checks triggers for Tokens which come into range
@@ -93,9 +94,10 @@ namespace Entities
             extraTurns = 0;
             _textTurnsRemaining.text = extraTurns.ToString();
             _textTurnsRemaining.gameObject.SetActive(false);
-            textSkipUi.gameObject.SetActive(false);
+            textSkipUi.SetActive(false);
             currentFinishAction?.Invoke();
             currentFinishAction = null;
+            SignalBus<SignalToggleFfw>.Fire(new SignalToggleFfw() { Enabled = true });
         }
 
         public void WaitAfterKillingThenSkipTurn()
@@ -104,18 +106,19 @@ namespace Entities
             extraTurns = 0;
             _textTurnsRemaining.text = extraTurns.ToString();
             _textTurnsRemaining.gameObject.SetActive(false);
-            textSkipUi.gameObject.SetActive(false);
+            textSkipUi.SetActive(false);
             Invoke(nameof(SkipTurn), 0.4f);
         }
 
         IEnumerator PlayerTurn(Action finished)
         {
+            SignalBus<SignalToggleFfw>.Fire(new SignalToggleFfw() { Enabled = false });
             currentFinishAction = finished;
             if (extraTurns == range)
             {
                 playerTurn.Play();
                 _textTurnsRemaining.gameObject.SetActive(true);
-                textSkipUi.gameObject.SetActive(true);
+                textSkipUi.SetActive(true);
 
                 // Fetch all current enemies from TurnManager
                 _currentEnemyTransforms.Clear();
@@ -127,7 +130,6 @@ namespace Entities
 
             while (true)
             {
-
                 var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 mousePos.z = 0;
                 if (_gameUi.gamePausePanel.activeInHierarchy)
@@ -153,6 +155,7 @@ namespace Entities
                                 extraTurns -= 1;
                                 _textTurnsRemaining.text = extraTurns.ToString();
                                 finished?.Invoke();
+                                SignalBus<SignalToggleFfw>.Fire(new SignalToggleFfw() { Enabled = true });
                                 yield break;
                             }
                         }
@@ -238,7 +241,7 @@ namespace Entities
                                     fakeDestinationCursor.GetComponent<SpriteRenderer>().sortingOrder = -19;
                                 }
 
-                                textSkipUi.gameObject.SetActive(false);
+                                textSkipUi.SetActive(false);
                                 _movementCursor.SetActive(false);
                                 playerMove.Play();
                                 
@@ -252,7 +255,7 @@ namespace Entities
                                         _textTurnsRemaining.gameObject.SetActive(false);
                                     }
                                     else
-                                        textSkipUi.gameObject.SetActive(true);
+                                        textSkipUi.SetActive(true);
 
                                     _animator.SetBool("Moving", false);
                                     _animator.SetInteger("Dir", 0);
@@ -261,6 +264,7 @@ namespace Entities
                                     spriteRenderer.sortingOrder = -(int)transform.position.y;
                                     Destroy(fakeDestinationCursor);
                                     Damage();
+                                    SignalBus<SignalToggleFfw>.Fire(new SignalToggleFfw() { Enabled = true });
                                     finished?.Invoke();
                                 }))
                                     yield break;
@@ -308,12 +312,6 @@ namespace Entities
                 }
             }
             return false;
-        }
-
-        private bool IsPossibleDirectionAWall(Vector3 supposedFinalTokenPosition)
-        {
-            var positionInTilemap = tilemap.WorldToCell(supposedFinalTokenPosition);
-            return tilemap.HasTile(positionInTilemap);
         }
 
         protected override void TakeDamage()

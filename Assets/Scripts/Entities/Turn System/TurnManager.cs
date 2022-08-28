@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Entities.Tokens;
 using Level;
+using Signals;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -29,7 +30,7 @@ namespace Entities.Turn_System
 
         private void Start()
         {
-            SignalBus<SignalGameEnded>.Subscribe((gameEnded) => OnGameEnded()).AddTo(disposables);
+            SignalBus<SignalGameEnded>.Subscribe((_) => OnGameEnded()).AddTo(disposables);
             CreateListITurnEntity();
             turnEntitiesObjects = turnEntities.Cast<Component>().Select(x => x.gameObject).ToList();
             occupiedNumbers = new List<TextMeshPro>();

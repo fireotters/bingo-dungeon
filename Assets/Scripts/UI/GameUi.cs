@@ -192,5 +192,19 @@ namespace UI
                 tokenClearCooldownBlock.SetActive(false);
             }
         }
+
+        private void HandleEndGame(SignalGameEnded context)
+        {
+            if (context.WinCondition)
+            {
+                _sound.musicStage.SetParameter("Win", 1);
+                _dialogs.gameWon.SetActive(true);
+            }
+            else
+            {
+                _sound.musicStage.SetParameter("Dead", 1);
+                _dialogs.gameLost.SetActive(true);
+            }
+        }
     }
 }

@@ -55,7 +55,7 @@ namespace Entities
 
         private void OnDestroy()
         {
-            SignalBus<SignalEnemyDied>.Fire();
+            _disposables.Dispose();
         }
 
         [ContextMenu("Snap")]

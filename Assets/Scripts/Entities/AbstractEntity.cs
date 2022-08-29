@@ -4,6 +4,7 @@ using DG.Tweening;
 using Toolbox;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using Signals;
 
 namespace Entities
 {
@@ -130,6 +131,11 @@ namespace Entities
             if (hitPoints <= 0)
             {
                 Destroy(gameObject);
+
+                if (transform.name == "Player")
+                    SignalBus<SignalGameEnded>.Fire(new SignalGameEnded { WinCondition = false });
+                else
+                    SignalBus<SignalEnemyDied>.Fire();
                 OnDeath();
             }
         }

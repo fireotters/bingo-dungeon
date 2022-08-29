@@ -24,7 +24,6 @@ namespace Entities
         private Turn_System.TurnManager _turnManager;
         private TextMeshPro _textTurnsRemaining, _textMovementCost;
         private GameObject _movementCursor, _cursorOptionAttack, _cursorOptionDestination, _textTrHalfSign, _textMcHalfSign;
-        private GameObject _uiPlayerButtons;
         private List<Transform> _currentEnemyTransforms = new List<Transform>();
         private Vector3 _lastFrameCursorPos = Vector3.zero;
 
@@ -33,7 +32,6 @@ namespace Entities
         protected override void Awake()
         {
             _gameUi = FindObjectOfType<Canvas>().GetComponent<GameUi>();
-            _uiPlayerButtons = FindObjectOfType<Canvas>().transform.Find("GameplayButtons").gameObject;
             _turnManager = FindObjectOfType<Turn_System.TurnManager>().GetComponent<Turn_System.TurnManager>();
             _lineRenderer = GetComponent<LineRenderer>();
             spriteRenderer = transform.Find("Sprite").GetComponent<SpriteRenderer>();
@@ -75,7 +73,7 @@ namespace Entities
 
         private void OnDestroy()
         {
-            SignalBus<SignalGameEnded>.Fire(new SignalGameEnded { WinCondition = false });
+            _disposables.Dispose();
         }
 
         // Player only checks triggers for Tokens which come into range
@@ -112,7 +110,7 @@ namespace Entities
             extraTurns = 0;
             _textTurnsRemaining.text = extraTurns.ToString();
             _textTurnsRemaining.gameObject.SetActive(false);
-            _uiPlayerButtons.SetActive(false);
+            _gameUi.ShowGameplayButtons(false);
             currentFinishAction?.Invoke();
             currentFinishAction = null;
             SignalBus<SignalToggleFfw>.Fire(new SignalToggleFfw() { Enabled = true });
@@ -124,7 +122,7 @@ namespace Entities
             extraTurns = 0;
             _textTurnsRemaining.text = extraTurns.ToString();
             _textTurnsRemaining.gameObject.SetActive(false);
-            _uiPlayerButtons.SetActive(false);
+            _gameUi.ShowGameplayButtons(false);
             Invoke(nameof(EndTurn), 0.4f);
         }
 
@@ -137,7 +135,7 @@ namespace Entities
             {
                 playerTurn.Play();
                 _textTurnsRemaining.gameObject.SetActive(true);
-                _uiPlayerButtons.SetActive(true);
+                _gameUi.ShowGameplayButtons(true);
 
                 // Fetch all current enemies from TurnManager
                 _currentEnemyTransforms.Clear();
@@ -151,7 +149,7 @@ namespace Entities
             {
                 var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 mousePos.z = 0;
-                if (_gameUi.gamePausePanel.activeInHierarchy || _gameUi.gameStuckPanel.activeInHierarchy)
+                if (_gameUi.IsGameplayInterruptingPanelOpen())
                 {
                     mousePos = new Vector3(6000, 6000, 0);
                 }
@@ -265,7 +263,7 @@ namespace Entities
                                     fakeDestinationCursor.GetComponent<SpriteRenderer>().sortingOrder = -19;
                                 }
 
-                                _uiPlayerButtons.SetActive(false);
+                                _gameUi.ShowGameplayButtons(false);
                                 _movementCursor.SetActive(false);
                                 playerMove.Play();
                                 
@@ -279,7 +277,7 @@ namespace Entities
                                         _textTurnsRemaining.gameObject.SetActive(false);
                                     }
                                     else
-                                        _uiPlayerButtons.SetActive(true);
+                                        _gameUi.ShowGameplayButtons(true);
 
                                     _animator.SetBool("Moving", false);
                                     _animator.SetInteger("Dir", 0);

@@ -79,7 +79,7 @@ namespace UI
 
         private void ToggleFfwTimeScale(SignalToggleFfw signal)
         {
-            if (_ffwUi._isFfwActive)
+            if (_ffwUi.isFfwActive)
             {
                 Time.timeScale = signal.Enabled ? 3 : 1;
             }
@@ -128,7 +128,7 @@ namespace UI
         public void DebugSuperSpeed()
         {
             // Disable normal ffw, since it changes timeScale constantly
-            if (_ffwUi._isFfwActive)
+            if (_ffwUi.isFfwActive)
                 ToggleFfw();
 
             if (Time.timeScale == 1)
@@ -226,17 +226,17 @@ namespace UI
         public readonly string ffwDisabledText = "NORMAL SPEED", ffwEnabledText = "FAST-FORWARDED";
         public GameObject ffwDisabledIcon, ffwEnabledIcon;
         public GameObject debugFfwDisabledIcon, debugFfwEnabledIcon;
-        public bool _isFfwActive;
+        public bool isFfwActive;
 
         public void ToggleFfwUi(string getset)
         {
             if (getset == "getFfwPref")
-                _isFfwActive = PlayerPrefs.GetInt("Ffw Enabled", 0) == 1;
-            ffwTooltipText.text = _isFfwActive ? ffwEnabledText : ffwDisabledText;
-            ffwDisabledIcon.SetActive(!_isFfwActive);
-            ffwEnabledIcon.SetActive(_isFfwActive);
+                isFfwActive = PlayerPrefs.GetInt("Ffw Enabled", 0) == 1;
+            ffwTooltipText.text = isFfwActive ? ffwEnabledText : ffwDisabledText;
+            ffwDisabledIcon.SetActive(!isFfwActive);
+            ffwEnabledIcon.SetActive(isFfwActive);
             if (getset == "setFfwPref")
-                PlayerPrefs.SetInt("Ffw Enabled", _isFfwActive ? 1 : 0);
+                PlayerPrefs.SetInt("Ffw Enabled", isFfwActive ? 1 : 0);
         }
     }
     [System.Serializable]

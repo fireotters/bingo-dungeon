@@ -125,18 +125,21 @@ namespace Entities
         
         protected virtual void TakeDamage()
         {
-            hitPoints--;
-            print($"AAAAAAAAAAARGGGGGGGGGGGYHHHHHHHHHHHHHHHHHHHHHH MY BOOOONES (health is now {hitPoints})");
-
-            if (hitPoints <= 0)
+            if (hitPoints > 0)
             {
-                Destroy(gameObject);
+                print($"{transform.name}: AAAAAAAARGGGGGGGHHHHHHHHHHHHH MY BOOOONES (health is now {hitPoints})");
+                hitPoints--;
 
-                if (transform.name == "Player")
-                    SignalBus<SignalGameEnded>.Fire(new SignalGameEnded { WinCondition = false });
-                else
-                    SignalBus<SignalEnemyDied>.Fire();
-                OnDeath();
+                if (hitPoints == 0)
+                {
+                    Destroy(gameObject);
+
+                    if (transform.name == "Player")
+                        SignalBus<SignalGameEnded>.Fire(new SignalGameEnded { WinCondition = false });
+                    else
+                        SignalBus<SignalEnemyDied>.Fire();
+                    OnDeath();
+                }
             }
         }
 

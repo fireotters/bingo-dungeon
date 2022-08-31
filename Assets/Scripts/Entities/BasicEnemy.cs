@@ -12,21 +12,25 @@ namespace Entities
 {
     public abstract class BasicEnemy : AbstractEntity
     {
-        [Tooltip("Time to move in seconds")] private float timeToMove = .3f;
-        private float timeToStartTurn = .1f;
+        // Enemy states
+        private bool _pissed = false;
+        private bool _colorIsBlack;
 
-        [HideInInspector] public Transform playerObj;
+        // Move timings
+        private float _timeToMove = .3f;
+        private readonly float _timeToStartTurn = .1f;
+
+
 
         public Transform moveReticuleGameObject;
-        bool BlackPiece;
-        Animator enemyAnimator;
-        public GameObject corpsePrefab;
+        private Animator enemyAnimator;
+        [SerializeField] private GameObject corpsePrefab;
 
-        private bool _pissed = false;
 
         // Targetting
-        [HideInInspector] public List<Vector3> validMoves = new List<Vector3>();
-        [HideInInspector] public Vector3 fatalMove = Vector3.zero;
+        private Transform playerObj;
+        private List<Vector3> validMoves = new List<Vector3>();
+        private Vector3 fatalMove = Vector3.zero;
         [SerializeField] private StudioEventEmitter enemyMovement, enemyDeath;
 
         CompositeDisposable _disposables = new CompositeDisposable();
@@ -38,8 +42,8 @@ namespace Entities
             playerObj = GameObject.Find("Player").transform;
 
             // Colour the piece
-            BlackPiece = Convert.ToBoolean(Random.Range(0, 2));
-            enemyAnimator.SetBool("Black", BlackPiece);
+            _colorIsBlack = Convert.ToBoolean(Random.Range(0, 2));
+            enemyAnimator.SetBool("Black", _colorIsBlack);
 
             // SignalBus Actions
             SignalBus<SignalPieceAdded>.Fire(default);
@@ -74,7 +78,8 @@ namespace Entities
             // If the player can be killed, do it. Else, pick a random valid destination.
             if (fatalMove != Vector3.zero)
             {
-                timeToMove *= 3; // Slow down piece which finishes off Player, accentuate the loss.
+                // Slow down piece which finishes off Player, accentuates the loss.
+                _timeToMove *= 3;
                 return fatalMove;
             }
             else if (validMoves == null || validMoves.Count == 0)
@@ -95,20 +100,22 @@ namespace Entities
                     return playerToDestinationDist > playerToEnemyDist;
                 }).ToList();
 
-                var chanceToRetreat = Random.Range(1, 8);
-                print($"Piece {gameObject.name} is {(chanceToRetreat > 2 ? "APPROACHING" : "RETREATING")} - (Approach Moves: {movesCloserToPlayer.Count}) (Retreat Moves: {movesAwayFromPlayer.Count})");
+                // Retreat Chance:
+                // 20% if piece is Pissed, 50% if piece is docile
+                int roll = Random.Range(1, 101);
+                int retreat_chance = _pissed ? 20 : 50;
+                bool enemy_will_retreat = roll < retreat_chance;
+                print($"Piece {gameObject.name} wants to {(enemy_will_retreat ? "APPROACH" : "RETREAT")} - (Approach Moves: {movesCloserToPlayer.Count}) (Retreat Moves: {movesAwayFromPlayer.Count})");
 
-                if (chanceToRetreat > 2)
+                if (enemy_will_retreat)
                 {
-                    return movesCloserToPlayer.Count > 0
-                        ? movesCloserToPlayer[Random.Range(0, movesCloserToPlayer.Count)]
-                        : transform.position;
+                    return movesAwayFromPlayer.Count > 0 ? movesAwayFromPlayer[Random.Range(0, movesAwayFromPlayer.Count)]
+                         : movesAwayFromPlayer.Count > 0 ? movesCloserToPlayer[Random.Range(0, movesCloserToPlayer.Count)] : transform.position;
                 }
                 else
                 {
-                    return movesAwayFromPlayer.Count > 0 
-                        ? movesAwayFromPlayer[Random.Range(0, movesAwayFromPlayer.Count)]
-                        : transform.position;
+                    return movesCloserToPlayer.Count > 0 ? movesCloserToPlayer[Random.Range(0, movesCloserToPlayer.Count)]
+                         : movesAwayFromPlayer.Count > 0 ? movesAwayFromPlayer[Random.Range(0, movesAwayFromPlayer.Count)] : transform.position;
                 }
             }
         }
@@ -184,7 +191,7 @@ namespace Entities
                 SignalBus<SignalToggleFfw>.Fire(new SignalToggleFfw { Enabled = false });
                 enemyMovement.SetParameter("Deadly", 1);
             }
-            transform.DOMove(destination, timeToMove).OnComplete(
+            transform.DOMove(destination, _timeToMove).OnComplete(
                 () =>
                 {
                     extraTurns = 0;
@@ -204,7 +211,7 @@ namespace Entities
 
         IEnumerator EnemyTurn(System.Action finished)
         {
-            yield return new WaitForSeconds(timeToStartTurn);
+            yield return new WaitForSeconds(_timeToStartTurn);
             DoMove(finished);
         }
 
@@ -213,7 +220,7 @@ namespace Entities
             enemyDeath.Play();
             if (corpsePrefab != null)
             {
-                corpsePrefab.GetComponent<Corpse>().BlackPiece = BlackPiece;
+                corpsePrefab.GetComponent<Corpse>().BlackPiece = _colorIsBlack;
                 Instantiate(corpsePrefab, transform.position, Quaternion.identity);
             }
         }

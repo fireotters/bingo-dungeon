@@ -64,8 +64,11 @@ namespace Entities.Turn_System
         private void DropInitialToken()
         {
             var selectedNumber = DecideTokenNumber();
-            var chosenColor = DecideTokenColor();
-            DropTokenOn(selectedNumber, chosenColor, playSound:false);
+            if (selectedNumber != null)
+            {
+                var chosenColor = DecideTokenColor();
+                DropTokenOn(selectedNumber, chosenColor, playSound: false);
+            }
         }
 
         private void StartPlayer()
@@ -153,15 +156,18 @@ namespace Entities.Turn_System
                             {
                                 // Decide number & color
                                 var chosenNumber = DecideTokenNumber();
-                                var chosenColor = DecideTokenColor();
+                                if (chosenNumber != null)
+                                {
+                                    var chosenColor = DecideTokenColor();
 
-                                // Hide pointer, summon Bingo UI
-                                yield return new WaitForSeconds(.5f);
-                                _bingoWheelUi.RunBingoWheelUi(Int16.Parse(chosenNumber.transform.name), chosenColor);
-                                yield return new WaitForSeconds(2f);
+                                    // Hide pointer, summon Bingo UI
+                                    yield return new WaitForSeconds(.5f);
+                                    _bingoWheelUi.RunBingoWheelUi(Int16.Parse(chosenNumber.transform.name), chosenColor);
+                                    yield return new WaitForSeconds(2f);
 
-                                // Drop token, return pointer
-                                DropTokenOn(chosenNumber, chosenColor);
+                                    // Drop token, return pointer
+                                    DropTokenOn(chosenNumber, chosenColor);
+                                }
                             }
                             currentTurn = 0;
                             yield return new WaitForSeconds(.5f);
@@ -205,8 +211,13 @@ namespace Entities.Turn_System
         }
 
         // Decide which tile to drop a token on by checking if a suggested tile is already occupied.
-        private TextMeshPro DecideTokenNumber(bool firstAttempt = true)
+        private TextMeshPro DecideTokenNumber(bool firstAttempt = true, int iteration = 0)
         {
+            if (iteration >= 20)
+            {
+                print("Token attempted to spawn 20 times, assume it is because of limited space & don't spawn a token.");
+                return null;
+            }
             if (firstAttempt)
             {
                 _occupiedNumbers.Clear();
@@ -216,7 +227,7 @@ namespace Entities.Turn_System
             }
 
             var rolledNumber = gridData.tileNumbers[Random.Range(0, gridData.tileNumbers.Count)];
-            return _occupiedNumbers.Contains(rolledNumber) ? DecideTokenNumber(false) : rolledNumber;
+            return _occupiedNumbers.Contains(rolledNumber) ? DecideTokenNumber(false, iteration + 1) : rolledNumber;
         }
 
 

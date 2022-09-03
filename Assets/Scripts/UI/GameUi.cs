@@ -1,6 +1,7 @@
 using Audio;
 using FMODUnity;
 using Signals;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -99,13 +100,6 @@ namespace UI
             GameIsPaused(false);
         }
 
-        public void ResetCurrentLevel()
-        {
-            _sound.musicStage.Stop();
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-            Time.timeScale = 1;
-        }
-
         public void ToggleOptionsPanel()
         {
             _dialogs.options.SetActive(!_dialogs.options.activeInHierarchy);
@@ -113,11 +107,14 @@ namespace UI
 
         public void LoadNextScene()
         {
-            _sound.musicStage.Stop();
+            _sound.fmodMixer.KillEverySound();
             SceneManager.LoadScene(sceneToLoad);
-            Time.timeScale = 1;
         }
-
+        public void ResetCurrentLevel()
+        {
+            _sound.fmodMixer.KillEverySound();
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
         public void ExitGameFromPause()
         {
             _sound.fmodMixer.KillEverySound();

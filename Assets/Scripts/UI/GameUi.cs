@@ -1,6 +1,7 @@
 using Audio;
 using FMODUnity;
 using Signals;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -12,27 +13,11 @@ namespace UI
     {
         public string sceneToLoad;
 
-        [Header("Menus")]
-        public GameObject gamePausePanel;
-        public GameObject optionsPanel, gameOverPanel, gameStuckPanel;
+        [SerializeField] private GameUiDialogs _dialogs;
+        [SerializeField] private GameUiPlayerUi _playerUi;
+        [SerializeField] private GameUiSound _sound;
+        [SerializeField] private GameUiFfwUi _ffwUi;
 
-        [Header("Player UI")]
-        public Image tokenClearCooldownImage;
-        public TextMeshProUGUI tokenClearCooldownText, tokenClearCooldownBlockText;
-        public GameObject tokenClearCooldownBlock;
-        public Button endTurnButton, retryLevelButton, eraseBlackTilesButton, eraseWhiteTilesButton;
-
-        [Header("Music & Sound")]
-        public StudioEventEmitter tokenDestroySound;
-        private FmodMixer _fmodMixer;
-        private StudioEventEmitter _gameSong;
-
-        [Header("FFW")]
-        public TextMeshProUGUI ffwText;
-        private readonly string ffwDisabledText = "NORMAL SPEED", ffwEnabledText = "FAST-FORWARDED";
-        public GameObject ffwDisabledIcon, ffwEnabledIcon;
-        public GameObject debugFfwDisabledIcon, debugFfwEnabledIcon;
-        private bool _isFfwActive;
         private readonly CompositeDisposable _disposables = new();
 
         private void Start()
@@ -40,24 +25,23 @@ namespace UI
             if (sceneToLoad == "")
                 Debug.LogError("GameUi: sceneToLoad not set! Finishing level will crash the game.");
 
-            _fmodMixer = GetComponent<FmodMixer>();
-            _gameSong = GetComponent<StudioEventEmitter>();
-            _gameSong.Play();
+            _sound.musicStage.Play();
 
             // Assign some UI buttons to objects in scene
             Entities.Player _player = FindObjectOfType<Entities.Player>();
             Entities.Turn_System.TurnManager _turnManager = FindObjectOfType<Entities.Turn_System.TurnManager>();
-            endTurnButton.onClick.AddListener(_player.WaitAfterKillingThenEndTurn);
-            retryLevelButton.onClick.AddListener(ResetCurrentLevel);
-            eraseBlackTilesButton.onClick.AddListener(_turnManager.RemoveTokensOnBlackSquares);
-            eraseWhiteTilesButton.onClick.AddListener(_turnManager.RemoveTokensOnWhiteSquares);
+            _playerUi.btnEndTurn.onClick.AddListener(_player.WaitAfterKillingThenEndTurn);
+            _playerUi.btnRetryLevelFromTokenStuck.onClick.AddListener(ResetCurrentLevel);
+            _playerUi.btnRetryLevelFromResetTokens.onClick.AddListener(ResetCurrentLevel);
+            _playerUi.btnEraseBlackTiles.onClick.AddListener(_turnManager.RemoveTokensOnBlackSquares);
+            _playerUi.btnEraseWhiteTiles.onClick.AddListener(_turnManager.RemoveTokensOnWhiteSquares);
 
-            // FFW
-            _isFfwActive = PlayerPrefs.GetInt("Ffw Enabled", 0) == 1;
-            ffwText.text = _isFfwActive ? ffwEnabledText : ffwDisabledText;
-            ffwDisabledIcon.SetActive(!_isFfwActive);
-            ffwEnabledIcon.SetActive(_isFfwActive);
+            _ffwUi.ToggleFfwUi("getFfwPref");
+
+
             SignalBus<SignalToggleFfw>.Subscribe(ToggleFfwTimeScale).AddTo(_disposables);
+            SignalBus<SignalEnemyDied>.Subscribe(HandleEnemiesPissed).AddTo(_disposables);
+            SignalBus<SignalGameEnded>.Subscribe(HandleEndGame).AddTo(_disposables);
         }
 
         private void Update()
@@ -70,13 +54,13 @@ namespace UI
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 // Pause if pause panel isn't open, resume if it is open
-                if (!optionsPanel.activeInHierarchy)
+                if (!_dialogs.options.activeInHierarchy)
                 {
-                    GameIsPaused(!gamePausePanel.activeInHierarchy);
+                    GameIsPaused(!_dialogs.paused.activeInHierarchy);
                 }
                 else
                 {
-                    optionsPanel.SetActive(!optionsPanel.activeInHierarchy);
+                    _dialogs.options.SetActive(!_dialogs.options.activeInHierarchy);
                 }
             }
         }
@@ -87,20 +71,16 @@ namespace UI
             if (Time.timeScale == 6)
             {
                 Time.timeScale = 1;
-                debugFfwDisabledIcon.SetActive(true);
-                debugFfwEnabledIcon.SetActive(false);
+                _ffwUi.debugFfwDisabledIcon.SetActive(true);
+                _ffwUi.debugFfwEnabledIcon.SetActive(false);
             }
 
-            _isFfwActive = !_isFfwActive;
-            ffwText.text = _isFfwActive ? ffwEnabledText : ffwDisabledText;
-            ffwDisabledIcon.SetActive(!_isFfwActive);
-            ffwEnabledIcon.SetActive(_isFfwActive);
-            PlayerPrefs.SetInt("Ffw Enabled", _isFfwActive ? 1 : 0);
+            _ffwUi.ToggleFfwUi("setFfwPref");
         }
 
         private void ToggleFfwTimeScale(SignalToggleFfw signal)
         {
-            if (_isFfwActive)
+            if (_ffwUi.isFfwActive)
             {
                 Time.timeScale = signal.Enabled ? 3 : 1;
             }
@@ -109,10 +89,10 @@ namespace UI
         private void GameIsPaused(bool intent)
         {
             // Show or hide pause panel and set timescale
-            _gameSong.SetParameter("Menu", intent ? 1 : 0);
-            gamePausePanel.SetActive(intent);
+            _sound.musicStage.SetParameter("Menu", intent ? 1 : 0);
+            _dialogs.paused.SetActive(intent);
             Time.timeScale = intent ? 0 : 1;
-            _fmodMixer.FindAllSfxAndPlayPause(gameIsPaused: intent);
+            _sound.fmodMixer.FindAllSfxAndPlayPause(gameIsPaused: intent);
         }
 
         public void ResumeGame()
@@ -120,28 +100,24 @@ namespace UI
             GameIsPaused(false);
         }
 
-        public void ResetCurrentLevel()
-        {
-            _gameSong.Stop();
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-            Time.timeScale = 1;
-        }
-
         public void ToggleOptionsPanel()
         {
-            optionsPanel.SetActive(!optionsPanel.activeInHierarchy);
+            _dialogs.options.SetActive(!_dialogs.options.activeInHierarchy);
         }
 
         public void LoadNextScene()
         {
-            _gameSong.Stop();
+            _sound.fmodMixer.KillEverySound();
             SceneManager.LoadScene(sceneToLoad);
-            Time.timeScale = 1;
         }
-
+        public void ResetCurrentLevel()
+        {
+            _sound.fmodMixer.KillEverySound();
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
         public void ExitGameFromPause()
         {
-            _fmodMixer.KillEverySound();
+            _sound.fmodMixer.KillEverySound();
             SceneManager.LoadScene("MainMenu");
             Time.timeScale = 1;
         }
@@ -149,7 +125,7 @@ namespace UI
         public void DebugSuperSpeed()
         {
             // Disable normal ffw, since it changes timeScale constantly
-            if (_isFfwActive)
+            if (_ffwUi.isFfwActive)
                 ToggleFfw();
 
             if (Time.timeScale == 1)
@@ -157,25 +133,113 @@ namespace UI
             else
                 Time.timeScale = 1;
 
-            debugFfwDisabledIcon.SetActive(Time.timeScale != 6);
-            debugFfwEnabledIcon.SetActive(Time.timeScale == 6);
+            _ffwUi.debugFfwDisabledIcon.SetActive(Time.timeScale != 6);
+            _ffwUi.debugFfwEnabledIcon.SetActive(Time.timeScale == 6);
         }
 
         public void UpdateTokenClearCooldown(int turnsToSet, bool playDestroySound = false)
         {
             print("Turns til Token Clear Ability: " + turnsToSet);
-            tokenClearCooldownText.text = turnsToSet.ToString();
-            tokenClearCooldownBlockText.text = "----- " + turnsToSet.ToString() + " turns left -----";
-            tokenClearCooldownImage.fillAmount = (4 - turnsToSet) / 4f;
+            _playerUi.txtTokenClearCooldownTooltipText.text = turnsToSet.ToString();
+            _playerUi.txtTokenClearCooldownBlockText.text = "----- " + turnsToSet.ToString() + " turns left -----";
+            _playerUi.imageTokenClearCooldown.fillAmount = (4 - turnsToSet) / 4f;
             if (playDestroySound)
             {
-                tokenDestroySound.Play();
-                tokenClearCooldownBlock.SetActive(true);
+                _sound.sfxTokenDestroy.Play();
+                _playerUi.tokenClearCooldownBlock.SetActive(true);
             }
             if (turnsToSet == 0)
             {
-                tokenClearCooldownBlock.SetActive(false);
+                _playerUi.tokenClearCooldownBlock.SetActive(false);
             }
         }
+
+        private void HandleEndGame(SignalGameEnded context)
+        {
+            if (context.WinCondition)
+            {
+                _sound.musicStage.SetParameter("Win", 1);
+                _dialogs.gameWon.SetActive(true);
+            }
+            else
+            {
+                _sound.musicStage.SetParameter("Dead", 1);
+                _dialogs.gameLost.SetActive(true);
+            }
+        }
+
+        private void HandleEnemiesPissed(SignalEnemyDied signal)
+        {
+            if (_playerUi.goForBingoUiVisible)
+            {
+                _playerUi.goForBingoUiVisible = false;
+                _playerUi.uiGoingForBingoButtons.SetActive(false);
+                _playerUi.uiGoingForPiecesButtons.SetActive(true);
+                _sound.musicStage.SetParameter("Angry", 1);
+                _sound.sfxPiecesPissed.Play();
+            }
+        }
+
+        public bool IsGameplayInterruptingPanelOpen()
+        {
+            return _dialogs.paused.activeInHierarchy || _dialogs.panelResetTokens.activeInHierarchy || _dialogs.panelTokensStuck.activeInHierarchy;
+        }
+
+        public void ShowGameplayButtons(bool show)
+        {
+            _playerUi.uiAllGameplayButtons.SetActive(show);
+        }
+
+        private void OnDestroy()
+        {
+            _disposables.Dispose();
+        }
+    }
+
+
+
+    [System.Serializable]
+    public class GameUiDialogs
+    {
+        public GameObject paused, options;
+        public GameObject gameLost, gameWon;
+        public GameObject panelTokensStuck, panelResetTokens;
+    }
+    [System.Serializable]
+    public class GameUiPlayerUi
+    {
+        public GameObject uiAllGameplayButtons, uiGoingForBingoButtons, uiGoingForPiecesButtons;
+        public Button btnEndTurn, btnRetryLevelFromTokenStuck, btnRetryLevelFromResetTokens, btnEraseBlackTiles, btnEraseWhiteTiles;
+
+        public TextMeshProUGUI txtTokenClearCooldownTooltipText, txtTokenClearCooldownBlockText;
+        public GameObject tokenClearCooldownBlock;
+        public Image imageTokenClearCooldown;
+        public bool goForBingoUiVisible = true;
+    }
+    [System.Serializable]
+    public class GameUiFfwUi
+    {
+        public TextMeshProUGUI ffwTooltipText;
+        public readonly string ffwDisabledText = "NORMAL SPEED", ffwEnabledText = "FAST-FORWARDED";
+        public GameObject ffwDisabledIcon, ffwEnabledIcon;
+        public GameObject debugFfwDisabledIcon, debugFfwEnabledIcon;
+        public bool isFfwActive;
+
+        public void ToggleFfwUi(string getset)
+        {
+            if (getset == "getFfwPref")
+                isFfwActive = PlayerPrefs.GetInt("Ffw Enabled", 0) == 1;
+            ffwTooltipText.text = isFfwActive ? ffwEnabledText : ffwDisabledText;
+            ffwDisabledIcon.SetActive(!isFfwActive);
+            ffwEnabledIcon.SetActive(isFfwActive);
+            if (getset == "setFfwPref")
+                PlayerPrefs.SetInt("Ffw Enabled", isFfwActive ? 1 : 0);
+        }
+    }
+    [System.Serializable]
+    public class GameUiSound
+    {
+        public StudioEventEmitter sfxTokenDestroy, musicStage, sfxPiecesPissed;
+        public FmodMixer fmodMixer;
     }
 }

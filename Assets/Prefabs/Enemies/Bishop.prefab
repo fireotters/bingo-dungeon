@@ -51,7 +51,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a8ef98bc58566245a65a1bb3cc2bc2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tilemap: {fileID: 0}
   range: 16
   fourDir: 0
   playerObj: {fileID: 0}
@@ -238,7 +237,7 @@ Animator:
   m_GameObject: {fileID: 585594735355505068}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 9e6c3098431d0c64799b3443d29545db, type: 2}
+  m_Controller: {fileID: 9100000, guid: 68689b35f63e02141af5dc9b6f9869f2, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

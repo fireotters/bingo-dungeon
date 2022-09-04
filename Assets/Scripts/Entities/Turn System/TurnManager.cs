@@ -17,14 +17,12 @@ namespace Entities.Turn_System
         public Transform currentTurnPointer;
         public Transform entitiesContainer;
         public List<ITurnEntity> turnEntities;
-        private BingoWheelUi _bingoWheelUi;
         public List<GameObject> turnEntitiesObjects;
+        private BingoWheelUi _bingoWheelUi;
         private int currentTurn;
         [SerializeField] private GridData gridData;
         [SerializeField] private Token blankToken;
         private List<TextMeshPro> _occupiedNumbers = new List<TextMeshPro>();
-        [SerializeField] private TileBase meteorTile;
-        [SerializeField] private Tilemap obstacleTilemap;
         bool rollTurn = true;
         CompositeDisposable disposables = new CompositeDisposable();
 
@@ -35,13 +33,23 @@ namespace Entities.Turn_System
         public List<Token> tokenEntities;
         [HideInInspector] public List<Vector3> tokenLocations;
 
+        // Pieces Aggressive mode
+        private bool tokensCanSpawn = true;
+        private bool piecesJustBecamePissed = false;
+
         private void Start()
         {
             SignalBus<SignalGameEnded>.Subscribe((_) => OnGameEnded()).AddTo(disposables);
+            SignalBus<SignalEnemyDied>.Subscribe((x) =>
+            {
+                piecesJustBecamePissed = true;
+                tokensCanSpawn = false;
+                RemoveTokensOnSquares("white", false);
+                RemoveTokensOnSquares("black", false);
+            }).AddTo(disposables);
+
             CreateListITurnEntity();
             turnEntitiesObjects = turnEntities.Cast<Component>().Select(x => x.gameObject).ToList();
-            turnEntities[0].InitTurn();
-            turnEntities[0].DoTurn(NextTurn);
             _bingoWheelUi = FindObjectOfType<Canvas>().transform.Find("OverlayBingoUI").GetComponent<BingoWheelUi>();
             _gameUi = FindObjectOfType<Canvas>().GetComponent<UI.GameUi>();
             UpdatePointer();
@@ -50,13 +58,23 @@ namespace Entities.Turn_System
             // Drop the first two tokens
             Invoke(nameof(DropInitialToken), 0.05f);
             Invoke(nameof(DropInitialToken), 0.1f);
+            Invoke(nameof(StartPlayer), 0.2f);
         }
 
         private void DropInitialToken()
         {
             var selectedNumber = DecideTokenNumber();
-            var chosenColor = DecideTokenColor();
-            DropTokenOn(selectedNumber, chosenColor, playSound:false);
+            if (selectedNumber != null)
+            {
+                var chosenColor = DecideTokenColor();
+                DropTokenOn(selectedNumber, chosenColor, playSound: false);
+            }
+        }
+
+        private void StartPlayer()
+        {
+            turnEntities[0].InitTurn();
+            turnEntities[0].DoTurn(NextTurn);
         }
 
         private void OnDestroy()
@@ -92,6 +110,14 @@ namespace Entities.Turn_System
         {
             yield return new WaitForEndOfFrame();
             yield return new WaitForEndOfFrame();
+            if (piecesJustBecamePissed)
+            {
+                piecesJustBecamePissed = false;
+                float tempTime = Time.timeScale;
+                Time.timeScale = 1f;
+                yield return new WaitForSeconds(2f);
+                Time.timeScale = tempTime;
+            }
             if (rollTurn)
             {
                 // Unpredictably, currentTurn will be higher than the max. In this case, skip to next round.
@@ -126,19 +152,22 @@ namespace Entities.Turn_System
 
                             currentTurnPointer.gameObject.SetActive(false);
                             // Drop a token if less than 10 exist
-                            if (tokenEntities.Count < 10)
+                            if (tokenEntities.Count < 10 && tokensCanSpawn)
                             {
                                 // Decide number & color
                                 var chosenNumber = DecideTokenNumber();
-                                var chosenColor = DecideTokenColor();
+                                if (chosenNumber != null)
+                                {
+                                    var chosenColor = DecideTokenColor();
 
-                                // Hide pointer, summon Bingo UI
-                                yield return new WaitForSeconds(.5f);
-                                _bingoWheelUi.RunBingoWheelUi(Int16.Parse(chosenNumber.transform.name), chosenColor);
-                                yield return new WaitForSeconds(2f);
+                                    // Hide pointer, summon Bingo UI
+                                    yield return new WaitForSeconds(.5f);
+                                    _bingoWheelUi.RunBingoWheelUi(Int16.Parse(chosenNumber.transform.name), chosenColor);
+                                    yield return new WaitForSeconds(2f);
 
-                                // Drop token, return pointer
-                                DropTokenOn(chosenNumber, chosenColor);
+                                    // Drop token, return pointer
+                                    DropTokenOn(chosenNumber, chosenColor);
+                                }
                             }
                             currentTurn = 0;
                             yield return new WaitForSeconds(.5f);
@@ -166,7 +195,7 @@ namespace Entities.Turn_System
 
         private void DropTokenOn(TextMeshPro number, Color chosenColor, bool playSound = true)
         {
-            var newToken = Instantiate(blankToken, number.transform.position, Quaternion.identity);
+            var newToken = Instantiate(blankToken, number.transform.position, Quaternion.identity, entitiesContainer);
             if (!playSound)
                 Destroy(newToken.GetComponent<FMODUnity.StudioEventEmitter>());
 
@@ -182,8 +211,13 @@ namespace Entities.Turn_System
         }
 
         // Decide which tile to drop a token on by checking if a suggested tile is already occupied.
-        private TextMeshPro DecideTokenNumber(bool firstAttempt = true)
+        private TextMeshPro DecideTokenNumber(bool firstAttempt = true, int iteration = 0)
         {
+            if (iteration >= 20)
+            {
+                print("Token attempted to spawn 20 times, assume it is because of limited space & don't spawn a token.");
+                return null;
+            }
             if (firstAttempt)
             {
                 _occupiedNumbers.Clear();
@@ -193,21 +227,21 @@ namespace Entities.Turn_System
             }
 
             var rolledNumber = gridData.tileNumbers[Random.Range(0, gridData.tileNumbers.Count)];
-            return _occupiedNumbers.Contains(rolledNumber) ? DecideTokenNumber(false) : rolledNumber;
+            return _occupiedNumbers.Contains(rolledNumber) ? DecideTokenNumber(false, iteration + 1) : rolledNumber;
         }
 
 
         // Remove tokens on a certain color of tile. (They're separate methods because values can't be passed through UnityActions)
         public void RemoveTokensOnBlackSquares()
         {
-            RemoveTokensOnSquares("black");
+            RemoveTokensOnSquares("black", true);
         }
         public void RemoveTokensOnWhiteSquares()
         {
-            RemoveTokensOnSquares("white");
+            RemoveTokensOnSquares("white", true);
         }
 
-        public void RemoveTokensOnSquares(string color)
+        public void RemoveTokensOnSquares(string color, bool playDestroySound)
         {
             List<Token> tokenEntitiesCopy = new List<Token>(tokenEntities);
             foreach (Token token in tokenEntitiesCopy)
@@ -220,7 +254,7 @@ namespace Entities.Turn_System
             }
             if (tokenEntities.Count != tokenEntitiesCopy.Count)
             {
-                _gameUi.UpdateTokenClearCooldown(4, playDestroySound:true);
+                _gameUi.UpdateTokenClearCooldown(4, playDestroySound: playDestroySound);
                 turnsToNextTokenClear = 4;
             }
         }

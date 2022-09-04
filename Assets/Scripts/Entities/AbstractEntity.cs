@@ -4,12 +4,13 @@ using DG.Tweening;
 using Toolbox;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using Signals;
 
 namespace Entities
 {
     public abstract class AbstractEntity : MonoBehaviour, ITurnEntity
     {
-        public Tilemap tilemap;
+        protected Tilemap _tilemap;
         public int range;
         public bool fourDir;
         private int lostTurns;
@@ -19,12 +20,22 @@ namespace Entities
         protected Action currentFinishAction;
         protected SpriteRenderer spriteRenderer;
 
-        public virtual void Awake()
+        protected virtual void Awake()
         {
+            if (spriteRenderer == null)
+                spriteRenderer = GetComponent<SpriteRenderer>();
+            foreach (Tilemap tm in FindObjectsOfType<Tilemap>())
+            {
+                if (tm.transform.name == "Obstacles")
+                {
+                    _tilemap = tm;
+                    break;
+                }
+            }
+
             if (transform.position.x * 10 % 5 != 0 || transform.position.y * 10 % 5 != 0)
                 Debug.LogError(transform.name + ": transform.pos.x & y must be set to a coord ending with .5! ");
 
-            spriteRenderer = GetComponent<SpriteRenderer>();
             spriteRenderer.sortingOrder = -(int)transform.position.y;
         }
 
@@ -40,8 +51,8 @@ namespace Entities
         protected List<Vector3> PreviewPath(Vector3 endPos)
         {
             return fourDir
-                ? AStar.FindFourDirectionPath(tilemap, transform.position, endPos)
-                : AStar.FindPath(tilemap, transform.position, endPos);
+                ? AStar.FindFourDirectionPath(_tilemap, transform.position, endPos)
+                : AStar.FindPath(_tilemap, transform.position, endPos);
         }
 
         public virtual bool TryMove(Vector3 destination, Action onFinish = null)
@@ -75,7 +86,7 @@ namespace Entities
 
         protected bool IsInRange(Vector3 endPos)
         {
-            Vector3Int distance = tilemap.WorldToCell(endPos) - tilemap.WorldToCell(transform.position);
+            Vector3Int distance = _tilemap.WorldToCell(endPos) - _tilemap.WorldToCell(transform.position);
             bool isWithinRange = distance.magnitude < (range + 1);
             bool isNotSquarePlayerIsOn = distance.magnitude > 0.1f;
             return isWithinRange && isNotSquarePlayerIsOn;
@@ -114,13 +125,21 @@ namespace Entities
         
         protected virtual void TakeDamage()
         {
-            hitPoints--;
-            print($"AAAAAAAAAAARGGGGGGGGGGGYHHHHHHHHHHHHHHHHHHHHHH MY BOOOONES (health is now {hitPoints})");
-
-            if (hitPoints <= 0)
+            if (hitPoints > 0)
             {
-                Destroy(gameObject);
-                OnDeath();
+                print($"{transform.name}: AAAAAAAARGGGGGGGHHHHHHHHHHHHH MY BOOOONES (health is now {hitPoints})");
+                hitPoints--;
+
+                if (hitPoints == 0)
+                {
+                    Destroy(gameObject);
+
+                    if (transform.name == "Player")
+                        SignalBus<SignalGameEnded>.Fire(new SignalGameEnded { WinCondition = false });
+                    else
+                        SignalBus<SignalEnemyDied>.Fire();
+                    OnDeath();
+                }
             }
         }
 

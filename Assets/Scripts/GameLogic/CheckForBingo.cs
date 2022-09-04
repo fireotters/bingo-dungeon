@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class CheckForBingo : MonoBehaviour
 {
-    public TextMeshProUGUI debugBingoDisplay;
+    [SerializeField] private TextMeshProUGUI debugBingoDisplay;
+    private bool alreadyWonBingo = false;
 
     // Important Note: The FloorGridGenerator fills out numbers from bottom to top, left to right. Instead of top to bottom.
     // Not important to fix this. The Bingo logic will still work, even upside down.
@@ -24,16 +25,19 @@ public class CheckForBingo : MonoBehaviour
 
     public void UpdateTokenPlacement(int notation, bool addOrRemove)
     {
+        if (alreadyWonBingo)
+            return;
+
         if (addOrRemove == true)
             board[notation] = 1;
         else
             board[notation] = 0;
 
-
         if (CheckForBingoResult())
         {
+            alreadyWonBingo = true;
             print("Win by Bingo");
-            SignalBus<SignalGameEnded>.Fire(new SignalGameEnded(){ WinCondition = true});
+            SignalBus<SignalGameEnded>.Fire(new SignalGameEnded { WinCondition = true });
         }
     }
 

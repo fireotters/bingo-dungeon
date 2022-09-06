@@ -1,21 +1,21 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using Signals;
+
 public static class HighScoreManagement
 {
     public static void ResetLevelScores()
     {
-        PlayerPrefs.SetString("levelScores", "");
+        PlayerPrefs.SetString("LevelScores", "");
         PlayerPrefs.Save();
     }
 
-
-
-    public static bool TryAddLevelScore(string levelName, string scoreType, int score)
+    public static bool TryAddLevelScore(string levelName, GameEndCondition scoreType, int score)
     {
         bool isNewHighscore;
-        string jsonString = PlayerPrefs.GetString("levelScores");
+        string jsonString = PlayerPrefs.GetString("LevelScores");
 
         // Load the list of level scores from JSON
         Highscores levelScores;
@@ -25,37 +25,31 @@ public static class HighScoreManagement
             levelScores = new Highscores { highscoreEntryList = new List<HighscoreEntry>() };
 
         // When adding a high score, take everything from the old list EXCEPT the high score for the current level.
-        List<HighscoreEntry> fullListOfScores = levelScores.highscoreEntryList.Where(hs => hs.levelName != levelName).ToList();
+        List<HighscoreEntry> listOfLevelScores = levelScores.highscoreEntryList.Where(hs => hs.levelName != levelName).ToList();
 
         // Find the high score for the current level. If one or zero exist, then overwrite or create an entry respectively. If two or more exist, flag an error.
-        int numOfCurrentLevelEntries = levelScores.highscoreEntryList.Where(hs => hs.levelName != levelName).Count();
+        int numOfCurrentLevelEntries = levelScores.highscoreEntryList.Where(hs => hs.levelName == levelName).Count();
         HighscoreEntry currentLevelScore;
         if (numOfCurrentLevelEntries == 1)
         {
-            currentLevelScore = levelScores.highscoreEntryList.Where(hs => hs.levelName != levelName).ToList()[0];
+            currentLevelScore = levelScores.highscoreEntryList.Where(hs => hs.levelName == levelName).ToList()[0];
             isNewHighscore = true;
-            if (scoreType == "token" && currentLevelScore.tokenScore < score)
+            if (scoreType == GameEndCondition.BingoWin && currentLevelScore.tokenScore < score)
                 currentLevelScore.tokenScore = score;
-            else if (scoreType == "piece" && currentLevelScore.pieceScore < score)
+            else if (scoreType == GameEndCondition.PieceWin && currentLevelScore.pieceScore < score)
                 currentLevelScore.pieceScore = score;
             else
-            {
-                Debug.LogError($"Level '{levelName}': Given an invalid victory type.");
                 return false;
-            }
         }
         else if (numOfCurrentLevelEntries == 0)
         {
             isNewHighscore = true;
-            if (scoreType == "token")
+            if (scoreType == GameEndCondition.BingoWin)
                 currentLevelScore = new HighscoreEntry { levelName = levelName, tokenScore = score, pieceScore = 0 };
-            else if (scoreType == "piece")
+            else if (scoreType == GameEndCondition.PieceWin)
                 currentLevelScore = new HighscoreEntry { levelName = levelName, tokenScore = 0, pieceScore = score };
             else
-            {
-                Debug.LogError($"Level '{levelName}': Given an invalid victory type.");
                 return false;
-            }
         }
         else
         {
@@ -63,10 +57,12 @@ public static class HighScoreManagement
             return false;
         }
 
-        fullListOfScores.Add(currentLevelScore);
+        listOfLevelScores.Add(currentLevelScore);
+        Highscores fullListOfScores = new Highscores { highscoreEntryList = listOfLevelScores };
 
         string json = JsonUtility.ToJson(fullListOfScores);
-        PlayerPrefs.SetString("levelScores", json);
+        Debug.Log(json);
+        PlayerPrefs.SetString("LevelScores", json);
         PlayerPrefs.Save();
         return isNewHighscore;
     }
@@ -75,13 +71,15 @@ public static class HighScoreManagement
 /* ------------------------------------------------------------------------------------------------------------------
  * Highscores & HighscoreEntry - Public classes for an entire list of highscores, and a single highscore entry
  * ------------------------------------------------------------------------------------------------------------------ */
+
+[Serializable]
 public class Highscores
 {
     public List<HighscoreEntry> highscoreEntryList;
 }
 
 // Represents a single Highscore Entry
-[System.Serializable]
+[Serializable]
 public class HighscoreEntry
 {
     public string levelName;

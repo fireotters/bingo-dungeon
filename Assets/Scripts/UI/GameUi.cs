@@ -17,6 +17,7 @@ namespace UI
         [SerializeField] private GameUiPlayerUi _playerUi;
         [SerializeField] private GameUiSound _sound;
         [SerializeField] private GameUiFfwUi _ffwUi;
+        private Entities.Turn_System.TurnManager _turnManager;
 
         private readonly CompositeDisposable _disposables = new();
 
@@ -29,7 +30,7 @@ namespace UI
 
             // Assign some UI buttons to objects in scene
             Entities.Player _player = FindObjectOfType<Entities.Player>();
-            Entities.Turn_System.TurnManager _turnManager = FindObjectOfType<Entities.Turn_System.TurnManager>();
+            _turnManager = FindObjectOfType<Entities.Turn_System.TurnManager>();
             _playerUi.btnEndTurn.onClick.AddListener(_player.WaitAfterKillingThenEndTurn);
             _playerUi.btnRetryLevelFromTokenStuck.onClick.AddListener(ResetCurrentLevel);
             _playerUi.btnRetryLevelFromResetTokens.onClick.AddListener(ResetCurrentLevel);
@@ -139,7 +140,7 @@ namespace UI
 
         public void UpdateTokenClearCooldown(int turnsToSet, bool playDestroySound = false)
         {
-            print("Turns til Token Clear Ability: " + turnsToSet);
+            //print("Turns til Token Clear Ability: " + turnsToSet);
             _playerUi.txtTokenClearCooldownTooltipText.text = turnsToSet.ToString();
             _playerUi.txtTokenClearCooldownBlockText.text = "----- " + turnsToSet.ToString() + " turns left -----";
             _playerUi.imageTokenClearCooldown.fillAmount = (4 - turnsToSet) / 4f;
@@ -156,16 +157,31 @@ namespace UI
 
         private void HandleEndGame(SignalGameEnded context)
         {
-            if (context.WinCondition)
+            switch (context.result)
             {
-                _sound.musicStage.SetParameter("Win", 1);
-                _dialogs.gameWon.SetActive(true);
+                case GameEndCondition.BingoWin:
+                    // TODO add unique elements. Think about disabling UI and telling player if their Bingo win was lucky (final token lands in place randomly)
+                    break;
+                case GameEndCondition.PieceWin:
+                    // TODO add unique elements
+                    break;
+                case GameEndCondition.Loss:
+                    _sound.musicStage.SetParameter("Dead", 1);
+                    _dialogs.gameLost.SetActive(true);
+                    return;
+                default:
+                    Debug.LogError("GameUi.HandleEndGame: Invalid GameEnded context.");
+                    return;
             }
-            else
-            {
-                _sound.musicStage.SetParameter("Dead", 1);
-                _dialogs.gameLost.SetActive(true);
-            }
+
+            // Win Conditions trigger some similar behaviour
+            _sound.musicStage.SetParameter("Win", 1);
+            _dialogs.gameWon.SetActive(true);
+
+            string levelName = SceneManager.GetActiveScene().name;
+            GameEndCondition scoreType = context.result;
+            int score = _turnManager.totalTurns;
+            HighScoreManagement.TryAddLevelScore(levelName, scoreType, score);
         }
 
         private void HandleEnemiesPissed(SignalEnemyDied signal)
@@ -229,11 +245,16 @@ namespace UI
         {
             if (getset == "getFfwPref")
                 isFfwActive = PlayerPrefs.GetInt("Ffw Enabled", 0) == 1;
+            else if (getset == "setFfwPref")
+            {
+                isFfwActive = !isFfwActive;
+                PlayerPrefs.SetInt("Ffw Enabled", isFfwActive ? 1 : 0);
+                PlayerPrefs.Save();
+            }
+
             ffwTooltipText.text = isFfwActive ? ffwEnabledText : ffwDisabledText;
             ffwDisabledIcon.SetActive(!isFfwActive);
             ffwEnabledIcon.SetActive(isFfwActive);
-            if (getset == "setFfwPref")
-                PlayerPrefs.SetInt("Ffw Enabled", isFfwActive ? 1 : 0);
         }
     }
     [System.Serializable]

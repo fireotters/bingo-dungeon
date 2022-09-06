@@ -37,7 +37,7 @@ public class CheckForBingo : MonoBehaviour
         {
             alreadyWonBingo = true;
             print("Win by Bingo");
-            SignalBus<SignalGameEnded>.Fire(new SignalGameEnded { WinCondition = true });
+            SignalBus<SignalGameEnded>.Fire(new SignalGameEnded { result = GameEndCondition.BingoWin });
         }
     }
 

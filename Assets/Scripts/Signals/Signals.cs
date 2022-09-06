@@ -1,8 +1,13 @@
 namespace Signals
 {
+
+    public enum GameEndCondition
+    {
+        Loss, BingoWin, PieceWin
+    }
     public struct SignalGameEnded
     {
-        public bool WinCondition;
+        public GameEndCondition result;
     }
 
     public struct SignalToggleFfw

@@ -37,6 +37,8 @@ namespace UI
             {
                 PlayerPrefs.SetFloat("Music", 0.8f);
                 PlayerPrefs.SetFloat("SFX", 0.8f);
+                PlayerPrefs.SetString("LevelScores", "");
+                PlayerPrefs.Save();
             }
         }
 

@@ -13,7 +13,7 @@ public class PieceCounter : MonoBehaviour
         {
             numOfPieces--;
             if (numOfPieces <= 0)
-                SignalBus<SignalGameEnded>.Fire(new SignalGameEnded { WinCondition = true });
+                SignalBus<SignalGameEnded>.Fire(new SignalGameEnded { result = GameEndCondition.PieceWin });
         }).AddTo(disposables);
     }
 

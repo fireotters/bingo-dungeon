@@ -8,7 +8,7 @@ public static class HighScoreManagement
 {
     public static void ResetLevelScores()
     {
-        PlayerPrefs.SetString("LevelScores", "");
+        PlayerPrefs.SetString("LevelScores", "{}");
         PlayerPrefs.Save();
     }
 
@@ -34,8 +34,8 @@ public static class HighScoreManagement
         {
             currentLevelScore = levelScores.highscoreEntryList.Where(hs => hs.levelName == levelName).ToList()[0];
             isNewHighscore = true;
-            if (scoreType == GameEndCondition.BingoWin && currentLevelScore.tokenScore < score)
-                currentLevelScore.tokenScore = score;
+            if (scoreType == GameEndCondition.BingoWin && currentLevelScore.bingoScore < score)
+                currentLevelScore.bingoScore = score;
             else if (scoreType == GameEndCondition.PieceWin && currentLevelScore.pieceScore < score)
                 currentLevelScore.pieceScore = score;
             else
@@ -45,9 +45,9 @@ public static class HighScoreManagement
         {
             isNewHighscore = true;
             if (scoreType == GameEndCondition.BingoWin)
-                currentLevelScore = new HighscoreEntry { levelName = levelName, tokenScore = score, pieceScore = 0 };
+                currentLevelScore = new HighscoreEntry { levelName = levelName, bingoScore = score, pieceScore = 0 };
             else if (scoreType == GameEndCondition.PieceWin)
-                currentLevelScore = new HighscoreEntry { levelName = levelName, tokenScore = 0, pieceScore = score };
+                currentLevelScore = new HighscoreEntry { levelName = levelName, bingoScore = 0, pieceScore = score };
             else
                 return false;
         }
@@ -83,6 +83,6 @@ public class Highscores
 public class HighscoreEntry
 {
     public string levelName;
-    public int tokenScore;
+    public int bingoScore;
     public int pieceScore;
 }

@@ -2,6 +2,7 @@ using FMODUnity;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Signals;
 
 namespace UI
 {
@@ -9,15 +10,16 @@ namespace UI
     {
         private enum SceneNavigationIntent
         {
-            StartGame = 1,
-            HelpMenu = 0
+            StartGame = 1, HelpMenu = 0
         }
 
         [Header("Main Menu UI")]
         [SerializeField] private TextMeshProUGUI versionText;
         [SerializeField] private GameObject desktopButtons, webButtons;
         private StudioEventEmitter menuSong;
-        
+
+        private readonly CompositeDisposable _disposables = new();
+
         private void Start()
         {
             menuSong = GetComponent<StudioEventEmitter>();
@@ -37,9 +39,11 @@ namespace UI
             {
                 PlayerPrefs.SetFloat("Music", 0.8f);
                 PlayerPrefs.SetFloat("SFX", 0.8f);
-                PlayerPrefs.SetString("LevelScores", "");
+                PlayerPrefs.SetString("LevelScores", "{}");
                 PlayerPrefs.Save();
             }
+
+            SignalBus<SignalMainMenuStartGame>.Subscribe(StartGame).AddTo(_disposables);
         }
 
         private void SetVersionText()
@@ -56,10 +60,10 @@ namespace UI
             }
         }
 
-        public void StartGame(string level)
+        public void StartGame(SignalMainMenuStartGame signal)
         {
             menuSong.Stop();
-            SceneManager.LoadScene($"Scenes/LevelScenes/{level}");
+            SceneManager.LoadScene($"Scenes/LevelScenes/{signal.levelToLoad}");
         }
 
         public void OpenHelp()
@@ -72,5 +76,7 @@ namespace UI
         {
             Application.Quit();
         }
+
+        
     }
 }

@@ -1,5 +1,10 @@
 namespace Signals
 {
+    public struct SignalMainMenuStartGame
+    {
+        public string levelToLoad;
+    }
+
 
     public enum GameEndCondition
     {

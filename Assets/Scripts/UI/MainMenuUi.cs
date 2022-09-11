@@ -43,7 +43,7 @@ namespace UI
                 PlayerPrefs.Save();
             }
 
-            SignalBus<SignalMainMenuStartGame>.Subscribe(StartGame).AddTo(_disposables);
+            SignalBus<SignalUiMainMenuStartGame>.Subscribe(StartGame).AddTo(_disposables);
         }
 
         private void SetVersionText()
@@ -60,7 +60,7 @@ namespace UI
             }
         }
 
-        public void StartGame(SignalMainMenuStartGame signal)
+        public void StartGame(SignalUiMainMenuStartGame signal)
         {
             menuSong.Stop();
             SceneManager.LoadScene($"Scenes/LevelScenes/{signal.levelToLoad}");

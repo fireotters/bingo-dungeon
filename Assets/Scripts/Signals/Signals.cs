@@ -1,6 +1,6 @@
 namespace Signals
 {
-    public struct SignalMainMenuStartGame
+    public struct SignalUiMainMenuStartGame
     {
         public string levelToLoad;
     }
@@ -26,6 +26,12 @@ namespace Signals
 
     public struct SignalEnemyDied
     {
+    }
+
+    public struct SignalUiMainMenuTooltipChange
+    {
+        public bool Showing;
+        public string LevelName, BingoScore, PieceScore;
     }
 }
 

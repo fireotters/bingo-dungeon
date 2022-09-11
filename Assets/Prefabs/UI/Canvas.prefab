@@ -1592,6 +1592,73 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!1 &2080172965313703844
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3726212037180969805}
+  - component: {fileID: 8022614265154524842}
+  m_Layer: 5
+  m_Name: SfxBingoRoll
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &3726212037180969805
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2080172965313703844}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -4}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8116306316021298630}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -400, y: -225}
+  m_SizeDelta: {x: 1, y: 1}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &8022614265154524842
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2080172965313703844}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -686032664
+      Data2: 1228866354
+      Data3: -128890448
+      Data4: -322085429
+    Path: event:/3D/Bingo roll
+  Event: 
+  PlayEvent: 0
+  StopEvent: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &2373425195166878669
 GameObject:
   m_ObjectHideFlags: 0
@@ -4170,7 +4237,6 @@ GameObject:
   - component: {fileID: 4019586813194717598}
   - component: {fileID: 4019586813194717597}
   - component: {fileID: 4019586813194717587}
-  - component: {fileID: 4565122632434219034}
   m_Layer: 5
   m_Name: OverlayBingoUI
   m_TagString: Untagged
@@ -4217,7 +4283,7 @@ MonoBehaviour:
   _animator: {fileID: 4019586813194717587}
   _ballImage: {fileID: 4019586812196075098}
   _ballText: {fileID: 4019586813038662039}
-  bingoRollSfx: {fileID: 4565122632434219034}
+  bingoRollSfx: {fileID: 8022614265154524842}
 --- !u!222 &4019586813194717597
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4246,36 +4312,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &4565122632434219034
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4019586813194717585}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CollisionTag: 
-  EventReference:
-    Guid:
-      Data1: -686032664
-      Data2: 1228866354
-      Data3: -128890448
-      Data4: -322085429
-    Path: event:/3D/Bingo roll
-  Event: 
-  PlayEvent: 0
-  StopEvent: 0
-  AllowFadeout: 1
-  TriggerOnce: 0
-  Preload: 0
-  Params: []
-  OverrideAttenuation: 0
-  OverrideMinDistance: 1
-  OverrideMaxDistance: 20
 --- !u!1 &4291769920482109145
 GameObject:
   m_ObjectHideFlags: 0
@@ -4702,7 +4738,7 @@ MonoBehaviour:
     ffwEnabledIcon: {fileID: 7079053646695683724}
     debugFfwDisabledIcon: {fileID: 1160052324724689173}
     debugFfwEnabledIcon: {fileID: 4362416362833077727}
-    _isFfwActive: 0
+    isFfwActive: 0
 --- !u!114 &4341101249688090787
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9823,6 +9859,7 @@ RectTransform:
   - {fileID: 1553522154213565465}
   - {fileID: 1244387134008582210}
   - {fileID: 923243661508752636}
+  - {fileID: 3726212037180969805}
   m_Father: {fileID: 4341101249688090784}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

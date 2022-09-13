@@ -45,43 +45,16 @@ SpriteAtlas:
     variantMultiplier: 1
     packables:
     - {fileID: 2800000, guid: f1f8249cb2e98e04a9ccb47f9a43ee30, type: 3}
-    - {fileID: 2800000, guid: 907efa3d1b5caed45a6f3e003c4c98d2, type: 3}
-    - {fileID: 2800000, guid: 930fa887a41b62244b30e7c7789f0330, type: 3}
-    - {fileID: 2800000, guid: 0659b1da3d606eb4bb586b2392b722ec, type: 3}
     - {fileID: 2800000, guid: ef7e708f05dbbf247a27d60611304c66, type: 3}
-    - {fileID: 2800000, guid: ab35e081016e8604a99c4fe4259d965a, type: 3}
-    - {fileID: 2800000, guid: 0abb4ef6e56c5084aad337b5187e79e8, type: 3}
-    - {fileID: 2800000, guid: f14ea9d8fde9cd44f9cfb6a694a81b33, type: 3}
-    - {fileID: 2800000, guid: 5a41a604b3ed4e342829bfa123020156, type: 3}
-    - {fileID: 2800000, guid: 900ec01cd6bfd6a40bfe431069ee51f1, type: 3}
-    - {fileID: 2800000, guid: d01a8e162757a0449beaadd28251d8f1, type: 3}
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
-  - {fileID: 21300000, guid: ab35e081016e8604a99c4fe4259d965a, type: 3}
-  - {fileID: 21300000, guid: 5a41a604b3ed4e342829bfa123020156, type: 3}
-  - {fileID: 21300000, guid: d01a8e162757a0449beaadd28251d8f1, type: 3}
-  - {fileID: 21300000, guid: 0abb4ef6e56c5084aad337b5187e79e8, type: 3}
-  - {fileID: 21300000, guid: 930fa887a41b62244b30e7c7789f0330, type: 3}
-  - {fileID: 21300000, guid: f14ea9d8fde9cd44f9cfb6a694a81b33, type: 3}
-  - {fileID: 21300000, guid: 0659b1da3d606eb4bb586b2392b722ec, type: 3}
-  - {fileID: 21300000, guid: 900ec01cd6bfd6a40bfe431069ee51f1, type: 3}
   - {fileID: 21300000, guid: f1f8249cb2e98e04a9ccb47f9a43ee30, type: 3}
-  - {fileID: 21300000, guid: 907efa3d1b5caed45a6f3e003c4c98d2, type: 3}
   - {fileID: 21300000, guid: ef7e708f05dbbf247a27d60611304c66, type: 3}
   m_PackedSpriteNamesToIndex:
-  - optionsHighlight
-  - playHighlight
-  - playPressed
-  - optionsNormal
-  - helpNormal
-  - optionsPressed
-  - helpPressed
-  - playNormal
   - cartoonMainMenu
-  - helpHighlight
   - nanaExit
   m_RenderDataMap: {}
   m_Tag: mainMenu

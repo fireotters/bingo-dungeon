@@ -8,15 +8,19 @@ using TMPro;
 
 public class ButtonLevelSelect : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    public string levelName, attachedLevel;
+    public string levelNum, levelName;
+    [HideInInspector] public string attachedLevel;
     private Button button;
     private string _highscoreBingo = "-", _highscorePiece = "-";
-    private TextMeshProUGUI _textBingoScore, _textPieceScore;
+    private TextMeshProUGUI _textLevelNum, _textBingoScore, _textPieceScore;
 
     private void Awake()
     {
-        button = GetComponent<Button>();
+        attachedLevel = levelNum.Length == 1 ? "Level0" + levelNum : "Level" + levelNum;
+        button = GetComponentInChildren<Button>();
         button.onClick.AddListener(LoadLevel);
+        _textLevelNum = transform.Find("TextLevelNum").GetComponent<TextMeshProUGUI>();
+        _textLevelNum.text = levelNum;
         _textBingoScore = transform.Find("ScoreRecords").Find("TextBingo").GetComponent<TextMeshProUGUI>();
         _textPieceScore = transform.Find("ScoreRecords").Find("TextPiece").GetComponent<TextMeshProUGUI>();
     }
@@ -36,7 +40,6 @@ public class ButtonLevelSelect : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        string levelNum = attachedLevel[^2..].StartsWith("0") ? attachedLevel[^1..] : attachedLevel[^2..];
         string tempLevelName = levelNum + ". " + levelName;
         string tempHighscoreBingo = _highscoreBingo != "-" ? _highscoreBingo : "...";
         string tempHighscorePiece = _highscorePiece != "-" ? _highscorePiece : "...";

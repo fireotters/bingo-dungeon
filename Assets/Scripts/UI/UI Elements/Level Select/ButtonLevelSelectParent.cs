@@ -33,7 +33,7 @@ public class ButtonLevelSelectParent : MonoBehaviour
         // Only enable the buttons for completed levels, and the next uncomplete level
         for (int i = 0; i < numOfUnlocks; i++)
         {
-            levelButtons[i].GetComponent<Button>().interactable = true;
+            levelButtons[i].GetComponentInChildren<Button>().interactable = true;
         }
     }
 }

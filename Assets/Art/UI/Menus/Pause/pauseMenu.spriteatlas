@@ -44,42 +44,15 @@ SpriteAtlas:
     secondaryTextureSettings: {}
     variantMultiplier: 1
     packables:
-    - {fileID: 2800000, guid: 5961ffe59b8afcb48af4b45300a9a474, type: 3}
-    - {fileID: 2800000, guid: 8f847c9eec1dfa943b92340635a12d46, type: 3}
-    - {fileID: 2800000, guid: 1122c9729b426e641bf0126929e28a92, type: 3}
     - {fileID: 2800000, guid: 63c397d38e8b8d344a517c7de2d59247, type: 3}
-    - {fileID: 2800000, guid: 3391aed408458ab4f8863c7aa16ba25d, type: 3}
-    - {fileID: 2800000, guid: 8e17137c1921776458396644ff520437, type: 3}
-    - {fileID: 2800000, guid: 093660f0eacb0c04583ac3b090bd6261, type: 3}
-    - {fileID: 2800000, guid: 0fdda9c8c538b3a47beebd181917dd0c, type: 3}
-    - {fileID: 2800000, guid: fb08ae9203d06d640873457af36cc74f, type: 3}
-    - {fileID: 2800000, guid: fb1ef248449431f4c80b5e4c539550bd, type: 3}
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
-  - {fileID: 21300000, guid: 093660f0eacb0c04583ac3b090bd6261, type: 3}
-  - {fileID: 21300000, guid: 1122c9729b426e641bf0126929e28a92, type: 3}
-  - {fileID: 21300000, guid: fb08ae9203d06d640873457af36cc74f, type: 3}
   - {fileID: 21300000, guid: 63c397d38e8b8d344a517c7de2d59247, type: 3}
-  - {fileID: 21300000, guid: 3391aed408458ab4f8863c7aa16ba25d, type: 3}
-  - {fileID: 21300000, guid: 5961ffe59b8afcb48af4b45300a9a474, type: 3}
-  - {fileID: 21300000, guid: fb1ef248449431f4c80b5e4c539550bd, type: 3}
-  - {fileID: 21300000, guid: 0fdda9c8c538b3a47beebd181917dd0c, type: 3}
-  - {fileID: 21300000, guid: 8e17137c1921776458396644ff520437, type: 3}
-  - {fileID: 21300000, guid: 8f847c9eec1dfa943b92340635a12d46, type: 3}
   m_PackedSpriteNamesToIndex:
-  - quitPressed
-  - optionsPressed
-  - resumeNormal
   - pauseBase
-  - quitHighlight
-  - OptionsHighlight
-  - resumePressed
-  - resumeHighlight
-  - quitNormal
-  - optionsNormal
   m_RenderDataMap: {}
   m_Tag: pauseMenu
   m_IsVariant: 0

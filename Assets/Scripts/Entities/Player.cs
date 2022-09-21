@@ -26,6 +26,7 @@ namespace Entities
         private GameObject _movementCursor, _cursorOptionAttack, _cursorOptionDestination, _textTrHalfSign, _textMcHalfSign;
         private List<Transform> _currentEnemyTransforms = new List<Transform>();
         private Vector3 _lastFrameCursorPos = Vector3.zero;
+        private bool hasPlayedTurnSound = false;
 
         private readonly CompositeDisposable _disposables = new();
 
@@ -100,6 +101,7 @@ namespace Entities
 
         IEnumerator LostTurn(Action finished)
         {
+            hasPlayedTurnSound = false;
             yield return new WaitForSeconds(1);
             finished?.Invoke();
         }
@@ -108,6 +110,7 @@ namespace Entities
         {
             StopAllCoroutines();
             extraTurns = 0;
+            hasPlayedTurnSound = false;
             _textTurnsRemaining.text = extraTurns.ToString();
             _textTurnsRemaining.gameObject.SetActive(false);
             _gameUi.ShowGameplayButtons(false);
@@ -131,8 +134,9 @@ namespace Entities
             SignalBus<SignalToggleFfw>.Fire(new SignalToggleFfw() { Enabled = false });
             _turnManager.UpdateTokenLocations();
             currentFinishAction = finished;
-            if (extraTurns == range)
+            if (!hasPlayedTurnSound && extraTurns == range)
             {
+                hasPlayedTurnSound = true;
                 playerTurn.Play();
                 _textTurnsRemaining.gameObject.SetActive(true);
                 _gameUi.ShowGameplayButtons(true);
@@ -274,6 +278,7 @@ namespace Entities
 
                                     if (extraTurns <= 0)
                                     {
+                                        hasPlayedTurnSound = false;
                                         _textTurnsRemaining.gameObject.SetActive(false);
                                     }
                                     else

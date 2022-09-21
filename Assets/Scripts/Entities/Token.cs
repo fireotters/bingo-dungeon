@@ -1,8 +1,5 @@
 ﻿using System;
-using DG.Tweening;
-using Entities.Turn_System;
-using TMPro;
-using Unity.VisualScripting;
+using System.Collections;
 using UnityEngine;
 
 namespace Entities.Tokens
@@ -26,11 +23,15 @@ namespace Entities.Tokens
     {
         private Vector3 debugDestination;
         private SpriteRenderer _spriteRender;
+        private Animator _animator;
+        private ParticleSystem _destroyParticles;
         public string colorOfCurrentSquare; 
 
         private void Awake()
         {
             _spriteRender = GetComponent<SpriteRenderer>();
+            _animator = GetComponent<Animator>();
+            _destroyParticles = GetComponentInChildren<ParticleSystem>();
             FindCurrentSquareColor();
         }
 
@@ -73,6 +74,14 @@ namespace Entities.Tokens
         private void OnDrawGizmos()
         {
             Gizmos.DrawWireSphere(debugDestination, .5f);
+        }
+
+        public IEnumerator DestroyToken()
+        {
+            _destroyParticles.Play();
+            _animator.SetBool("destroyed", true);
+            yield return new WaitForSeconds(2);
+            Destroy(gameObject);
         }
     }
 }

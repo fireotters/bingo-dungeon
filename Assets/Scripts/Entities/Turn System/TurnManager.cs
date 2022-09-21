@@ -251,7 +251,7 @@ namespace Entities.Turn_System
                 if (token.colorOfCurrentSquare == color)
                 {
                     tokenEntities.Remove(token);
-                    Destroy(token.gameObject);
+                    StartCoroutine(token.DestroyToken());
                 }
             }
             if (tokenEntities.Count != tokenEntitiesCopy.Count)

@@ -4,7 +4,7 @@ using UnityEngine;
 public class PieceCounter : MonoBehaviour
 {
     CompositeDisposable disposables = new CompositeDisposable();
-    public int numOfPieces = 0;
+    [HideInInspector] public int numOfPieces = 0;
 
     void Awake()
     {

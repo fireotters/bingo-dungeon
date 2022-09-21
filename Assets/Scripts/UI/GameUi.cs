@@ -162,10 +162,10 @@ namespace UI
             switch (context.result)
             {
                 case GameEndCondition.BingoWin:
-                    // TODO add unique elements. Think about disabling UI and telling player if their Bingo win was lucky (final token lands in place randomly)
+                    _dialogs.SetupVictoryDialog("bingo", 0, 0);
                     break;
                 case GameEndCondition.PieceWin:
-                    // TODO add unique elements
+                    _dialogs.SetupVictoryDialog("piece", 0, 0);
                     break;
                 case GameEndCondition.Loss:
                     _sound.musicStage.SetParameter("Dead", 1);
@@ -229,6 +229,21 @@ namespace UI
         public GameObject paused, options;
         public GameObject gameLost, gameWon;
         public GameObject panelTokensStuck, panelResetTokens;
+        public Color clrVictoryBingo, clrVictoryBingoBest, clrVictoryPiece, clrVictoryPieceBest;
+        public TextMeshProUGUI txtVictoryCurrent, txtVictoryBest;
+        public GameObject imgVictoryBingo, imgVictoryPiece;
+
+        public void SetupVictoryDialog(string victoryType, int currentScore, int bestScore)
+        {
+            txtVictoryCurrent.color = victoryType == "bingo" ? clrVictoryBingo : clrVictoryPiece;
+            txtVictoryBest.color = victoryType == "bingo" ? clrVictoryBingoBest : clrVictoryPieceBest;
+            if (victoryType == "bingo")
+                imgVictoryBingo.SetActive(true);
+            else
+                imgVictoryPiece.SetActive(true);
+            txtVictoryCurrent.text = currentScore.ToString() + " turns";
+            txtVictoryBest.text = "Best: " + bestScore.ToString() + " turns";
+        }
     }
     [System.Serializable]
     public class GameUiPlayerUi

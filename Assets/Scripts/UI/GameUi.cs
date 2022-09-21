@@ -18,6 +18,7 @@ namespace UI
         [SerializeField] private GameUiSound _sound;
         [SerializeField] private GameUiFfwUi _ffwUi;
         private Entities.Turn_System.TurnManager _turnManager;
+        private PieceCounter _pieceCounter;
 
         private readonly CompositeDisposable _disposables = new();
 
@@ -31,6 +32,7 @@ namespace UI
             // Assign some UI buttons to objects in scene
             Entities.Player _player = FindObjectOfType<Entities.Player>();
             _turnManager = FindObjectOfType<Entities.Turn_System.TurnManager>();
+            _pieceCounter = FindObjectOfType<PieceCounter>();
             _playerUi.btnEndTurn.onClick.AddListener(_player.WaitAfterKillingThenEndTurn);
             _playerUi.btnRetryLevelFromTokenStuck.onClick.AddListener(ResetCurrentLevel);
             _playerUi.btnRetryLevelFromResetTokens.onClick.AddListener(ResetCurrentLevel);
@@ -186,13 +188,20 @@ namespace UI
 
         private void HandleEnemiesPissed(SignalEnemyDied signal)
         {
+            // Slightly delay the 'Pissed' UI changes, because we need to be sure PieceCounter has the correct piece count. TODO improve this when PieceCounter is removed.
+            Invoke(nameof(HandleEnemiesPissed2), 0.1f);
+        }
+
+        private void HandleEnemiesPissed2()
+        {
             if (_playerUi.goForBingoUiVisible)
             {
                 _playerUi.goForBingoUiVisible = false;
                 _playerUi.uiGoingForBingoButtons.SetActive(false);
                 _playerUi.uiGoingForPiecesButtons.SetActive(true);
                 _sound.musicStage.SetParameter("Angry", 1);
-                _sound.sfxPiecesPissed.Play();
+                if (_pieceCounter.numOfPieces > 0)
+                    _sound.sfxPiecesPissed.Play();
             }
         }
 

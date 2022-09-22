@@ -179,7 +179,8 @@ MonoBehaviour:
   currentTurnPointer: {fileID: 3795019009517499573}
   entitiesContainer: {fileID: 0}
   turnEntitiesObjects: []
+  totalTurns: 1
   gridData: {fileID: 11400000, guid: 361afe7f11283034a94bf7faf0e41ea8, type: 2}
   blankToken: {fileID: 7707287522434911567, guid: b29d97cced1a18f4183ad5bbeb62b219, type: 3}
-  meteorTile: {fileID: 11400000, guid: e3485a0d61ddd5f4cb630556cb26eb5d, type: 2}
-  obstacleTilemap: {fileID: 0}
+  tokenEntities: []
+  tokenLocations: []

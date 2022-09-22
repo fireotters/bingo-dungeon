@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
@@ -12,9 +13,9 @@ public static class HighScoreManagement
         PlayerPrefs.Save();
     }
 
-    public static bool TryAddLevelScore(string levelName, GameEndCondition scoreType, int score)
+    // Check new score against existing highscore for a level. Return the original highscore or new highscore as int.
+    public static int TryAddScoreThenReturnHighscore(string levelName, GameEndCondition scoreType, int score)
     {
-        bool isNewHighscore;
         string jsonString = PlayerPrefs.GetString("LevelScores");
 
         // Load the list of level scores from JSON
@@ -33,28 +34,25 @@ public static class HighScoreManagement
         if (numOfCurrentLevelEntries == 1)
         {
             currentLevelScore = levelScores.highscoreEntryList.Where(hs => hs.levelName == levelName).ToList()[0];
-            isNewHighscore = true;
-            if (scoreType == GameEndCondition.BingoWin && currentLevelScore.bingoScore < score)
+            if (scoreType == GameEndCondition.BingoWin && score < currentLevelScore.bingoScore)
                 currentLevelScore.bingoScore = score;
-            else if (scoreType == GameEndCondition.PieceWin && currentLevelScore.pieceScore < score)
+            else if (scoreType == GameEndCondition.PieceWin && score < currentLevelScore.pieceScore)
                 currentLevelScore.pieceScore = score;
             else
-                return false;
+                return scoreType == GameEndCondition.BingoWin ? currentLevelScore.bingoScore : currentLevelScore.pieceScore;
         }
-        else if (numOfCurrentLevelEntries == 0)
+        else
         {
-            isNewHighscore = true;
+            if (numOfCurrentLevelEntries != 0)
+                Debug.LogError($"Level '{levelName}': Multiple HighscoreEntry entries in PlayerPrefs. This isn't expected. Overwrite them all with latest score.");
+
             if (scoreType == GameEndCondition.BingoWin)
                 currentLevelScore = new HighscoreEntry { levelName = levelName, bingoScore = score, pieceScore = 0 };
             else if (scoreType == GameEndCondition.PieceWin)
                 currentLevelScore = new HighscoreEntry { levelName = levelName, bingoScore = 0, pieceScore = score };
             else
-                return false;
-        }
-        else
-        {
-            Debug.LogError($"Level '{levelName}': Multiple HighscoreEntry entries in PlayerPrefs. This isn't expected.");
-            return false;
+                throw new InvalidEnumArgumentException();
+            score = -1; // Flag highscore as the first attempt at a level.
         }
 
         listOfLevelScores.Add(currentLevelScore);
@@ -64,7 +62,7 @@ public static class HighScoreManagement
         Debug.Log(json);
         PlayerPrefs.SetString("LevelScores", json);
         PlayerPrefs.Save();
-        return isNewHighscore;
+        return score;
     }
 }
 

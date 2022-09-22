@@ -20,7 +20,7 @@ namespace Entities.Turn_System
         public List<GameObject> turnEntitiesObjects;
         private BingoWheelUi _bingoWheelUi;
         private int currentTurn;
-        [HideInInspector] public int totalTurns = 1;
+        public int totalTurns = 1;
         [SerializeField] private GridData gridData;
         [SerializeField] private Token blankToken;
         private List<TextMeshPro> _occupiedNumbers = new List<TextMeshPro>();

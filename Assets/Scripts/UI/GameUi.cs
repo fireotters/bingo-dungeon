@@ -159,21 +159,11 @@ namespace UI
 
         private void HandleEndGame(SignalGameEnded context)
         {
-            switch (context.result)
+            if (context.result == GameEndCondition.Loss)
             {
-                case GameEndCondition.BingoWin:
-                    _dialogs.SetupVictoryDialog("bingo", 0, 0);
-                    break;
-                case GameEndCondition.PieceWin:
-                    _dialogs.SetupVictoryDialog("piece", 0, 0);
-                    break;
-                case GameEndCondition.Loss:
-                    _sound.musicStage.SetParameter("Dead", 1);
-                    _dialogs.gameLost.SetActive(true);
-                    return;
-                default:
-                    Debug.LogError("GameUi.HandleEndGame: Invalid GameEnded context.");
-                    return;
+                _sound.musicStage.SetParameter("Dead", 1);
+                _dialogs.gameLost.SetActive(true);
+                return;
             }
 
             // Win Conditions trigger some similar behaviour
@@ -183,7 +173,8 @@ namespace UI
             string levelName = SceneManager.GetActiveScene().name;
             GameEndCondition scoreType = context.result;
             int score = _turnManager.totalTurns;
-            HighScoreManagement.TryAddLevelScore(levelName, scoreType, score);
+            int highScore = HighScoreManagement.TryAddScoreThenReturnHighscore(levelName, scoreType, score);
+            _dialogs.SetupVictoryDialog(scoreType, score, highScore);
         }
 
         private void HandleEnemiesPissed(SignalEnemyDied signal)
@@ -233,16 +224,31 @@ namespace UI
         public TextMeshProUGUI txtVictoryCurrent, txtVictoryBest;
         public GameObject imgVictoryBingo, imgVictoryPiece;
 
-        public void SetupVictoryDialog(string victoryType, int currentScore, int bestScore)
+        public void SetupVictoryDialog(GameEndCondition victoryType, int currentScore, int bestScore)
         {
-            txtVictoryCurrent.color = victoryType == "bingo" ? clrVictoryBingo : clrVictoryPiece;
-            txtVictoryBest.color = victoryType == "bingo" ? clrVictoryBingoBest : clrVictoryPieceBest;
-            if (victoryType == "bingo")
+            if (victoryType == GameEndCondition.BingoWin)
+            {
+                txtVictoryCurrent.color = clrVictoryPiece;
+                txtVictoryBest.color = clrVictoryPieceBest;
                 imgVictoryBingo.SetActive(true);
-            else
+            }
+            else if (victoryType == GameEndCondition.PieceWin)
+            {
+                txtVictoryCurrent.color = clrVictoryPiece;
+                txtVictoryBest.color = clrVictoryPieceBest;
                 imgVictoryPiece.SetActive(true);
-            txtVictoryCurrent.text = currentScore.ToString() + " turns";
-            txtVictoryBest.text = "Best: " + bestScore.ToString() + " turns";
+            }
+
+            txtVictoryCurrent.text = currentScore.ToString() + (currentScore > 1 ? " turns": " turn");
+            if (bestScore == -1)
+            {
+                txtVictoryBest.text = "";
+                txtVictoryCurrent.verticalAlignment = VerticalAlignmentOptions.Middle;
+            }
+            else if (bestScore == currentScore)
+                txtVictoryBest.text = "New best score!";
+            else
+                txtVictoryBest.text = "Best: " + bestScore.ToString() + (currentScore > 1 ? " turns" : " turn");
         }
     }
     [System.Serializable]

@@ -44,9 +44,6 @@ SpriteAtlas:
     secondaryTextureSettings: {}
     variantMultiplier: 1
     packables:
-    - {fileID: 2800000, guid: 5e320c4daad3e1a4cb0b77aebf7fb3bd, type: 3}
-    - {fileID: 2800000, guid: 22a30696ea85e454ba7267af822a064b, type: 3}
-    - {fileID: 2800000, guid: 9ae0c772bc4b6b84d95f4398edd6109c, type: 3}
     - {fileID: 2800000, guid: 0937308bef4fbbb49933a30d3e5d7c77, type: 3}
     - {fileID: 2800000, guid: 17008acd646436f4d94a73f6776a192a, type: 3}
     - {fileID: 2800000, guid: 4edfc0f57b727ae429797cc0b67de399, type: 3}
@@ -57,19 +54,13 @@ SpriteAtlas:
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
   - {fileID: 21300000, guid: 06353a31acfe23741ba5de9467670e28, type: 3}
-  - {fileID: 21300000, guid: 9ae0c772bc4b6b84d95f4398edd6109c, type: 3}
   - {fileID: 21300000, guid: 4edfc0f57b727ae429797cc0b67de399, type: 3}
-  - {fileID: 21300000, guid: 22a30696ea85e454ba7267af822a064b, type: 3}
   - {fileID: 21300000, guid: 0937308bef4fbbb49933a30d3e5d7c77, type: 3}
-  - {fileID: 21300000, guid: 5e320c4daad3e1a4cb0b77aebf7fb3bd, type: 3}
   - {fileID: 21300000, guid: 17008acd646436f4d94a73f6776a192a, type: 3}
   m_PackedSpriteNamesToIndex:
   - sliderKnob
-  - backPressed
   - sliderFull
-  - backNormal
   - base
-  - backHighlight
   - sliderEmpty
   m_RenderDataMap: {}
   m_Tag: optionsMenu

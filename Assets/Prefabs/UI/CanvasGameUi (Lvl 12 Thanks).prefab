@@ -150,7 +150,7 @@ MonoBehaviour:
   m_text: 'With the final room cleared, Granny awakens from her exciting dream.
 
     She
-    thinks to herself that maybe... Trying some Chess or D&D wasn''t such a bad idea
+    thinks to herself that maybe... Trying some Chess or D&D isn''t such a bad idea
     after all.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a2feb005ef40ea04bb4e8f005befec19, type: 2}

@@ -41,6 +41,15 @@ namespace UI
 
             _ffwUi.ToggleFfwUi("getFfwPref");
 
+            // Show tutorial automatically if a level hasn't been beaten before
+            if (_dialogs.tutorialIndex != 0)
+            {
+                if (PlayerPrefs.GetInt("tutorialUpTo", 0) < _dialogs.tutorialIndex)
+                {
+                    _dialogs.panelTutorial.SetActive(true);
+                }
+            }
+
 
             SignalBus<SignalToggleFfw>.Subscribe(ToggleFfwTimeScale).AddTo(_disposables);
             SignalBus<SignalEnemyDied>.Subscribe(HandleEnemiesPissed).AddTo(_disposables);
@@ -198,7 +207,8 @@ namespace UI
 
         public bool IsGameplayInterruptingPanelOpen()
         {
-            return _dialogs.paused.activeInHierarchy || _dialogs.panelResetTokens.activeInHierarchy || _dialogs.panelTokensStuck.activeInHierarchy;
+            return _dialogs.paused.activeInHierarchy || _dialogs.panelResetTokens.activeInHierarchy
+                || _dialogs.panelTokensStuck.activeInHierarchy || _dialogs.panelTutorial.activeInHierarchy;
         }
 
         public void ShowGameplayButtons(bool show)
@@ -217,9 +227,10 @@ namespace UI
     [System.Serializable]
     public class GameUiDialogs
     {
+        public int tutorialIndex;
         public GameObject paused, options;
         public GameObject gameLost, gameWon;
-        public GameObject panelTokensStuck, panelResetTokens;
+        public GameObject panelTokensStuck, panelResetTokens, panelTutorial;
         public Color clrVictoryBingo, clrVictoryBingoBest, clrVictoryPiece, clrVictoryPieceBest;
         public TextMeshProUGUI txtVictoryCurrent, txtVictoryBest;
         public GameObject imgVictoryBingo, imgVictoryPiece;
@@ -249,6 +260,16 @@ namespace UI
                 txtVictoryBest.text = "New best score!";
             else
                 txtVictoryBest.text = "Best: " + bestScore.ToString() + (bestScore > 1 ? " turns" : " turn");
+
+
+            // Set tutorial as completed, so it won't appear next time
+            if (tutorialIndex != 0)
+            {
+                if (PlayerPrefs.GetInt("tutorialUpTo", 0) < tutorialIndex)
+                {
+                    PlayerPrefs.SetInt("tutorialUpTo", tutorialIndex);
+                }
+            }
         }
     }
     [System.Serializable]

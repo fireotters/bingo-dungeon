@@ -10,6 +10,7 @@ public static class HighScoreManagement
     public static void ResetLevelScores()
     {
         PlayerPrefs.SetString("LevelScores", "{}");
+        PlayerPrefs.SetInt("tutorialUpTo", 0);
         PlayerPrefs.Save();
     }
 

@@ -34,13 +34,10 @@ namespace UI
                 case "tesla":
                     Application.OpenURL("https://teslasp2.itch.io/");
                     break;
+                case "fireotters":
+                    Application.OpenURL("https://fireotters.com");
+                    break;
             }
-        }
-
-        public void TogglePage()
-        {
-            helpPage.SetActive(!helpPage.activeInHierarchy);
-            creditsPage.SetActive(!creditsPage.activeInHierarchy);
         }
 
         public void BackToMainMenu()

@@ -10,7 +10,13 @@ public class TooltipLevelSelect : MonoBehaviour
     private GameObject _tooltipBg;
     private TextMeshProUGUI _textLevelName, _textBingoScore, _textPieceScore;
     private RectTransform _rectTransform, _canvasRectTransform;
+    private Vector3 tooltipOffset = new Vector3(10, -10, 0);
     private readonly CompositeDisposable _disposables = new();
+
+    // Cursor changing
+    public Texture2D normalCursor, tooltipCursor;
+    private CursorMode cursorMode = CursorMode.Auto;
+    private Vector2 cursorHotspot = Vector2.zero;
 
     private void Start()
     {
@@ -25,7 +31,8 @@ public class TooltipLevelSelect : MonoBehaviour
 
     private void Update()
     {
-        Vector2 anchoredPosition = Input.mousePosition / _canvasRectTransform.localScale.x;
+        Vector3 desiredPosition = Input.mousePosition + tooltipOffset;
+        Vector2 anchoredPosition = desiredPosition / _canvasRectTransform.localScale.x;
         if (anchoredPosition.x + _rectTransform.rect.width > _canvasRectTransform.rect.width)
             anchoredPosition.x = _canvasRectTransform.rect.width - _rectTransform.rect.width;
         if (anchoredPosition.y > _canvasRectTransform.rect.height)
@@ -49,6 +56,7 @@ public class TooltipLevelSelect : MonoBehaviour
             _ => signal.PieceScore + " turns",
         };
         _tooltipBg.SetActive(signal.Showing);
+        Cursor.SetCursor(signal.Showing ? tooltipCursor : normalCursor, cursorHotspot, cursorMode);
     }
     private void OnDestroy()
     {

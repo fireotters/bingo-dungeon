@@ -14,7 +14,7 @@ public static class HighScoreManagement
     }
 
     // Check new score against existing highscore for a level. Return the original highscore or new highscore as int.
-    public static int TryAddScoreThenReturnHighscore(string levelName, GameEndCondition scoreType, int score)
+    public static (bool, int) TryAddScoreThenReturnHighscore(string levelName, GameEndCondition scoreType, int score)
     {
         string jsonString = PlayerPrefs.GetString("LevelScores");
 
@@ -39,7 +39,10 @@ public static class HighScoreManagement
             else if (scoreType == GameEndCondition.PieceWin && score < currentLevelScore.pieceScore)
                 currentLevelScore.pieceScore = score;
             else
-                return scoreType == GameEndCondition.BingoWin ? currentLevelScore.bingoScore : currentLevelScore.pieceScore;
+            {
+                int highscoreToReturn = scoreType == GameEndCondition.BingoWin ? currentLevelScore.bingoScore : currentLevelScore.pieceScore;
+                return (false, highscoreToReturn);
+            }
         }
         else
         {
@@ -52,7 +55,7 @@ public static class HighScoreManagement
                 currentLevelScore = new HighscoreEntry { levelName = levelName, bingoScore = 0, pieceScore = score };
             else
                 throw new InvalidEnumArgumentException();
-            score = -1; // Flag highscore as the first attempt at a level.
+            score = -1; // Flag highscore as the first attempt at a level, don't congratulate for new high score
         }
 
         listOfLevelScores.Add(currentLevelScore);
@@ -62,7 +65,7 @@ public static class HighScoreManagement
         Debug.Log(json);
         PlayerPrefs.SetString("LevelScores", json);
         PlayerPrefs.Save();
-        return score;
+        return (true, score);
     }
 }
 

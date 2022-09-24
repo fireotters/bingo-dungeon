@@ -173,8 +173,8 @@ namespace UI
             string levelName = SceneManager.GetActiveScene().name;
             GameEndCondition scoreType = context.result;
             int score = _turnManager.totalTurns;
-            int highScore = HighScoreManagement.TryAddScoreThenReturnHighscore(levelName, scoreType, score);
-            _dialogs.SetupVictoryDialog(scoreType, score, highScore);
+            (bool wasThisNewHighscore, int highScore) = HighScoreManagement.TryAddScoreThenReturnHighscore(levelName, scoreType, score);
+            _dialogs.SetupVictoryDialog(scoreType, score, highScore, wasThisNewHighscore);
         }
 
         private void HandleEnemiesPissed(SignalEnemyDied signal)
@@ -224,7 +224,7 @@ namespace UI
         public TextMeshProUGUI txtVictoryCurrent, txtVictoryBest;
         public GameObject imgVictoryBingo, imgVictoryPiece;
 
-        public void SetupVictoryDialog(GameEndCondition victoryType, int currentScore, int bestScore)
+        public void SetupVictoryDialog(GameEndCondition victoryType, int currentScore, int bestScore, bool wasThisNewHighscore)
         {
             if (victoryType == GameEndCondition.BingoWin)
             {
@@ -245,10 +245,10 @@ namespace UI
                 txtVictoryBest.text = "";
                 txtVictoryCurrent.verticalAlignment = VerticalAlignmentOptions.Middle;
             }
-            else if (bestScore == currentScore)
+            else if (wasThisNewHighscore)
                 txtVictoryBest.text = "New best score!";
             else
-                txtVictoryBest.text = "Best: " + bestScore.ToString() + (currentScore > 1 ? " turns" : " turn");
+                txtVictoryBest.text = "Best: " + bestScore.ToString() + (bestScore > 1 ? " turns" : " turn");
         }
     }
     [System.Serializable]

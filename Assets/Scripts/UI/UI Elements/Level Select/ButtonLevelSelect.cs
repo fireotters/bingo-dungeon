@@ -40,12 +40,20 @@ public class ButtonLevelSelect : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        string tempLevelName = levelNum + ". " + levelName;
-        string tempHighscoreBingo = _highscoreBingo != "-" ? _highscoreBingo : "...";
-        string tempHighscorePiece = _highscorePiece != "-" ? _highscorePiece : "...";
-        SignalBus<SignalUiMainMenuTooltipChange>.Fire(new SignalUiMainMenuTooltipChange {
-            Showing = true, LevelName = tempLevelName, BingoScore = tempHighscoreBingo, PieceScore = tempHighscorePiece
-        });
+        // Show the tooltip if the button is interactible
+        if (button.interactable)
+        {
+            string tempLevelName = levelNum + ". " + levelName;
+            string tempHighscoreBingo = _highscoreBingo != "-" ? _highscoreBingo : "...";
+            string tempHighscorePiece = _highscorePiece != "-" ? _highscorePiece : "...";
+            SignalBus<SignalUiMainMenuTooltipChange>.Fire(new SignalUiMainMenuTooltipChange
+            {
+                Showing = true,
+                LevelName = tempLevelName,
+                BingoScore = tempHighscoreBingo,
+                PieceScore = tempHighscorePiece
+            });
+        }
     }
     public void OnPointerExit(PointerEventData eventData)
     {

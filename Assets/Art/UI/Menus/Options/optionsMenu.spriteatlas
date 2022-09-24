@@ -60,7 +60,7 @@ SpriteAtlas:
   m_PackedSpriteNamesToIndex:
   - sliderKnob
   - sliderFull
-  - base
+  - options menu
   - sliderEmpty
   m_RenderDataMap: {}
   m_Tag: optionsMenu

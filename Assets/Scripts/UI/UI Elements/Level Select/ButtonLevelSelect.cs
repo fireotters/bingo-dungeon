@@ -32,8 +32,8 @@ public class ButtonLevelSelect : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     public void UpdateLevelHighscores(int bingoScore, int pieceScore)
     {
-        _highscoreBingo = bingoScore == 0 ? "-" : bingoScore.ToString();
-        _highscorePiece = pieceScore == 0 ? "-" : pieceScore.ToString();
+        _highscoreBingo = bingoScore == -1 ? "-" : bingoScore.ToString();
+        _highscorePiece = pieceScore == -1 ? "-" : pieceScore.ToString();
         _textBingoScore.text = _highscoreBingo;
         _textPieceScore.text = _highscorePiece;
     }

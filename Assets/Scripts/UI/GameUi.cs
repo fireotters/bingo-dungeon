@@ -247,8 +247,8 @@ namespace UI
         {
             if (victoryType == GameEndCondition.BingoWin)
             {
-                txtVictoryCurrent.color = clrVictoryPiece;
-                txtVictoryBest.color = clrVictoryPieceBest;
+                txtVictoryCurrent.color = clrVictoryBingo;
+                txtVictoryBest.color = clrVictoryBingoBest;
                 imgVictoryBingo.SetActive(true);
             }
             else if (victoryType == GameEndCondition.PieceWin)

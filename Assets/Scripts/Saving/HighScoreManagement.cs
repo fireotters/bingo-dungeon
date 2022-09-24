@@ -51,9 +51,9 @@ public static class HighScoreManagement
                 Debug.LogError($"Level '{levelName}': Multiple HighscoreEntry entries in PlayerPrefs. This isn't expected. Overwrite them all with latest score.");
 
             if (scoreType == GameEndCondition.BingoWin)
-                currentLevelScore = new HighscoreEntry { levelName = levelName, bingoScore = score, pieceScore = 0 };
+                currentLevelScore = new HighscoreEntry { levelName = levelName, bingoScore = score, pieceScore = -1 };
             else if (scoreType == GameEndCondition.PieceWin)
-                currentLevelScore = new HighscoreEntry { levelName = levelName, bingoScore = 0, pieceScore = score };
+                currentLevelScore = new HighscoreEntry { levelName = levelName, bingoScore = -1, pieceScore = score };
             else
                 throw new InvalidEnumArgumentException();
             score = -1; // Flag highscore as the first attempt at a level, don't congratulate for new high score

@@ -98,7 +98,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   oscilationSpeed: 1
-  amplitude: 0.25
+  amplitude: 0.15
 --- !u!1 &3795019009517499572
 GameObject:
   m_ObjectHideFlags: 0

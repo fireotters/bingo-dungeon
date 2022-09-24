@@ -171,18 +171,18 @@ namespace Entities
                             // Move the token if the destination doesn't have a wall or another token
                             if (!_tilemap.HasTile(destinationTile))
                             {
+                                // Moving a token is free. Don't perform end of move actions.
                                 if (!_turnManager.tokenLocations.Contains(intendedDestination))
                                 {
-                                    // Moving a tokens is free.
                                     tokenSelected.transform.DOMove(intendedDestination, 0.6f);
                                     nearbyTokens.Remove(tokenSelected);
                                     tokenSelected.UpdateCurrentSquareColor();
                                 }
 
-                                _textTurnsRemaining.text = extraTurns.ToString();
-                                finished?.Invoke();
-                                SignalBus<SignalToggleFfw>.Fire(new SignalToggleFfw() { Enabled = true });
-                                yield break;
+                                //_textTurnsRemaining.text = extraTurns.ToString();
+                                //finished?.Invoke();
+                                //SignalBus<SignalToggleFfw>.Fire(new SignalToggleFfw() { Enabled = true });
+                                //yield break;
                             }
                         }
                 }

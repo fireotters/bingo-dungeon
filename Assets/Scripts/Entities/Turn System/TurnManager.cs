@@ -95,7 +95,7 @@ namespace Entities.Turn_System
             if (component == null)
                 return;
             var currentEntTransform = component.transform;
-            currentTurnPointer.position = currentEntTransform.position + Vector3.up;
+            currentTurnPointer.position = currentEntTransform.position + (Vector3.up * 1.2f);
             currentTurnPointer.SetParent(currentEntTransform);
         }
 

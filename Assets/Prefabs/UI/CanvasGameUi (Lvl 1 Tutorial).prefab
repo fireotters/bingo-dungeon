@@ -590,11 +590,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2659922836957685363, guid: 6fb36710cd893f648b139d27b0f6532a, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3697951211194322999, guid: 6fb36710cd893f648b139d27b0f6532a, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4030028526240142773, guid: 6fb36710cd893f648b139d27b0f6532a, type: 3}
       propertyPath: m_text
@@ -602,7 +602,7 @@ PrefabInstance:
 
 
         Avoid being
-        captured by the Rook! Approach carefully, and then capture him yourself.'
+        captured by the Rook! Approach carefully, and then capture it yourself.'
       objectReference: {fileID: 0}
     - target: {fileID: 4145058032593227645, guid: 6fb36710cd893f648b139d27b0f6532a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode

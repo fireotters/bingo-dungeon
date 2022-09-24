@@ -135,7 +135,7 @@ namespace Entities
                     Destroy(gameObject);
 
                     if (transform.name == "Player")
-                        SignalBus<SignalGameEnded>.Fire(new SignalGameEnded { WinCondition = false });
+                        SignalBus<SignalGameEnded>.Fire(new SignalGameEnded { result = GameEndCondition.Loss });
                     else
                         SignalBus<SignalEnemyDied>.Fire();
                     OnDeath();

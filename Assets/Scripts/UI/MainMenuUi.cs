@@ -2,6 +2,8 @@ using FMODUnity;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Signals;
+using System.Collections.Generic;
 
 namespace UI
 {
@@ -9,15 +11,20 @@ namespace UI
     {
         private enum SceneNavigationIntent
         {
-            StartGame = 1,
-            HelpMenu = 0
+            StartGame = 1, HelpMenu = 0
         }
 
         [Header("Main Menu UI")]
         [SerializeField] private TextMeshProUGUI versionText;
         [SerializeField] private GameObject desktopButtons, webButtons;
         private StudioEventEmitter menuSong;
-        
+
+        // Easter Egg. Code from Jessespike on Unity Forums (http://answers.unity.com/answers/1241572/view.html)
+        const int MaxInputHistory = 8;
+        [HideInInspector] public List<string> inputHistory = new List<string>();
+
+        private readonly CompositeDisposable _disposables = new();
+
         private void Start()
         {
             menuSong = GetComponent<StudioEventEmitter>();
@@ -37,7 +44,56 @@ namespace UI
             {
                 PlayerPrefs.SetFloat("Music", 0.8f);
                 PlayerPrefs.SetFloat("SFX", 0.8f);
+                PlayerPrefs.SetString("LevelScores", "{}");
+                PlayerPrefs.Save();
             }
+
+            SignalBus<SignalUiMainMenuStartGame>.Subscribe(StartGame).AddTo(_disposables);
+        }
+
+        private void Update()
+        {
+            UpdateEasterEggState();
+        }
+
+        private void UpdateEasterEggState()
+        {
+            if (!string.IsNullOrEmpty(Input.inputString))
+            {
+                inputHistory.Insert(0, Input.inputString);
+                while (inputHistory.Count > MaxInputHistory)
+                {
+                    inputHistory.RemoveAt(inputHistory.Count - 1);
+                }
+            }
+
+            if (CheckForKeyword("loss"))
+            {
+                Debug.Log("It's morbin' time");
+                inputHistory.Clear();
+                menuSong.Stop();
+                SceneManager.LoadScene($"Scenes/LevelScenes/ZZ Loss Secret (thx Tesla)");
+            }
+        }
+
+        private bool CheckForKeyword(string keyword)
+        {
+            if (inputHistory.Count >= keyword.Length)
+            {
+                for (int i = 0; i < keyword.Length; i++)
+                {
+                    if (keyword[keyword.Length - 1 - i].ToString() != inputHistory[i])
+                    {
+                        // input does not match keyword
+                        return false;
+                    }
+                }
+                // input and keyword match has been found
+                return true;
+            }
+
+            // not enough input to do comparison
+            return false;
         }
 
         private void SetVersionText()
@@ -53,31 +109,11 @@ namespace UI
                 versionText.text = $"Version {Application.version}";
             }
         }
-        public void Transition(int b)
-        {
-            switch (b)
-            {
-                case 0:
-                    Invoke(nameof(OpenHelp), 0);
-                    break;
-                case 1:
-                    Invoke(nameof(StartGame), 0);
-                    break;
-                default:
-                    Debug.LogError("This option is not defined!");
-                    break;
-            }
-        }
 
-        public void StartGame()
+        public void StartGame(SignalUiMainMenuStartGame signal)
         {
             menuSong.Stop();
-            Invoke(nameof(StartGame2), 0.2f);
-        }
-
-        private void StartGame2()
-        {
-            SceneManager.LoadScene("Scenes/LevelScenes/Level1");
+            SceneManager.LoadScene($"Scenes/LevelScenes/{signal.levelToLoad}");
         }
 
         public void OpenHelp()
@@ -90,5 +126,7 @@ namespace UI
         {
             Application.Quit();
         }
+
+        
     }
 }

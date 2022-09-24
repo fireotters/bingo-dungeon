@@ -4,7 +4,7 @@ using UnityEngine;
 public class PieceCounter : MonoBehaviour
 {
     CompositeDisposable disposables = new CompositeDisposable();
-    int numOfPieces = 0;
+    [HideInInspector] public int numOfPieces = 0;
 
     void Awake()
     {
@@ -13,7 +13,7 @@ public class PieceCounter : MonoBehaviour
         {
             numOfPieces--;
             if (numOfPieces <= 0)
-                SignalBus<SignalGameEnded>.Fire(new SignalGameEnded { WinCondition = true });
+                SignalBus<SignalGameEnded>.Fire(new SignalGameEnded { result = GameEndCondition.PieceWin });
         }).AddTo(disposables);
     }
 

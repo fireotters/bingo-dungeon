@@ -128,8 +128,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 1470999981
-  m_fontColor: {r: 0.6784314, g: 0.6784314, b: 0.6784314, a: 0.34117648}
+    rgba: 867020205
+  m_fontColor: {r: 0.6784314, g: 0.6784314, b: 0.6784314, a: 0.2}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -200,7 +200,7 @@ SortingGroup:
   m_GameObject: {fileID: 8174027415674399978}
   m_Enabled: 1
   m_SortingLayerID: 1827605805
-  m_SortingLayer: -3
+  m_SortingLayer: -4
   m_SortingOrder: 10
 --- !u!61 &1924739184767483627
 BoxCollider2D:

@@ -78,6 +78,22 @@ namespace Audio
             }
         }
 
+        public void KillEverySoundExceptEraseScores()
+        {
+            print("DEATH TO AUDIO MUSIC IS FORBIDDEN BY THE LAW OF ROBOTNIK");
+            if (FindObjectsOfType(typeof(StudioEventEmitter)) is StudioEventEmitter[] eventEmitters)
+            {
+                foreach (var eventEmitter in eventEmitters)
+                {
+                    if (eventEmitter.EventReference.Guid.ToString() != "{00534ba2-fd7d-4840-9a05-f93af61cdfde}")
+                    {
+                        eventEmitter.AllowFadeout = false;
+                        eventEmitter.Stop();
+                    }
+                }
+            }
+        }
+
         private float DecibelToLinear(float dB)
         {
             var linear = Mathf.Pow(10f, dB / 20f);

@@ -17,11 +17,14 @@ namespace UI
         [SerializeField] private GameUiPlayerUi _playerUi;
         [SerializeField] private GameUiSound _sound;
         [SerializeField] private GameUiFfwUi _ffwUi;
+        private Entities.Turn_System.TurnManager _turnManager;
+        private PieceCounter _pieceCounter;
 
         private readonly CompositeDisposable _disposables = new();
 
         private void Start()
         {
+            Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
             if (sceneToLoad == "")
                 Debug.LogError("GameUi: sceneToLoad not set! Finishing level will crash the game.");
 
@@ -29,7 +32,8 @@ namespace UI
 
             // Assign some UI buttons to objects in scene
             Entities.Player _player = FindObjectOfType<Entities.Player>();
-            Entities.Turn_System.TurnManager _turnManager = FindObjectOfType<Entities.Turn_System.TurnManager>();
+            _turnManager = FindObjectOfType<Entities.Turn_System.TurnManager>();
+            _pieceCounter = FindObjectOfType<PieceCounter>();
             _playerUi.btnEndTurn.onClick.AddListener(_player.WaitAfterKillingThenEndTurn);
             _playerUi.btnRetryLevelFromTokenStuck.onClick.AddListener(ResetCurrentLevel);
             _playerUi.btnRetryLevelFromResetTokens.onClick.AddListener(ResetCurrentLevel);
@@ -37,6 +41,15 @@ namespace UI
             _playerUi.btnEraseWhiteTiles.onClick.AddListener(_turnManager.RemoveTokensOnWhiteSquares);
 
             _ffwUi.ToggleFfwUi("getFfwPref");
+
+            // Show tutorial automatically if a level hasn't been beaten before
+            if (_dialogs.tutorialIndex != 0)
+            {
+                if (PlayerPrefs.GetInt("tutorialUpTo", 0) < _dialogs.tutorialIndex)
+                {
+                    _dialogs.panelTutorial.SetActive(true);
+                }
+            }
 
 
             SignalBus<SignalToggleFfw>.Subscribe(ToggleFfwTimeScale).AddTo(_disposables);
@@ -56,7 +69,10 @@ namespace UI
                 // Pause if pause panel isn't open, resume if it is open
                 if (!_dialogs.options.activeInHierarchy)
                 {
-                    GameIsPaused(!_dialogs.paused.activeInHierarchy);
+                    if (!IsPauseInterruptingPanelOpen())
+                    {
+                        GameIsPaused(!_dialogs.paused.activeInHierarchy);
+                    }
                 }
                 else
                 {
@@ -139,7 +155,7 @@ namespace UI
 
         public void UpdateTokenClearCooldown(int turnsToSet, bool playDestroySound = false)
         {
-            print("Turns til Token Clear Ability: " + turnsToSet);
+            //print("Turns til Token Clear Ability: " + turnsToSet);
             _playerUi.txtTokenClearCooldownTooltipText.text = turnsToSet.ToString();
             _playerUi.txtTokenClearCooldownBlockText.text = "----- " + turnsToSet.ToString() + " turns left -----";
             _playerUi.imageTokenClearCooldown.fillAmount = (4 - turnsToSet) / 4f;
@@ -156,19 +172,31 @@ namespace UI
 
         private void HandleEndGame(SignalGameEnded context)
         {
-            if (context.WinCondition)
-            {
-                _sound.musicStage.SetParameter("Win", 1);
-                _dialogs.gameWon.SetActive(true);
-            }
-            else
+            if (context.result == GameEndCondition.Loss)
             {
                 _sound.musicStage.SetParameter("Dead", 1);
                 _dialogs.gameLost.SetActive(true);
+                return;
             }
+
+            // Win Conditions trigger some similar behaviour
+            _sound.musicStage.SetParameter("Win", 1);
+            _dialogs.gameWon.SetActive(true);
+
+            string levelName = SceneManager.GetActiveScene().name;
+            GameEndCondition scoreType = context.result;
+            int score = _turnManager.totalTurns;
+            (bool wasThisNewHighscore, int highScore) = HighScoreManagement.TryAddScoreThenReturnHighscore(levelName, scoreType, score);
+            _dialogs.SetupVictoryDialog(scoreType, score, highScore, wasThisNewHighscore);
         }
 
         private void HandleEnemiesPissed(SignalEnemyDied signal)
+        {
+            // Slightly delay the 'Pissed' UI changes, because we need to be sure PieceCounter has the correct piece count. TODO improve this when PieceCounter is removed.
+            Invoke(nameof(HandleEnemiesPissed2), 0.1f);
+        }
+
+        private void HandleEnemiesPissed2()
         {
             if (_playerUi.goForBingoUiVisible)
             {
@@ -176,13 +204,19 @@ namespace UI
                 _playerUi.uiGoingForBingoButtons.SetActive(false);
                 _playerUi.uiGoingForPiecesButtons.SetActive(true);
                 _sound.musicStage.SetParameter("Angry", 1);
-                _sound.sfxPiecesPissed.Play();
+                if (_pieceCounter.numOfPieces > 0)
+                    _sound.sfxPiecesPissed.Play();
             }
         }
 
         public bool IsGameplayInterruptingPanelOpen()
         {
-            return _dialogs.paused.activeInHierarchy || _dialogs.panelResetTokens.activeInHierarchy || _dialogs.panelTokensStuck.activeInHierarchy;
+            return _dialogs.paused.activeInHierarchy || _dialogs.panelResetTokens.activeInHierarchy
+                || _dialogs.panelTokensStuck.activeInHierarchy || _dialogs.panelTutorial.activeInHierarchy;
+        }
+        public bool IsPauseInterruptingPanelOpen()
+        {
+            return _dialogs.gameLost.activeInHierarchy || _dialogs.gameWon.activeInHierarchy || _dialogs.panelTutorial.activeInHierarchy;
         }
 
         public void ShowGameplayButtons(bool show)
@@ -201,9 +235,51 @@ namespace UI
     [System.Serializable]
     public class GameUiDialogs
     {
+        public int tutorialIndex;
         public GameObject paused, options;
         public GameObject gameLost, gameWon;
-        public GameObject panelTokensStuck, panelResetTokens;
+        public GameObject panelTokensStuck, panelResetTokens, panelTutorial; // panelTutorial also refers to the Thank You screen on Lvl 12
+        public Color clrVictoryBingo, clrVictoryBingoBest, clrVictoryPiece, clrVictoryPieceBest;
+        public TextMeshProUGUI txtVictoryCurrent, txtVictoryBest;
+        public GameObject imgVictoryBingo, imgVictoryPiece;
+
+        public void SetupVictoryDialog(GameEndCondition victoryType, int currentScore, int bestScore, bool wasThisNewHighscore)
+        {
+            if (victoryType == GameEndCondition.BingoWin)
+            {
+                txtVictoryCurrent.color = clrVictoryBingo;
+                txtVictoryBest.color = clrVictoryBingoBest;
+                imgVictoryBingo.SetActive(true);
+            }
+            else if (victoryType == GameEndCondition.PieceWin)
+            {
+                txtVictoryCurrent.color = clrVictoryPiece;
+                txtVictoryBest.color = clrVictoryPieceBest;
+                imgVictoryPiece.SetActive(true);
+            }
+
+            txtVictoryCurrent.text = currentScore.ToString() + (currentScore > 1 ? " turns": " turn");
+            if (bestScore == -1)
+            {
+                txtVictoryBest.text = "";
+                txtVictoryCurrent.verticalAlignment = VerticalAlignmentOptions.Middle;
+            }
+            else if (wasThisNewHighscore)
+                txtVictoryBest.text = "New best score!";
+            else
+                txtVictoryBest.text = "Best: " + bestScore.ToString() + (bestScore > 1 ? " turns" : " turn");
+
+
+            // Set tutorial as completed, so it won't appear next time
+            if (tutorialIndex != 0)
+            {
+                if (PlayerPrefs.GetInt("tutorialUpTo", 0) < tutorialIndex)
+                {
+                    PlayerPrefs.SetInt("tutorialUpTo", tutorialIndex);
+                    PlayerPrefs.Save();
+                }
+            }
+        }
     }
     [System.Serializable]
     public class GameUiPlayerUi
@@ -229,11 +305,16 @@ namespace UI
         {
             if (getset == "getFfwPref")
                 isFfwActive = PlayerPrefs.GetInt("Ffw Enabled", 0) == 1;
+            else if (getset == "setFfwPref")
+            {
+                isFfwActive = !isFfwActive;
+                PlayerPrefs.SetInt("Ffw Enabled", isFfwActive ? 1 : 0);
+                PlayerPrefs.Save();
+            }
+
             ffwTooltipText.text = isFfwActive ? ffwEnabledText : ffwDisabledText;
             ffwDisabledIcon.SetActive(!isFfwActive);
             ffwEnabledIcon.SetActive(isFfwActive);
-            if (getset == "setFfwPref")
-                PlayerPrefs.SetInt("Ffw Enabled", isFfwActive ? 1 : 0);
         }
     }
     [System.Serializable]

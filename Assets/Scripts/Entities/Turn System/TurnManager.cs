@@ -20,6 +20,7 @@ namespace Entities.Turn_System
         public List<GameObject> turnEntitiesObjects;
         private BingoWheelUi _bingoWheelUi;
         private int currentTurn;
+        public int totalTurns = 1;
         [SerializeField] private GridData gridData;
         [SerializeField] private Token blankToken;
         private List<TextMeshPro> _occupiedNumbers = new List<TextMeshPro>();
@@ -94,7 +95,7 @@ namespace Entities.Turn_System
             if (component == null)
                 return;
             var currentEntTransform = component.transform;
-            currentTurnPointer.position = currentEntTransform.position + Vector3.up;
+            currentTurnPointer.position = currentEntTransform.position + (Vector3.up * 1.2f);
             currentTurnPointer.SetParent(currentEntTransform);
         }
 
@@ -172,6 +173,7 @@ namespace Entities.Turn_System
                             currentTurn = 0;
                             yield return new WaitForSeconds(.5f);
                             currentTurnPointer.gameObject.SetActive(true);
+                            totalTurns++;
                         }
 
                         UpdatePointer();
@@ -249,7 +251,7 @@ namespace Entities.Turn_System
                 if (token.colorOfCurrentSquare == color)
                 {
                     tokenEntities.Remove(token);
-                    Destroy(token.gameObject);
+                    StartCoroutine(token.DestroyToken());
                 }
             }
             if (tokenEntities.Count != tokenEntitiesCopy.Count)

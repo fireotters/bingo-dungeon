@@ -1,8 +1,18 @@
 namespace Signals
 {
+    public struct SignalUiMainMenuStartGame
+    {
+        public string levelToLoad;
+    }
+
+
+    public enum GameEndCondition
+    {
+        Loss, BingoWin, PieceWin
+    }
     public struct SignalGameEnded
     {
-        public bool WinCondition;
+        public GameEndCondition result;
     }
 
     public struct SignalToggleFfw
@@ -16,6 +26,12 @@ namespace Signals
 
     public struct SignalEnemyDied
     {
+    }
+
+    public struct SignalUiMainMenuTooltipChange
+    {
+        public bool Showing;
+        public string LevelName, BingoScore, PieceScore;
     }
 }
 

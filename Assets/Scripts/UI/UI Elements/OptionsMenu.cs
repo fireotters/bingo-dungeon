@@ -11,11 +11,15 @@ namespace UI
         
         [SerializeField] private Slider _optionMusicSlider;
         public Slider optionSFXSlider;
+        [SerializeField] private Toggle _optionsFullScreenToggle;
         private Audio.FmodMixer fmodMixer;
 
         private void Awake()
         {
             fmodMixer = FindObjectOfType<Canvas>().GetComponent<Audio.FmodMixer>();
+
+            if (Screen.fullScreen)
+                _optionsFullScreenToggle.isOn = true;
         }
 
         private void OnEnable()

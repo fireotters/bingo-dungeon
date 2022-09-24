@@ -68,7 +68,7 @@ namespace Entities.Tokens
                 colorOfCurrentSquare = "white";
             else
                 colorOfCurrentSquare = "black";
-            print(colorOfCurrentSquare);
+            //print(colorOfCurrentSquare);
         }
 
         private void OnDrawGizmos()

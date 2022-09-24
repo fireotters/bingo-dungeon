@@ -7297,18 +7297,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1273121968610353321, guid: 30faf536fd16d684c89abdc8fbf92eea, type: 3}
-      propertyPath: m_RootOrder
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 2814286389417376349, guid: 30faf536fd16d684c89abdc8fbf92eea, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4011268388355494545, guid: 30faf536fd16d684c89abdc8fbf92eea, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4090835017300834817, guid: 30faf536fd16d684c89abdc8fbf92eea, type: 3}
       propertyPath: sceneToLoad
       value: level02
@@ -7400,26 +7388,6 @@ PrefabInstance:
     - target: {fileID: 4090835017300834842, guid: 30faf536fd16d684c89abdc8fbf92eea, type: 3}
       propertyPath: m_Name
       value: CanvasGameUi (Lvl 1 Tutorial)
-      objectReference: {fileID: 0}
-    - target: {fileID: 5956778952222216958, guid: 30faf536fd16d684c89abdc8fbf92eea, type: 3}
-      propertyPath: m_RootOrder
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 5956778952736736859, guid: 30faf536fd16d684c89abdc8fbf92eea, type: 3}
-      propertyPath: m_RootOrder
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 6163132692720038585, guid: 30faf536fd16d684c89abdc8fbf92eea, type: 3}
-      propertyPath: m_RootOrder
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 8066355268645150372, guid: 30faf536fd16d684c89abdc8fbf92eea, type: 3}
-      propertyPath: m_RootOrder
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 8383954040814122848, guid: 30faf536fd16d684c89abdc8fbf92eea, type: 3}
-      propertyPath: m_RootOrder
-      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 30faf536fd16d684c89abdc8fbf92eea, type: 3}
@@ -16990,6 +16958,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 44528416679693979, guid: f55d23a239910404abe16c7a50cb47d1, type: 3}
+      propertyPath: m_SortingLayer
+      value: -2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f55d23a239910404abe16c7a50cb47d1, type: 3}
 --- !u!1001 &1876590598165449363
@@ -17001,7 +16973,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1876590596722464800, guid: de72a1fdbfc0ebf4b82ba4a7806f1450, type: 3}
       propertyPath: m_SortingOrder
-      value: -32768
+      value: -100
       objectReference: {fileID: 0}
     - target: {fileID: 1876590596722464801, guid: de72a1fdbfc0ebf4b82ba4a7806f1450, type: 3}
       propertyPath: m_Name

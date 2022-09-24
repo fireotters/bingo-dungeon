@@ -53,11 +53,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   range: 16
   fourDir: 0
-  playerObj: {fileID: 0}
   moveReticuleGameObject: {fileID: 2116351310106951641, guid: 526f03761721bcb42850480a01d43681, type: 3}
   corpsePrefab: {fileID: 1981591651481221961, guid: 157e10afdd907f744b367528efdc8bf0, type: 3}
-  validMoves: []
-  fatalMove: {x: 0, y: 0, z: 0}
   enemyMovement: {fileID: 8789766503661120670}
   enemyDeath: {fileID: 4430055989785639030}
 --- !u!120 &44528416679693979
@@ -98,8 +95,8 @@ LineRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -912334867
+  m_SortingLayer: -2
   m_SortingOrder: 0
   m_Positions:
   - {x: 0, y: 0, z: 0}

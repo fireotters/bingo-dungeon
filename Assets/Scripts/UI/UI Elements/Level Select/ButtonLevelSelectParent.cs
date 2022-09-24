@@ -14,7 +14,7 @@ public class ButtonLevelSelectParent : MonoBehaviour
         if (PlayerPrefs.HasKey("LevelScores"))
         {
             string jsonString = PlayerPrefs.GetString("LevelScores");
-            Debug.Log(jsonString);
+            //Debug.Log(jsonString);
             Highscores levelScores = JsonUtility.FromJson<Highscores>(jsonString);
             foreach (HighscoreEntry entry in levelScores.highscoreEntryList)
             {

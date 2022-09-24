@@ -24,6 +24,7 @@ namespace UI
 
         private void Start()
         {
+            Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
             if (sceneToLoad == "")
                 Debug.LogError("GameUi: sceneToLoad not set! Finishing level will crash the game.");
 

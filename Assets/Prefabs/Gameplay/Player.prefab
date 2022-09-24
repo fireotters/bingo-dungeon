@@ -639,13 +639,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37c696c672cf46688c168c0b09b4714e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tilemap: {fileID: 0}
   range: 3
   fourDir: 0
   playerTurn: {fileID: 2939432308111773618}
   playerMove: {fileID: 4893508218132824496}
   playerDeath: {fileID: 1334351381412749452}
-  textSkipUi: {fileID: 0}
 --- !u!120 &1876590596722464800
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -686,7 +684,7 @@ LineRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -912334867
   m_SortingLayer: -2
-  m_SortingOrder: -20
+  m_SortingOrder: -100
   m_Positions:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 1}

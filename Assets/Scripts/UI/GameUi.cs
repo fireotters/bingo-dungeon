@@ -68,7 +68,10 @@ namespace UI
                 // Pause if pause panel isn't open, resume if it is open
                 if (!_dialogs.options.activeInHierarchy)
                 {
-                    GameIsPaused(!_dialogs.paused.activeInHierarchy);
+                    if (!IsPauseInterruptingPanelOpen())
+                    {
+                        GameIsPaused(!_dialogs.paused.activeInHierarchy);
+                    }
                 }
                 else
                 {
@@ -210,6 +213,10 @@ namespace UI
             return _dialogs.paused.activeInHierarchy || _dialogs.panelResetTokens.activeInHierarchy
                 || _dialogs.panelTokensStuck.activeInHierarchy || _dialogs.panelTutorial.activeInHierarchy;
         }
+        public bool IsPauseInterruptingPanelOpen()
+        {
+            return _dialogs.gameLost.activeInHierarchy || _dialogs.gameWon.activeInHierarchy || _dialogs.panelTutorial.activeInHierarchy;
+        }
 
         public void ShowGameplayButtons(bool show)
         {
@@ -230,7 +237,7 @@ namespace UI
         public int tutorialIndex;
         public GameObject paused, options;
         public GameObject gameLost, gameWon;
-        public GameObject panelTokensStuck, panelResetTokens, panelTutorial;
+        public GameObject panelTokensStuck, panelResetTokens, panelTutorial; // panelTutorial also refers to the Thank You screen on Lvl 12
         public Color clrVictoryBingo, clrVictoryBingoBest, clrVictoryPiece, clrVictoryPieceBest;
         public TextMeshProUGUI txtVictoryCurrent, txtVictoryBest;
         public GameObject imgVictoryBingo, imgVictoryPiece;
@@ -268,6 +275,7 @@ namespace UI
                 if (PlayerPrefs.GetInt("tutorialUpTo", 0) < tutorialIndex)
                 {
                     PlayerPrefs.SetInt("tutorialUpTo", tutorialIndex);
+                    PlayerPrefs.Save();
                 }
             }
         }

@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 namespace UI
 {
@@ -52,7 +53,9 @@ namespace UI
 
         public void ResetHighscores()
         {
+            fmodMixer.KillEverySoundExceptEraseScores();
             HighScoreManagement.ResetLevelScores();
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
 }

@@ -49,5 +49,10 @@ namespace UI
             _optionMusicSlider.SetValueWithoutNotify(PlayerPrefs.GetFloat("Music"));
             optionSFXSlider.SetValueWithoutNotify(PlayerPrefs.GetFloat("SFX"));
         }
+
+        public void ResetHighscores()
+        {
+            HighScoreManagement.ResetLevelScores();
+        }
     }
 }

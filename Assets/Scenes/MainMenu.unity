@@ -1557,6 +1557,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 140125949}
+  - component: {fileID: 140125951}
+  - component: {fileID: 140125950}
   m_Layer: 5
   m_Name: WebButtons
   m_TagString: Untagged
@@ -1587,6 +1589,44 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -91.5}
   m_SizeDelta: {x: 1093, y: 595}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &140125950
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 140125948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: f1f8249cb2e98e04a9ccb47f9a43ee30, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &140125951
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 140125948}
+  m_CullTransparentMesh: 1
 --- !u!1 &140142655
 GameObject:
   m_ObjectHideFlags: 0
@@ -18917,7 +18957,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelNum: 11
-  levelName: The Armory
+  levelName: The Halls
   attachedLevel: 
 --- !u!1 &2003399528
 GameObject:

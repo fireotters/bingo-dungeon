@@ -1,3 +1,3 @@
-# GMTK's GameJam 2022 Project Repository
+# Bingo!! Dungeon!! (GMTK Game Jam 2022) Project Repository
 
-Aw shit, here we go again
+Game is complete. More levels, code cleanup, and bug fixes are possible in future.

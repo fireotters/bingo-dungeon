@@ -9,16 +9,24 @@ namespace Audio
     {
         private Bus sfx;
         private Bus music;
-        [SerializeField] private StudioEventEmitter sfxDemoEmitter;
         
         private void Start()
         {
             sfx = RuntimeManager.GetBus("bus:/Sfx");
             music = RuntimeManager.GetBus("bus:/Music");
+
+
+            float dbMusic = PlayerPrefs.GetFloat("Music");
+            float dbSfx = PlayerPrefs.GetFloat("SFX");
+
+            music.setVolume(DecibelToLinear(dbMusic));
+            sfx.setVolume(DecibelToLinear(dbSfx));
         }
 
         public void ChangeMusicVolume(float dB)
         {
+            if (dB <= -19.5f)
+                dB = -200f;
             music.setVolume(DecibelToLinear(dB));
             PlayerPrefs.SetFloat("Music", dB);
             PlayerPrefs.Save();
@@ -26,14 +34,11 @@ namespace Audio
 
         public void ChangeSfxVolume(float dB)
         {
+            if (dB <= -19.5f)
+                dB = -200f;
             sfx.setVolume(DecibelToLinear(dB));
             PlayerPrefs.SetFloat("SFX", dB);
             PlayerPrefs.Save();
-
-            if (!sfxDemoEmitter.IsPlaying())
-            {
-                sfxDemoEmitter.Play();
-            }
         }
 
         public void FindAllSfxAndPlayPause(bool gameIsPaused)
@@ -42,7 +47,9 @@ namespace Audio
             {
                 foreach (var eventEmitter in eventEmitters)
                 {
-                    if (!eventEmitter.Event.Contains("Stage theme"))
+                    // EventReference.Path cannot be used in builds. This GUID represents the Stage Music.
+                    // Pause every sound except the Stage Music.
+                    if (eventEmitter.EventReference.Guid.ToString() != "{3f293b51-10ca-4c8a-bff9-897937d8445f}")
                     {
                         switch (gameIsPaused)
                         {
@@ -67,6 +74,22 @@ namespace Audio
                 {
                     eventEmitter.AllowFadeout = false;
                     eventEmitter.Stop();
+                }
+            }
+        }
+
+        public void KillEverySoundExceptEraseScores()
+        {
+            print("DEATH TO AUDIO MUSIC IS FORBIDDEN BY THE LAW OF ROBOTNIK");
+            if (FindObjectsOfType(typeof(StudioEventEmitter)) is StudioEventEmitter[] eventEmitters)
+            {
+                foreach (var eventEmitter in eventEmitters)
+                {
+                    if (eventEmitter.EventReference.Guid.ToString() != "{00534ba2-fd7d-4840-9a05-f93af61cdfde}")
+                    {
+                        eventEmitter.AllowFadeout = false;
+                        eventEmitter.Stop();
+                    }
                 }
             }
         }

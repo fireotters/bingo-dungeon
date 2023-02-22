@@ -6,6 +6,6 @@ namespace Entities
 
         public void InitTurn();
 
-        int GetTurns();
+        float GetTurns();
     }
 }

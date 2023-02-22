@@ -98,7 +98,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   oscilationSpeed: 1
-  amplitude: 0.25
+  amplitude: 0.15
 --- !u!1 &3795019009517499572
 GameObject:
   m_ObjectHideFlags: 0
@@ -178,13 +178,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentTurnPointer: {fileID: 3795019009517499573}
   entitiesContainer: {fileID: 0}
-  bingoWheelUi: {fileID: 0}
   turnEntitiesObjects: []
+  totalTurns: 1
   gridData: {fileID: 11400000, guid: 361afe7f11283034a94bf7faf0e41ea8, type: 2}
-  tokens:
-  - {fileID: 1271792155338618115, guid: b29d97cced1a18f4183ad5bbeb62b219, type: 3}
-  - {fileID: 1271792155338618115, guid: 200e4e22a2c6a8747930535cca89aa15, type: 3}
-  - {fileID: 1271792155338618115, guid: 425ab7967f410704087a65a8a68de833, type: 3}
-  - {fileID: 1271792155338618115, guid: 6d5996c3a600e0f48b1777068afa1bd7, type: 3}
-  meteorTile: {fileID: 11400000, guid: e3485a0d61ddd5f4cb630556cb26eb5d, type: 2}
-  obstacleTilemap: {fileID: 0}
+  blankToken: {fileID: 7707287522434911567, guid: b29d97cced1a18f4183ad5bbeb62b219, type: 3}
+  tokenEntities: []
+  tokenLocations: []

@@ -96,5 +96,9 @@ fmod_editor.log
 # FMOD 1.10.x (Legacy)
 /Assets/FMODAssets/*
 /Assets/FMODStudioCache.meta
-Assets/Plugins/FMOD/Resources/FMODStudioSettings.asset
-Assets/Plugins/FMOD/Resources/FMODStudioSettings.asset
+
+
+# Additions by Crossfire
+/Assets/Plugins/FMOD/Resources/FMODStudioSettings.asset
+/Assets/StreamingAssets/*
+/Assets/StreamingAssets.meta

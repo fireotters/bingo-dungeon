@@ -1,14 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
+using Signals;
 using TMPro;
 using UnityEngine;
 
 public class CheckForBingo : MonoBehaviour
 {
-    public TextMeshProUGUI debugBingoDisplay;
+    [SerializeField] private TextMeshProUGUI debugBingoDisplay;
+    private bool alreadyWonBingo = false;
 
-    // TODO After Jam: The FloorGridGenerator fills out numbers from bottom to top, left to right. Instead of top to bottom.
-    // Not important right now. The Bingo logic will still work, even upside down.
+    // Important Note: The FloorGridGenerator fills out numbers from bottom to top, left to right. Instead of top to bottom.
+    // Not important to fix this. The Bingo logic will still work, even upside down.
     private int[] board =
     {
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -25,20 +25,19 @@ public class CheckForBingo : MonoBehaviour
 
     public void UpdateTokenPlacement(int notation, bool addOrRemove)
     {
-        if (addOrRemove == true)
-        {
-            board[notation] = 1;
-        }
-        else
-        {
-            board[notation] = 0;
-        }
+        if (alreadyWonBingo)
+            return;
 
-        print("Is there Bingo? " + CheckForBingoResult());
+        if (addOrRemove == true)
+            board[notation] = 1;
+        else
+            board[notation] = 0;
 
         if (CheckForBingoResult())
         {
-            SignalBus<SignalGameEnded>.Fire(new SignalGameEnded(){ winCondition = true});
+            alreadyWonBingo = true;
+            print("Win by Bingo");
+            SignalBus<SignalGameEnded>.Fire(new SignalGameEnded { result = GameEndCondition.BingoWin });
         }
     }
 

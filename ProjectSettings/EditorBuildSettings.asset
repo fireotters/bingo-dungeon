@@ -12,37 +12,31 @@ EditorBuildSettings:
     path: Assets/Scenes/HelpMenu.unity
     guid: 1db49a45939b8584ea6dbe04f6e41681
   - enabled: 1
-    path: Assets/Scenes/GameScene.unity
-    guid: 8857e8dbafc91084b8288812d469e1e3
-  - enabled: 1
-    path: Assets/Scenes/TemplateGameScene.unity
-    guid: dbadd84a1da2dc64aa4bb04480fdc8b2
-  - enabled: 1
-    path: Assets/Scenes/LevelScenes/Level1.unity
+    path: Assets/Scenes/LevelScenes/Level01.unity
     guid: 3591d1fe75643174ca8824e725de6109
   - enabled: 1
-    path: Assets/Scenes/LevelScenes/Level2 - Bishop Tutorial.unity
+    path: Assets/Scenes/LevelScenes/Level02.unity
     guid: 2059337a6fdfa8e428557b060a140ea1
   - enabled: 1
-    path: Assets/Scenes/LevelScenes/Level3.unity
+    path: Assets/Scenes/LevelScenes/Level03.unity
     guid: ea63ff114ba8c954d9bf3a0b8fc8f89e
   - enabled: 1
-    path: Assets/Scenes/LevelScenes/Level4.unity
+    path: Assets/Scenes/LevelScenes/Level04.unity
     guid: 8ae58ad3275f61145809e5bcc1f34d48
   - enabled: 1
-    path: Assets/Scenes/LevelScenes/Level5.unity
+    path: Assets/Scenes/LevelScenes/Level05.unity
     guid: 79e10f469b3800442afab81e81698aa6
   - enabled: 1
-    path: Assets/Scenes/LevelScenes/Level6.unity
+    path: Assets/Scenes/LevelScenes/Level06.unity
     guid: 76c55bd9968e24942b96000be43a3db3
   - enabled: 1
-    path: Assets/Scenes/LevelScenes/Level7.unity
+    path: Assets/Scenes/LevelScenes/Level07.unity
     guid: 3a4db67c3d9c71f4d8624a28ee36f3ce
   - enabled: 1
-    path: Assets/Scenes/LevelScenes/Level8.unity
+    path: Assets/Scenes/LevelScenes/Level08.unity
     guid: bbcb81fa0c3b7fb46a17d56b6461582c
   - enabled: 1
-    path: Assets/Scenes/LevelScenes/Level9.unity
+    path: Assets/Scenes/LevelScenes/Level09.unity
     guid: cc8808810ff822e42884eef208a7e49f
   - enabled: 1
     path: Assets/Scenes/LevelScenes/Level10.unity
@@ -53,4 +47,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/LevelScenes/Level12.unity
     guid: 88eadf0bc5d1b0342a35ac0e9fdadde4
+  - enabled: 1
+    path: Assets/Scenes/LevelScenes/ZZ Loss Secret (thx Tesla).unity
+    guid: 16167ecaf1b3a01468630503226d314f
   m_configObjects: {}

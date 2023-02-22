@@ -51,14 +51,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a8ef98bc58566245a65a1bb3cc2bc2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tilemap: {fileID: 0}
   range: 16
   fourDir: 0
-  playerObj: {fileID: 0}
   moveReticuleGameObject: {fileID: 2116351310106951641, guid: 526f03761721bcb42850480a01d43681, type: 3}
   corpsePrefab: {fileID: 1981591651481221961, guid: c54fc52716d250048bfcef37bbd120b6, type: 3}
-  validMoves: []
-  fatalMove: {x: 0, y: 0, z: 0}
   enemyMovement: {fileID: -853179937615616533}
   enemyDeath: {fileID: 651242170215618878}
 --- !u!120 &585594735355505064
@@ -99,8 +95,8 @@ LineRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -912334867
+  m_SortingLayer: -2
   m_SortingOrder: 0
   m_Positions:
   - {x: 0, y: 0, z: 0}
@@ -199,7 +195,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -912334867
-  m_SortingLayer: -1
+  m_SortingLayer: -2
   m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: b657afb801227534ca5a20b6d4b6f8cc, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -238,7 +234,7 @@ Animator:
   m_GameObject: {fileID: 585594735355505068}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 9e6c3098431d0c64799b3443d29545db, type: 2}
+  m_Controller: {fileID: 9100000, guid: 68689b35f63e02141af5dc9b6f9869f2, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -315,7 +311,7 @@ MonoBehaviour:
       Data4: 1703434089
     Path: event:/3D/Enemy killed
   Event: 
-  PlayEvent: 2
+  PlayEvent: 0
   StopEvent: 0
   AllowFadeout: 1
   TriggerOnce: 0

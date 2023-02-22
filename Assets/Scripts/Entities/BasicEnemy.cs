@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
 using FMODUnity;
+using Signals;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -11,42 +12,60 @@ namespace Entities
 {
     public abstract class BasicEnemy : AbstractEntity
     {
-        [Tooltip("Time to move in seconds")] private float timeToMove = .5f;
-        private float timeToStartTurn = .5f;
+        // Enemy states
+        private bool _pissed = false;
+        private bool _colorIsBlack;
 
-        [HideInInspector] public Transform playerObj;
+        // Move timings
+        private float _timeToMove = .3f;
+        private readonly float _timeToStartTurn = .1f;
 
-        //[HideInInspector] public Board boardManager;
+
+
         public Transform moveReticuleGameObject;
-        bool BlackPiece;
-        bool Pissed;
-        Animator enemyAnimator;
-        public GameObject corpsePrefab;
+        private Animator enemyAnimator;
+        [SerializeField] private GameObject corpsePrefab;
+
 
         // Targetting
-        [HideInInspector] public List<Vector3> validMoves = new List<Vector3>();
-        [HideInInspector] public Vector3 fatalMove = Vector3.zero;
+        private Transform playerObj;
+        private List<Vector3> validMoves = new List<Vector3>();
+        private Vector3 fatalMove = Vector3.zero;
         [SerializeField] private StudioEventEmitter enemyMovement, enemyDeath;
+
+        CompositeDisposable _disposables = new CompositeDisposable();
 
         private void Start()
         {
+            // Find Components
+            enemyAnimator = GetComponent<Animator>();
             playerObj = GameObject.Find("Player").transform;
-            //boardManager = GameObject.Find("Board").GetComponent<Board>();
-            BlackPiece = Convert.ToBoolean(Random.Range(0, 2));
-            enemyAnimator = gameObject.GetComponent<Animator>();
-            enemyAnimator.SetBool("Black", BlackPiece);
+
+            // Colour the piece
+            _colorIsBlack = Convert.ToBoolean(Random.Range(0, 2));
+            enemyAnimator.SetBool("Black", _colorIsBlack);
+
+            // SignalBus Actions
             SignalBus<SignalPieceAdded>.Fire(default);
+            SignalBus<SignalEnemyDied>.Subscribe((x) =>
+            {
+                if (!_pissed)
+                {
+                    _pissed = true;
+                    enemyAnimator.SetBool("Pissed", true);
+                }
+            }).AddTo(_disposables);
         }
 
         private void OnDestroy()
         {
-            SignalBus<SignalEnemyDied>.Fire();
+            _disposables.Dispose();
         }
 
         [ContextMenu("Snap")]
         public void SnapToClosesTile()
         {
-            transform.position = tilemap.WorldToCell(transform.position) + tilemap.cellSize/2;
+            transform.position = _tilemap.WorldToCell(transform.position) + _tilemap.cellSize/2;
         }
 
         public virtual Vector3 ChoosePosition()
@@ -59,7 +78,8 @@ namespace Entities
             // If the player can be killed, do it. Else, pick a random valid destination.
             if (fatalMove != Vector3.zero)
             {
-                timeToMove *= 3; // Slow down piece which finishes off Player, accentuate the loss.
+                // Slow down piece which finishes off Player, accentuates the loss.
+                _timeToMove *= 3;
                 return fatalMove;
             }
             else if (validMoves == null || validMoves.Count == 0)
@@ -79,24 +99,23 @@ namespace Entities
                     var playerToEnemyDist = Vector3.Distance(transform.position, playerPos);
                     return playerToDestinationDist > playerToEnemyDist;
                 }).ToList();
-                print($"piece {gameObject.name} can move closer to player {movesCloserToPlayer.Count}");
-                print($"piece {gameObject.name} can move away from player {movesAwayFromPlayer.Count}");
 
-                var chanceToRetreat = Random.Range(1, 8);
+                // Retreat Chance:
+                // 20% if piece is Pissed, 50% if piece is docile
+                int roll = Random.Range(1, 101);
+                int retreat_chance = _pissed ? 20 : 50;
+                bool enemy_will_retreat = roll < retreat_chance;
+                print($"Piece {gameObject.name} wants to {(enemy_will_retreat ? "APPROACH" : "RETREAT")} - (Approach Moves: {movesCloserToPlayer.Count}) (Retreat Moves: {movesAwayFromPlayer.Count})");
 
-                print($"piece {gameObject.name} will go closer to player: {chanceToRetreat > 2}");
-
-                if (chanceToRetreat > 2)
+                if (enemy_will_retreat)
                 {
-                    return movesCloserToPlayer.Count > 0
-                        ? movesCloserToPlayer[Random.Range(0, movesCloserToPlayer.Count)]
-                        : transform.position;
+                    return movesAwayFromPlayer.Count > 0 ? movesAwayFromPlayer[Random.Range(0, movesAwayFromPlayer.Count)]
+                         : movesAwayFromPlayer.Count > 0 ? movesCloserToPlayer[Random.Range(0, movesCloserToPlayer.Count)] : transform.position;
                 }
                 else
                 {
-                    return movesAwayFromPlayer.Count > 0 
-                        ? movesAwayFromPlayer[Random.Range(0, movesAwayFromPlayer.Count)]
-                        : transform.position;
+                    return movesCloserToPlayer.Count > 0 ? movesCloserToPlayer[Random.Range(0, movesCloserToPlayer.Count)]
+                         : movesAwayFromPlayer.Count > 0 ? movesAwayFromPlayer[Random.Range(0, movesAwayFromPlayer.Count)] : transform.position;
                 }
             }
         }
@@ -104,8 +123,8 @@ namespace Entities
         public bool ValidateDestination(Vector3 modifier)
         {
             Vector3 destination = transform.position + modifier;
-            Vector3Int destinationTile = tilemap.WorldToCell(destination);
-            if (tilemap.HasTile(destinationTile) || IsCellOccupiedByEnemy(destination))
+            Vector3Int destinationTile = _tilemap.WorldToCell(destination);
+            if (_tilemap.HasTile(destinationTile) || IsCellOccupiedByEnemy(destination))
             {
                 return false; // Tell the enemy to no longer search for valid tiles in this direction.
             }
@@ -169,9 +188,10 @@ namespace Entities
             enemyMovement.Play();
             if (fatalMove != Vector3.zero)
             {
+                SignalBus<SignalToggleFfw>.Fire(new SignalToggleFfw { Enabled = false });
                 enemyMovement.SetParameter("Deadly", 1);
             }
-            transform.DOMove(destination, timeToMove).OnComplete(
+            transform.DOMove(destination, _timeToMove).OnComplete(
                 () =>
                 {
                     extraTurns = 0;
@@ -191,7 +211,7 @@ namespace Entities
 
         IEnumerator EnemyTurn(System.Action finished)
         {
-            yield return new WaitForSeconds(timeToStartTurn);
+            yield return new WaitForSeconds(_timeToStartTurn);
             DoMove(finished);
         }
 
@@ -200,8 +220,7 @@ namespace Entities
             enemyDeath.Play();
             if (corpsePrefab != null)
             {
-                corpsePrefab.GetComponent<Corpse>().BlackPiece = BlackPiece;
-                corpsePrefab.GetComponent<Corpse>().Pissed = Pissed;
+                corpsePrefab.GetComponent<Corpse>().BlackPiece = _colorIsBlack;
                 Instantiate(corpsePrefab, transform.position, Quaternion.identity);
             }
         }

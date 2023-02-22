@@ -34,16 +34,18 @@ namespace UI
                 case "tesla":
                     Application.OpenURL("https://teslasp2.itch.io/");
                     break;
+                case "fireotters":
+                    Application.OpenURL("https://fireotters.com");
+                    break;
             }
         }
 
-        public void TogglePage()
+        public void BackToMainMenu()
         {
-            helpPage.SetActive(!helpPage.activeInHierarchy);
-            creditsPage.SetActive(!creditsPage.activeInHierarchy);
+            Invoke(nameof(BackToMainMenu2), 0.2f);
         }
 
-        public void BackToMainMenu()
+        private void BackToMainMenu2()
         {
             SceneManager.LoadScene("Scenes/MainMenu");
         }

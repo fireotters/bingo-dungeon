@@ -6,25 +6,63 @@ using UnityEngine;
 using TMPro;
 using DG.Tweening;
 using FMODUnity;
+using Signals;
 using UI;
 
 namespace Entities
 {
     public class Player : AbstractEntity
     {
-        public LineRenderer lineRenderer;
-        [SerializeField] private Animator animator;
+        private Animator _animator;
         private Vector3 previousPos;
-		private List<Token> nearbyTokens = new List<Token>();
-		[SerializeField] TextMeshPro text;
-        [SerializeField] GameObject textSkipUi;
-        [SerializeField] private StudioEventEmitter playerTurn, playerMove;
-        private GameUi gameUi;
+        private List<Token> nearbyTokens = new List<Token>();
+        [SerializeField] private StudioEventEmitter playerTurn, playerMove, playerDeath;
+        private GameUi _gameUi;
 
-        public override void Awake()
+        // Movement Cursor Related Variables
+        private LineRenderer _lineRenderer;
+        private Turn_System.TurnManager _turnManager;
+        private TextMeshPro _textTurnsRemaining, _textMovementCost;
+        private GameObject _movementCursor, _cursorOptionAttack, _cursorOptionDestination, _textTrHalfSign, _textMcHalfSign;
+        private List<Transform> _currentEnemyTransforms = new List<Transform>();
+        private Vector3 _lastFrameCursorPos = Vector3.zero;
+        private bool hasPlayedTurnSound = false;
+
+        private readonly CompositeDisposable _disposables = new();
+
+        protected override void Awake()
         {
-            gameUi = FindObjectOfType<Canvas>().GetComponent<GameUi>();
+            _gameUi = FindObjectOfType<Canvas>().GetComponent<GameUi>();
+            _turnManager = FindObjectOfType<Turn_System.TurnManager>().GetComponent<Turn_System.TurnManager>();
+            _lineRenderer = GetComponent<LineRenderer>();
+            spriteRenderer = transform.Find("Sprite").GetComponent<SpriteRenderer>();
+
             base.Awake();
+        }
+
+        private void Start()
+        {
+            if (transform.position.x * 10 % 5 != 0 || transform.position.y * 10 % 5 != 0)
+                Debug.LogError(transform.name + ": transform.pos.x & y must be set to a coord ending with .5! ");
+
+
+            _movementCursor = transform.Find("MovementCursor").gameObject;
+            _cursorOptionAttack = _movementCursor.transform.Find("AttackCursor").gameObject;
+            _cursorOptionDestination = _movementCursor.transform.Find("DestinationCursor").gameObject;
+
+            _textTurnsRemaining = transform.Find("TextTurnsRemaining").GetComponent<TextMeshPro>();
+            _textMovementCost = _movementCursor.transform.Find("TextMovementCost").GetComponent<TextMeshPro>();
+            _textTrHalfSign = _textTurnsRemaining.transform.Find("Half Sign").gameObject;
+            _textMcHalfSign = _textMovementCost.transform.Find("Half Sign").gameObject;
+
+            _animator = transform.Find("Sprite").GetComponent<Animator>();
+            spriteRenderer.sortingOrder = -(int)transform.position.y;
+
+            // Pieces aggressive
+            SignalBus<SignalEnemyDied>.Subscribe((x) =>
+            {
+                nearbyTokens.Clear();
+            }).AddTo(_disposables);
         }
 
         private void Update()
@@ -36,25 +74,19 @@ namespace Entities
 
         private void OnDestroy()
         {
-            SignalBus<SignalGameEnded>.Fire(new SignalGameEnded { winCondition = false });
+            _disposables.Dispose();
         }
 
+        // Player only checks triggers for Tokens which come into range
         private void OnTriggerEnter2D(Collider2D col)
         {
             if (col.gameObject.transform.parent.TryGetComponent<Token>(out var foundToken))
-            {
-                print("next to a token");
                 nearbyTokens.Add(foundToken);
-                print(nearbyTokens.Count);
-            }
         }
         private void OnTriggerExit2D(Collider2D col)
         {
             if (col.gameObject.transform.parent.TryGetComponent<Token>(out var foundToken))
-            {
-                print("moved away from a token");
                 nearbyTokens.Remove(foundToken);
-            }
         }
 
         public override void DoTurn(Action finished)
@@ -69,38 +101,59 @@ namespace Entities
 
         IEnumerator LostTurn(Action finished)
         {
+            hasPlayedTurnSound = false;
             yield return new WaitForSeconds(1);
             finished?.Invoke();
         }
 
-        public void SkipTurn()
+        public void EndTurn()
         {
             StopAllCoroutines();
             extraTurns = 0;
-            text.text = extraTurns.ToString();
-            text.gameObject.SetActive(false);
-            textSkipUi.gameObject.SetActive(false);
+            hasPlayedTurnSound = false;
+            _textTurnsRemaining.text = extraTurns.ToString();
+            _textTurnsRemaining.gameObject.SetActive(false);
+            _gameUi.ShowGameplayButtons(false);
             currentFinishAction?.Invoke();
             currentFinishAction = null;
+            SignalBus<SignalToggleFfw>.Fire(new SignalToggleFfw() { Enabled = true });
+        }
+
+        public void WaitAfterKillingThenEndTurn()
+        {
+            // Killing an enemy and immediately skipping turns caused enemy movement sounds to be doubled
+            extraTurns = 0;
+            _textTurnsRemaining.text = extraTurns.ToString();
+            _textTurnsRemaining.gameObject.SetActive(false);
+            _gameUi.ShowGameplayButtons(false);
+            Invoke(nameof(EndTurn), 0.4f);
         }
 
         IEnumerator PlayerTurn(Action finished)
         {
+            SignalBus<SignalToggleFfw>.Fire(new SignalToggleFfw() { Enabled = false });
+            _turnManager.UpdateTokenLocations();
             currentFinishAction = finished;
-            if (extraTurns == range)
+            if (!hasPlayedTurnSound && extraTurns == range)
             {
+                hasPlayedTurnSound = true;
                 playerTurn.Play();
-                text.gameObject.SetActive(true);
-                textSkipUi.gameObject.SetActive(true);
+                _textTurnsRemaining.gameObject.SetActive(true);
+                _gameUi.ShowGameplayButtons(true);
+
+                // Fetch all current enemies from TurnManager
+                _currentEnemyTransforms.Clear();
+                foreach (GameObject x in _turnManager.turnEntitiesObjects)
+                    _currentEnemyTransforms.Add(x.transform);
             }
-            text.text = extraTurns.ToString();
+            _textTurnsRemaining.text = Mathf.FloorToInt(extraTurns).ToString();
+            _textTrHalfSign.SetActive(extraTurns % 1f == .5f);
 
             while (true)
             {
-
                 var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 mousePos.z = 0;
-                if (gameUi.gamePausePanel.activeInHierarchy)
+                if (_gameUi.IsGameplayInterruptingPanelOpen())
                 {
                     mousePos = new Vector3(6000, 6000, 0);
                 }
@@ -114,16 +167,22 @@ namespace Entities
                             Vector3 directionToMove = tokenSelected.transform.position - transform.position;
                             Vector3 intendedDestination = tokenSelected.transform.position + directionToMove;
 
-                            Vector3Int destinationTile = tilemap.WorldToCell(intendedDestination);
-                            if (!tilemap.HasTile(destinationTile))
+                            Vector3Int destinationTile = _tilemap.WorldToCell(intendedDestination);
+                            // Move the token if the destination doesn't have a wall or another token
+                            if (!_tilemap.HasTile(destinationTile))
                             {
-                                tokenSelected.transform.DOMove(intendedDestination, 0.6f);
-                                nearbyTokens.Remove(tokenSelected);
+                                // Moving a token is free. Don't perform end of move actions.
+                                if (!_turnManager.tokenLocations.Contains(intendedDestination))
+                                {
+                                    tokenSelected.transform.DOMove(intendedDestination, 0.6f);
+                                    nearbyTokens.Remove(tokenSelected);
+                                    tokenSelected.UpdateCurrentSquareColor();
+                                }
 
-                                extraTurns -= 1;
-                                text.text = extraTurns.ToString();
-                                finished?.Invoke();
-                                yield break;
+                                //_textTurnsRemaining.text = extraTurns.ToString();
+                                //finished?.Invoke();
+                                //SignalBus<SignalToggleFfw>.Fire(new SignalToggleFfw() { Enabled = true });
+                                //yield break;
                             }
                         }
                 }
@@ -136,20 +195,36 @@ namespace Entities
                     {
                         // Dodgy move cost setup, because our A* implementation cannot return move costs.
                         // This measures how long a line is, and from that determine the cost.
-                        // This is so that Player can't go around thin walls to destinations which are considered 'In Range'
                         float totalMoveCost = 0;
                         for (int i = 0; i < previewLinePoints.Count - 1; i++)
                         {
-                            totalMoveCost += Vector3.Distance(previewLinePoints[i], previewLinePoints[i + 1]);
+                            float x = Vector3.Distance(previewLinePoints[i], previewLinePoints[i + 1]);
+                            if (x % 1f != 0f)
+                                // Round up any diagonal lines to their closest multiple of 1.5, instead of 1.4142
+                                x = 1.5f * Mathf.FloorToInt((x + .75f) / 1.5f);
+                            totalMoveCost += x;
                         }
 
-                        // Round down to allow more forgiving movement, but also round up to rein in movement a bit.
-                        if (Math.Round(totalMoveCost) <= extraTurns)
+                        if (totalMoveCost <= extraTurns + 0.5f)
                         {
-                            lineRenderer.positionCount = previewLinePoints.Count;
-                            lineRenderer.SetPositions(previewLinePoints.ToArray());
+                            // Render a line & movement cost sign if a move is valid.
+                            _lineRenderer.positionCount = previewLinePoints.Count;
+                            _lineRenderer.SetPositions(previewLinePoints.ToArray());
+                            _movementCursor.SetActive(true);
+                            _movementCursor.transform.position = previewLinePoints[^1];
+                            _textMovementCost.text = Mathf.FloorToInt(totalMoveCost).ToString();
+                            _textMcHalfSign.SetActive(totalMoveCost % 1f == .5f);
 
-                            // Can only move if preview points exist
+                            // Show a 'damage' sprite if cursor is over an enemy
+                            if (_lastFrameCursorPos != _movementCursor.transform.position)
+                            {
+                                bool showAttackCursor = IsMouseHoveringOverEnemy(_movementCursor.transform.position);
+                                _cursorOptionAttack.SetActive(showAttackCursor);
+                                _cursorOptionDestination.SetActive(!showAttackCursor);
+                            }
+                            _lastFrameCursorPos = _movementCursor.transform.position;
+
+
                             if (Input.GetMouseButton(0))
                             {
                                 float xTo = mousePos.x;
@@ -179,31 +254,44 @@ namespace Entities
                                 else if (xDiff < 0 && yDiff < 0)
                                     dir = 1;
 
-                                animator.SetBool("Moving", true);
-                                animator.SetInteger("Dir", dir);
-                                animator.SetBool("Push", false);
-                                textSkipUi.gameObject.SetActive(false);
+                                _animator.SetBool("Moving", true);
+                                _animator.SetInteger("Dir", dir);
+                                _animator.SetBool("Push", false);
 
+                                // Spawn a fake destination cursor
+                                GameObject fakeDestinationCursor = Instantiate(_cursorOptionDestination, new Vector3(6000,6000, 0), Quaternion.identity);
+                                if (_cursorOptionDestination.activeInHierarchy)
+                                {
+                                    fakeDestinationCursor.transform.position = _movementCursor.transform.position;
+                                    fakeDestinationCursor.GetComponent<SpriteRenderer>().sortingLayerName = "Pieces (incl. Player)";
+                                    fakeDestinationCursor.GetComponent<SpriteRenderer>().sortingOrder = -19;
+                                }
+
+                                _gameUi.ShowGameplayButtons(false);
+                                _movementCursor.SetActive(false);
                                 playerMove.Play();
                                 
                                 if (TryMove(mousePos, () =>
                                 {
-                                    extraTurns -= Mathf.FloorToInt(totalMoveCost);
-                                    text.text = extraTurns.ToString();
+                                    extraTurns -= totalMoveCost;
+                                    _textTurnsRemaining.text = extraTurns.ToString();
 
-                                    if (extraTurns == 0)
+                                    if (extraTurns <= 0)
                                     {
-                                        text.gameObject.SetActive(false);
+                                        hasPlayedTurnSound = false;
+                                        _textTurnsRemaining.gameObject.SetActive(false);
                                     }
                                     else
-                                        textSkipUi.gameObject.SetActive(true);
+                                        _gameUi.ShowGameplayButtons(true);
 
-                                    animator.SetBool("Moving", false);
-                                    animator.SetInteger("Dir", 0);
-                                    animator.SetBool("Push", false);
-                                    lineRenderer.positionCount = 0;
+                                    _animator.SetBool("Moving", false);
+                                    _animator.SetInteger("Dir", 0);
+                                    _animator.SetBool("Push", false);
+                                    _lineRenderer.positionCount = 0;
                                     spriteRenderer.sortingOrder = -(int)transform.position.y;
+                                    Destroy(fakeDestinationCursor);
                                     Damage();
+                                    SignalBus<SignalToggleFfw>.Fire(new SignalToggleFfw() { Enabled = true });
                                     finished?.Invoke();
                                 }))
                                     yield break;
@@ -211,13 +299,15 @@ namespace Entities
                         }
                         else
                         {
-                            lineRenderer.positionCount = 0;
+                            _lineRenderer.positionCount = 0;
+                            _movementCursor.SetActive(false);
                         }
                     }
                 }
                 else
                 {
-                    lineRenderer.positionCount = 0;
+                    _lineRenderer.positionCount = 0;
+                    _movementCursor.SetActive(false);
                 }
 
                 yield return null;
@@ -239,61 +329,28 @@ namespace Entities
             return null;
         }
 
-        //private bool TryMoveToken(Vector3 mousePos)
-        //{
-        //    Vector3[] possibleDirections =
-        //    {
-        //        new(0, 1), new(0, -1), new(1, 0), new(-1, 0),
-        //    };
-
-        //    var validPositionsToMove = FigureOutValidPositions(possibleDirections);
-        //    float previousDistance = 0;
-        //    var nearestPointToMousePos = Vector3.zero;
-
-        //    foreach (var validPosition in validPositionsToMove)
-        //    {
-        //        var distance = Vector3.Distance(mousePos, validPosition);
-        //        if (nearestPointToMousePos == Vector3.zero || distance < previousDistance)
-        //            nearestPointToMousePos = validPosition;
-
-        //        previousDistance = distance;
-        //    }
-
-        //    var lineToDraw = new[] { nearbyToken.transform.position, nearestPointToMousePos };
-        //    lineRenderer.positionCount = lineToDraw.Length;
-        //    lineRenderer.SetPositions(lineToDraw);
-
-        //    if (Input.GetMouseButton(1))
-        //    {
-        //        nearbyToken.MoveTo(nearestPointToMousePos);
-        //        nearbyToken = null;
-        //        return true;
-        //    }
-
-        //    return false;
-        //}
-
-        //private List<Vector3> FigureOutValidPositions(Vector3[] possibleDirections)
-        //{
-        //    var validPositions = new List<Vector3>();
-
-        //    foreach (var possibleDirection in possibleDirections)
-        //    {
-        //        var supposedFinalTokenPosition = nearbyToken.transform.position + possibleDirection;
-        //        if (supposedFinalTokenPosition != transform.position &&
-        //            !IsPossibleDirectionAWall(supposedFinalTokenPosition))
-        //        {
-        //            validPositions.Add(supposedFinalTokenPosition);
-        //        }
-        //    }
-
-        //    return validPositions;
-        //}
-
-        private bool IsPossibleDirectionAWall(Vector3 supposedFinalTokenPosition)
+        private bool IsMouseHoveringOverEnemy(Vector3 movementCursorPos)
         {
-            var positionInTilemap = tilemap.WorldToCell(supposedFinalTokenPosition);
-            return tilemap.HasTile(positionInTilemap);
+            foreach (Transform enemy in _currentEnemyTransforms)
+            {
+                if (Vector3.Distance(movementCursorPos, enemy.position) < 0.1f)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        protected override void TakeDamage()
+        {
+            var expectedHealthValue = hitPoints - 1;
+            
+            if (expectedHealthValue <= 0)
+            {
+                playerDeath.Play();
+            }
+
+            base.TakeDamage();
         }
     }
 }

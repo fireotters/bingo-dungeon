@@ -259,12 +259,7 @@ namespace UI
             }
 
             txtVictoryCurrent.text = currentScore.ToString() + (currentScore > 1 ? " turns": " turn");
-            if (bestScore == -1)
-            {
-                txtVictoryBest.text = "";
-                txtVictoryCurrent.verticalAlignment = VerticalAlignmentOptions.Middle;
-            }
-            else if (wasThisNewHighscore)
+            if (wasThisNewHighscore)
                 txtVictoryBest.text = "New best score!";
             else
                 txtVictoryBest.text = "Best: " + bestScore.ToString() + (bestScore > 1 ? " turns" : " turn");

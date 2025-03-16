@@ -34,19 +34,28 @@ public static class HighScoreManagement
         HighscoreEntry currentLevelScore;
         if (numOfCurrentLevelEntries == 1)
         {
+            Debug.Log("A highscore already exists. Determining what to do...");
             currentLevelScore = levelScores.highscoreEntryList.Where(hs => hs.levelName == levelName).ToList()[0];
-            if (scoreType == GameEndCondition.BingoWin && score < currentLevelScore.bingoScore)
-                currentLevelScore.bingoScore = score;
-            else if (scoreType == GameEndCondition.PieceWin && score < currentLevelScore.pieceScore)
-                currentLevelScore.pieceScore = score;
-            else
+            if (scoreType == GameEndCondition.BingoWin)
             {
-                int highscoreToReturn = scoreType == GameEndCondition.BingoWin ? currentLevelScore.bingoScore : currentLevelScore.pieceScore;
-                return (false, highscoreToReturn);
+                bool scoreShouldBeOverwritten = score < currentLevelScore.bingoScore || currentLevelScore.bingoScore == -1;
+                if (scoreShouldBeOverwritten)
+                    currentLevelScore.bingoScore = score;
+                else
+                    return (false, currentLevelScore.bingoScore);
+            }
+            else if (scoreType == GameEndCondition.PieceWin)
+            {
+                bool scoreShouldBeOverwritten = score < currentLevelScore.pieceScore || currentLevelScore.pieceScore == -1;
+                if (scoreShouldBeOverwritten)
+                    currentLevelScore.pieceScore = score;
+                else
+                    return (false, currentLevelScore.pieceScore);
             }
         }
         else
         {
+            Debug.Log("A highscore doesn't already exist. Determining what to do...");
             if (numOfCurrentLevelEntries != 0)
                 Debug.LogError($"Level '{levelName}': Multiple HighscoreEntry entries in PlayerPrefs. This isn't expected. Overwrite them all with latest score.");
 
@@ -56,7 +65,6 @@ public static class HighScoreManagement
                 currentLevelScore = new HighscoreEntry { levelName = levelName, bingoScore = -1, pieceScore = score };
             else
                 throw new InvalidEnumArgumentException();
-            score = -1; // Flag highscore as the first attempt at a level, don't congratulate for new high score
         }
 
         listOfLevelScores.Add(currentLevelScore);

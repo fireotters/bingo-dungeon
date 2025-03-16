@@ -9,7 +9,7 @@ How To Start Game
 Launch the 'Bingo!! Dungeon!!' executable (File ending in .exe, .x86_64).
 By default, the game starts in fullscreen. To change this, visit 'Options'. You'll also find volume options there.
 
-To uninstall this game, delete the entire 'Bingo!! Dungeon!! v1.1' folder.
+To uninstall this game, delete the entire 'Bingo!! Dungeon!! v1.1.1' folder.
 
 ------------------
 OS Specific Instructions

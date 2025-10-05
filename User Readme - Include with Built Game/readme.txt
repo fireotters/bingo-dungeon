@@ -1,4 +1,4 @@
-Bingo!! Dungeon!! v1.1.1
+Bingo!! Dungeon!! v1.1.2
 
 Developed by: benchi99, CrossfireCam, Darelt, Rioni, TeslaSP2
 Full credits and itch.io links are in the game's Help menu
@@ -7,20 +7,26 @@ Full credits and itch.io links are in the game's Help menu
 How To Start Game
 ------------------
 Launch the 'Bingo!! Dungeon!!' executable (File ending in .exe, .x86_64).
-By default, the game starts in fullscreen. To change this, visit 'Options'. You'll also find volume options there.
+By default, the game starts in fullscreen. To change this, visit 'Options'. You'll also find volume options there, among other settings.
 
-To uninstall this game, delete the entire 'Bingo!! Dungeon!! v1.1.1' folder.
+To uninstall this game, delete the entire 'Bingo!! Dungeon!! v1.1.2' folder.
 
 ------------------
 OS Specific Instructions
 ------------------
 Windows - Smartscreen may block the game from opening. Click 'More info' and 'Run anyway'.
 
-Linux - Game may not work immediately. Go to the executable's 'Properties, Permissions' and check the box for 'Allow executing file as program'. Or you could run "chmod +x" on the executable to mark it as an executable.
+Linux - The game may not run as an executable.
+• For Ubuntu, go to the executable's 'Properties, Permissions' and check the box for 'Allow executing file as program'.
+• For other distros, you could run "chmod +x" on the executable to mark it as an executable.
+• If the game crashes immediately, check "~/.config/unity3d/FireOtters/Bingo!! Dungeon!!" for an error log
 
 ------------------
 Changelog
 ------------------
+v1.1.2 - Patch for CVE-2025-59489 (5 October 2025)
+• Patched a Unity vulnerability (https://unity.com/security/sept-2025-01)
+
 v1.1.1 - High Score Bugfix (16 March 2025)
 • Fix for the game being unable to track scores for both victory conditions
 
